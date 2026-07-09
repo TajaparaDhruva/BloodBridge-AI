@@ -272,7 +272,9 @@ const Dashboard = () => {
       <AnimatePresence>
         {showNotifications && (
           <NotificationCenter
+            isOpen={showNotifications}
             notifications={notifications}
+            setNotifications={setNotifications}
             onClose={() => setShowNotifications(false)}
             onMarkRead={(id) => setNotifications((n) => n.map((x) => (x.id === id ? { ...x, read: true } : x)))}
           />

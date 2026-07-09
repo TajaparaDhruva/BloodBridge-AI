@@ -105,7 +105,7 @@ const Signup = () => {
   };
 
   // ── Step 0: Role Selection ────────────────────────────────────────────────
-  const RoleStep = () => (
+  const renderRoleStep = () => (
     <div className="space-y-4">
       <h2 className="text-[22px] font-extrabold text-slate dark:text-white">Who are you?</h2>
       <p className="text-muted text-[14px] mb-6">Select your role to personalize your BloodBridge experience.</p>
@@ -140,7 +140,7 @@ const Signup = () => {
   );
 
   // ── Step 1: Basic Credentials ─────────────────────────────────────────────
-  const CredentialsStep = () => (
+  const renderCredentialsStep = () => (
     <div className="space-y-4">
       <h2 className="text-[22px] font-extrabold text-slate dark:text-white">Create Your Account</h2>
       <p className="text-muted text-[14px] mb-6">Set up your login credentials.</p>
@@ -175,7 +175,7 @@ const Signup = () => {
   );
 
   // ── Step 2: Role-specific Details ─────────────────────────────────────────
-  const DetailsStep = () => (
+  const renderDetailsStep = () => (
     <div className="space-y-4">
       <h2 className="text-[22px] font-extrabold text-slate dark:text-white">
         {role === 'donor' ? 'Medical Profile' : 'Hospital Details'}
@@ -252,7 +252,7 @@ const Signup = () => {
   );
 
   // ── Step 3: Review & Agreements ───────────────────────────────────────────
-  const ConfirmStep = () => (
+  const renderConfirmStep = () => (
     <div className="space-y-5">
       <h2 className="text-[22px] font-extrabold text-slate dark:text-white">Review & Confirm</h2>
 
@@ -309,7 +309,7 @@ const Signup = () => {
   );
 
   // ── Syncing Animation ─────────────────────────────────────────────────────
-  const SyncAnimation = () => (
+  const renderSyncAnimation = () => (
     <div className="text-center py-8">
       <motion.div
         className="w-20 h-20 rounded-full bg-bloodred/10 flex items-center justify-center mx-auto mb-5 text-bloodred"
@@ -345,7 +345,15 @@ const Signup = () => {
     </div>
   );
 
-  const steps = [<RoleStep />, <CredentialsStep />, <DetailsStep />, <ConfirmStep />];
+  const getStepContent = () => {
+    switch (step) {
+      case 0: return renderRoleStep();
+      case 1: return renderCredentialsStep();
+      case 2: return renderDetailsStep();
+      case 3: return renderConfirmStep();
+      default: return null;
+    }
+  };
 
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
@@ -439,7 +447,7 @@ const Signup = () => {
           <AnimatePresence mode="wait">
             {syncing ? (
               <motion.div key="sync" initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}>
-                <SyncAnimation />
+                {renderSyncAnimation()}
               </motion.div>
             ) : (
               <motion.div
@@ -449,7 +457,7 @@ const Signup = () => {
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               >
-                {steps[step]}
+                {getStepContent()}
               </motion.div>
             )}
           </AnimatePresence>
