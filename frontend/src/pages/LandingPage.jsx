@@ -70,7 +70,7 @@ const staggerContainer = {
 const LandingPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { requests, createRequest } = useAuth();
+  const { requests } = useAuth();
 
   // States for FAQs
   const [activeFaq, setActiveFaq] = useState(null);

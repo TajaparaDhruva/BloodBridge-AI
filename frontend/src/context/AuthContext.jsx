@@ -323,7 +323,7 @@ export const AuthProvider = ({ children }) => {
     return () => clearInterval(interval);
   }, []);
 
-  const login = (email, password, role) => {
+  const login = ({ email, password, role }) => {
     // Simulated auth check
     let userDetails = {
       email,
@@ -336,7 +336,7 @@ export const AuthProvider = ({ children }) => {
     return true;
   };
 
-  const signup = (name, email, password, role) => {
+  const signup = ({ name, email, password, role }) => {
     let userDetails = {
       email,
       name,

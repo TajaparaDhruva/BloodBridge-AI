@@ -43,7 +43,7 @@ const StepIndicator = ({ current }) => (
 
 const Signup = () => {
   const navigate = useNavigate();
-  const { register } = useAuth();
+  const { signup } = useAuth();
 
   const [step, setStep] = useState(0);
   const [role, setRole] = useState('');
@@ -95,7 +95,7 @@ const Signup = () => {
     setSyncing(true);
     try {
       const payload = { ...form, role };
-      await register(payload);
+      await signup(payload);
       setLoading(true);
       setTimeout(() => navigate('/dashboard'), 1800);
     } catch (err) {

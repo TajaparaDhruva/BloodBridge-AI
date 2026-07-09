@@ -121,20 +121,63 @@ const NearbyHospitals = ({ onCall }) => {
       group.addLayer(marker);
     });
 
+    // Draw route line to selected hospital if active
+    if (selectedHospital) {
+      const routePoints = [
+        [centerLat, centerLng],
+        [selectedHospital.coordinates.lat, selectedHospital.coordinates.lng]
+      ];
+      
+      const routeLine = window.L.polyline(routePoints, {
+        color: '#E11D48', // rose-600 / bloodred
+        weight: 4,
+        opacity: 0.85,
+        dashArray: '6, 8', // elegant dashed routing line
+        lineJoin: 'round'
+      });
+      
+      group.addLayer(routeLine);
+    }
+
   }, [filteredHospitals, selectedHospital, centerLat, centerLng]);
 
   // 3. Pan to selected hospital coordinate
   useEffect(() => {
     const map = mapInstanceRef.current;
     if (!map || !selectedHospital) return;
+    // Only fly to if we are not fitting bounds from directions click
+    // checking if map bounds already contain both center and hospital to prevent override
+    const routePoints = [
+      [centerLat, centerLng],
+      [selectedHospital.coordinates.lat, selectedHospital.coordinates.lng]
+    ];
+    const bounds = window.L.latLngBounds(routePoints);
+    const currentBounds = map.getBounds();
+    if (currentBounds && currentBounds.contains(bounds)) {
+      // already showing route, don't fly to single point
+      return;
+    }
+    
     map.flyTo([selectedHospital.coordinates.lat, selectedHospital.coordinates.lng], 14, {
       animate: true,
       duration: 1.5
     });
-  }, [selectedHospital]);
+  }, [selectedHospital, centerLat, centerLng]);
 
   const handleDirections = (h) => {
-    alert(`Generating dynamic AI routing instructions to ${h.name}...\nAddress: ${h.address}\nETA: ${h.eta}`);
+    if (!h || !h.coordinates) return;
+    setSelectedHospital(h);
+    const map = mapInstanceRef.current;
+    if (map && window.L) {
+      const routePoints = [
+        [centerLat, centerLng],
+        [h.coordinates.lat, h.coordinates.lng]
+      ];
+      const bounds = window.L.latLngBounds(routePoints);
+      setTimeout(() => {
+        map.fitBounds(bounds, { padding: [40, 40], animate: true, duration: 1.2 });
+      }, 100);
+    }
   };
 
   return (

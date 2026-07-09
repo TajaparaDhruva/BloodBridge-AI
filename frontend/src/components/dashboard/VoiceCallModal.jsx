@@ -64,6 +64,24 @@ const VoiceCallModal = ({ hospitalName, number, onClose }) => {
   const recognitionRef = useRef(null);
   const durationIntervalRef = useRef(null);
 
+  const callStateRef = useRef(callState);
+  const isMutedRef = useRef(isMuted);
+  const isOnHoldRef = useRef(isOnHold);
+  const isSpeakingRef = useRef(false);
+
+  // Keep refs in sync with state updates
+  useEffect(() => {
+    callStateRef.current = callState;
+  }, [callState]);
+
+  useEffect(() => {
+    isMutedRef.current = isMuted;
+  }, [isMuted]);
+
+  useEffect(() => {
+    isOnHoldRef.current = isOnHold;
+  }, [isOnHold]);
+
   // Trigger a brief screen toast
   const triggerToast = (msg) => {
     setToastMessage(msg);
@@ -154,15 +172,33 @@ const VoiceCallModal = ({ hospitalName, number, onClose }) => {
     rec.onerror = (e) => {
       console.log('Speech recognition error:', e.error);
       setIsListening(false);
-      if (callState === 'connected' && !isOnHold && !isMuted) {
+      if (callStateRef.current === 'connected' && !isOnHoldRef.current && !isMutedRef.current) {
         setStatusMessage('Call Active');
+      }
+      
+      // Auto-restart listening if call is active, AI is not speaking, and mic is active
+      if (callStateRef.current === 'connected' && !isMutedRef.current && !isOnHoldRef.current && !isSpeakingRef.current) {
+        setTimeout(() => {
+          if (callStateRef.current === 'connected' && !isMutedRef.current && !isOnHoldRef.current && !isSpeakingRef.current) {
+            startListening();
+          }
+        }, 300);
       }
     };
     
     rec.onend = () => {
       setIsListening(false);
-      if (callState === 'connected' && !isOnHold && !isMuted) {
+      if (callStateRef.current === 'connected' && !isOnHoldRef.current && !isMutedRef.current) {
         setStatusMessage('Call Active');
+      }
+      
+      // Auto-restart listening if call is active, AI is not speaking, and mic is active
+      if (callStateRef.current === 'connected' && !isMutedRef.current && !isOnHoldRef.current && !isSpeakingRef.current) {
+        setTimeout(() => {
+          if (callStateRef.current === 'connected' && !isMutedRef.current && !isOnHoldRef.current && !isSpeakingRef.current) {
+            startListening();
+          }
+        }, 100);
       }
     };
     
@@ -170,7 +206,7 @@ const VoiceCallModal = ({ hospitalName, number, onClose }) => {
   };
 
   const startListening = () => {
-    if (isMuted || isOnHold) return;
+    if (isMutedRef.current || isOnHoldRef.current) return;
     if (window.speechSynthesis) window.speechSynthesis.cancel();
     if (recognitionRef.current) {
       try {
@@ -207,14 +243,16 @@ const VoiceCallModal = ({ hospitalName, number, onClose }) => {
     utterance.pitch = 1.05; // Slightly adjusted for clear, friendly human tone
     
     utterance.onstart = () => {
+      isSpeakingRef.current = true;
       stopListening();
       setStatusMessage('Operator Speaking...');
     };
     
     utterance.onend = () => {
+      isSpeakingRef.current = false;
       setStatusMessage('Call Active');
       // Automatically resume listening to create a continuous conversation
-      if (callState === 'connected' && !isMuted && !isOnHold) {
+      if (callStateRef.current === 'connected' && !isMutedRef.current && !isOnHoldRef.current) {
         startListening();
       }
     };
@@ -226,11 +264,17 @@ const VoiceCallModal = ({ hospitalName, number, onClose }) => {
   const handleUserInput = (inputText) => {
     if (!inputText.trim()) return;
     
-    // Detect Language
+    // Detect Language - robust Hinglish & Hindi detection
     const lower = inputText.toLowerCase();
     const hindiRegex = /[\u0900-\u097F]/;
     const isHindiText = hindiRegex.test(inputText) || 
-      ['chahiye', 'kaha', 'karon', 'bhejo', 'bhai', 'dost', 'hai', 'hain', 'madad', 'mil', 'donor', 'hospital', 'stock', 'aabhar', 'shukriya', 'dhanyawad', 'nathi', 'lohe'].some(w => lower.includes(w));
+      [
+        'chahiye', 'kaha', 'karon', 'bhejo', 'bhai', 'dost', 'hai', 'hain', 'madad', 'mil', 
+        'donor', 'hospital', 'stock', 'aabhar', 'shukriya', 'dhanyawad', 'nathi', 'lohe',
+        'aap', 'tum', 'mera', 'ho', 'kya', 'ko', 'se', 'batao', 'suno', 'bol', 'kaise', 
+        'namaste', 'alvida', 'achha', 'theek', 'karo', 'kar', 'raha', 'rahi', 'he', 'ki', 
+        'ka', 'ke', 'aur', 'ya', 'na', 'ne', 'par', 'bhi', 'hi', 'to', 'toh', 'apko', 'tumko'
+      ].some(w => lower.includes(w));
     
     // Find Response
     let match = null;
@@ -252,6 +296,7 @@ const VoiceCallModal = ({ hospitalName, number, onClose }) => {
   const toggleMute = () => {
     const nextMute = !isMuted;
     setIsMuted(nextMute);
+    isMutedRef.current = nextMute;
     if (nextMute) {
       stopListening();
       setStatusMessage('Microphone Muted');
@@ -259,7 +304,7 @@ const VoiceCallModal = ({ hospitalName, number, onClose }) => {
     } else {
       setStatusMessage('Call Active');
       triggerToast('Microphone Unmuted');
-      if (callState === 'connected' && !isOnHold) {
+      if (callStateRef.current === 'connected' && !isOnHoldRef.current) {
         startListening();
       }
     }
@@ -283,6 +328,7 @@ const VoiceCallModal = ({ hospitalName, number, onClose }) => {
   const toggleHold = () => {
     const nextHold = !isOnHold;
     setIsOnHold(nextHold);
+    isOnHoldRef.current = nextHold;
     if (nextHold) {
       stopListening();
       if (window.speechSynthesis) window.speechSynthesis.cancel();
@@ -318,6 +364,7 @@ const VoiceCallModal = ({ hospitalName, number, onClose }) => {
       const ringingTimeout = setTimeout(() => {
         if (ringToneRef.current) ringToneRef.current.stop();
         setCallState('connected');
+        callStateRef.current = 'connected';
         setStatusMessage('Call Active');
         
         // Start duration counter
