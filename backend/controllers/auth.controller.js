@@ -152,10 +152,11 @@ const signup = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
+    const normalizedEmail = (email || '').toLowerCase().trim();
 
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email: normalizedEmail }).select('+password');
     if (!user || !(await user.comparePassword(password))) {
-      return sendError(res, 'Invalid email or password', 401);
+      return sendError(res, 'Invalid email or password. Please check your credentials.', 401);
     }
 
     if (!user.isActive) {
