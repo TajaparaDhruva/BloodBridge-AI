@@ -38,9 +38,9 @@ const signup = async (req, res, next) => {
       emergencyReady
     } = req.body;
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email: email.toLowerCase().trim() });
     if (existingUser) {
-      return sendError(res, 'Email already in use', 400);
+      return sendError(res, 'An account with this email already exists. Please log in instead.', 400);
     }
 
     const user = await User.create({ name, email, password, role });
