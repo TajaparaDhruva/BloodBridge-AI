@@ -6,6 +6,10 @@ import {
   FiMap, FiMessageSquare, FiFileText, FiUserPlus, FiPlusCircle,
   FiMaximize2, FiRadio, FiCheckCircle, FiXCircle, FiChevronRight
 } from 'react-icons/fi';
+import {
+  AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip,
+  ResponsiveContainer, CartesianGrid, Legend, Cell
+} from 'recharts';
 
 // Premium Real-Time Medical Capsule Component for Blood Inventory
 const MedicalCapsule = ({ group, units, status, prediction, days }) => {
@@ -287,7 +291,7 @@ const OverviewTab = ({
 
       setLiveRequests(prev => [newRequest, ...prev]);
       setActiveRequests(prev => prev + 1);
-    }, 12000); // Prepend new request every 12 seconds
+    }, 1500); // Prepend new request every 1.5 seconds
 
     return () => clearInterval(requestInterval);
   }, []);
@@ -1107,103 +1111,219 @@ const OverviewTab = ({
       {/* ─── SECTION 9: MODERN CHARTS ─────────────────────────────────────────────── */}
       <div className="grid md:grid-cols-2 gap-6">
         
-        {/* Chart 1: Fulfilled vs Requested dispatches */}
-        <div className="p-6 rounded-[28px] glass-card border border-white/20 dark:border-white/05 dark:bg-darksurf/40 shadow-lg">
-          <h3 className="font-extrabold text-slate dark:text-white text-[14px] uppercase tracking-widest mb-4">Fulfilled Dispatch Analytics</h3>
+        {/* Chart 1: Fulfilled vs Requested dispatches (Area Chart) */}
+        <div className="p-6 rounded-[28px] glass-card border border-white/20 dark:border-white/05 dark:bg-darksurf/40 shadow-lg flex flex-col justify-between relative overflow-hidden group min-h-[360px]">
+          {/* Subtle background glow */}
+          <div className="absolute -top-24 -left-24 w-48 h-48 rounded-full bg-bloodred/02 dark:bg-bloodred/04 filter blur-[60px] pointer-events-none" />
           
-          <div className="h-48 w-full flex items-end gap-3.5 pt-4">
-            {chartData.map((d) => {
-              const reqH = (d.req / 15) * 100;
-              const okH = (d.ok / 15) * 100;
+          <div className="flex justify-between items-start mb-6">
+            <div>
+              <h3 className="font-extrabold text-slate dark:text-white text-[14px] uppercase tracking-widest">Fulfilled Dispatch Analytics</h3>
+              <p className="text-muted text-[10px] font-bold uppercase tracking-wider mt-1">Weekly load matching trends</p>
+            </div>
+            {/* Dynamic total rate badge */}
+            {(() => {
+              const totalReq = chartData.reduce((acc, d) => acc + d.req, 0);
+              const totalOk = chartData.reduce((acc, d) => acc + d.ok, 0);
+              const fulfillmentRate = totalReq ? Math.round((totalOk / totalReq) * 100) : 0;
               return (
-                <div key={d.day} className="flex-1 flex flex-col items-center gap-2 group cursor-pointer">
-                  <div className="h-32 w-full flex gap-1.5 justify-center items-end bg-black/02 dark:bg-white/01 rounded-xl p-1 relative group hover:bg-black/04 dark:hover:bg-white/02 transition-all duration-300">
-                    
-                    {/* Tooltip on hover */}
-                    <div className="absolute -top-7 scale-0 group-hover:scale-100 bg-slate-900 text-white text-[9px] font-black px-2 py-0.5 rounded-md shadow-md transition-all duration-200 z-10 whitespace-nowrap">
-                      Req: {d.req} | OK: {d.ok}
-                    </div>
-
-                    {/* Req Bar */}
-                    <motion.div 
-                      style={{ height: `${reqH}%` }} 
-                      className="w-3 bg-slate-300 dark:bg-slate-700 rounded-full"
-                      layoutId={`req-bar-${d.day}`}
-                    />
-                    {/* Ok Bar */}
-                    <motion.div 
-                      style={{ height: `${okH}%` }} 
-                      className="w-3 bg-gradient-to-t from-[#D81B43] to-[#F03561] dark:from-[#D81B43]/90 dark:to-[#F03561]/90 rounded-full shadow-lg shadow-bloodred/10"
-                      layoutId={`ok-bar-${d.day}`}
-                    />
-                  </div>
-                  <span className="text-[10px] text-muted font-bold group-hover:text-bloodred transition-colors">{d.day}</span>
-                </div>
+                <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-emerald/10 text-emerald border border-emerald/15 flex items-center gap-1.5 shadow-sm">
+                  <FiCheck className="w-3.5 h-3.5" />
+                  {fulfillmentRate}% Success
+                </span>
               );
-            })}
+            })()}
           </div>
-          <div className="flex justify-center gap-4 mt-4 text-[10px] font-bold text-muted">
-            <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-700" /> Requested</span>
-            <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-gradient-to-t from-[#D81B43] to-[#F03561]" /> Fulfilled</span>
+          
+          {/* Recharts AreaChart */}
+          <div className="h-56 w-full relative z-10">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="colorReq" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#6366F1" stopOpacity={0.25}/>
+                    <stop offset="95%" stopColor="#6366F1" stopOpacity={0.0}/>
+                  </linearGradient>
+                  <linearGradient id="colorOk" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#D81B43" stopOpacity={0.35}/>
+                    <stop offset="95%" stopColor="#D81B43" stopOpacity={0.0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.08)" vertical={false} />
+                <XAxis 
+                  dataKey="day" 
+                  tickLine={false} 
+                  axisLine={false} 
+                  tick={{ fill: 'rgba(148,163,184,0.7)', fontSize: 10, fontWeight: 700 }}
+                  dy={10}
+                />
+                <YAxis 
+                  tickLine={false} 
+                  axisLine={false} 
+                  tick={{ fill: 'rgba(148,163,184,0.7)', fontSize: 10, fontWeight: 700 }}
+                />
+                <Tooltip 
+                  cursor={{ stroke: 'rgba(148,163,184,0.15)', strokeWidth: 1.5 }}
+                  content={({ active, payload, label }) => {
+                    if (active && payload && payload.length) {
+                      const req = payload.find(p => p.dataKey === 'req')?.value || 0;
+                      const ok = payload.find(p => p.dataKey === 'ok')?.value || 0;
+                      const rate = req ? Math.round((ok / req) * 100) : 100;
+                      return (
+                        <div className="bg-white/95 dark:bg-darksurf2/95 backdrop-blur-xl border border-black/10 dark:border-white/10 rounded-2xl p-4 shadow-premium text-[11px] min-w-44 select-none">
+                          <p className="font-black text-slate dark:text-white uppercase tracking-widest mb-2">{label} Dispatch</p>
+                          <div className="space-y-1.5 font-bold text-muted mb-2">
+                            <div className="flex justify-between items-center gap-4">
+                              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-indigo-500" /> Requested:</span>
+                              <span className="text-slate dark:text-white font-extrabold">{req} Units</span>
+                            </div>
+                            <div className="flex justify-between items-center gap-4">
+                              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-bloodred" /> Fulfilled:</span>
+                              <span className="text-slate dark:text-white font-extrabold">{ok} Units</span>
+                            </div>
+                          </div>
+                          <div className="pt-2 border-t border-black/05 dark:border-white/05 flex justify-between items-center">
+                            <span className="text-[10px] font-black text-muted uppercase">Match Rate:</span>
+                            <span className="text-[13px] font-black text-emerald">{rate}%</span>
+                          </div>
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="req" 
+                  stroke="#6366F1" 
+                  strokeWidth={2}
+                  fillOpacity={1} 
+                  fill="url(#colorReq)" 
+                  name="Requested"
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="ok" 
+                  stroke="#D81B43" 
+                  strokeWidth={2.5}
+                  fillOpacity={1} 
+                  fill="url(#colorOk)" 
+                  name="Fulfilled"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+          
+          {/* Legend */}
+          <div className="flex justify-center gap-6 mt-4 text-[10px] font-bold text-muted border-t border-black/03 dark:border-white/03 pt-4 relative z-10">
+            <span className="flex items-center gap-2">
+              <span className="w-3 h-1.5 rounded-full bg-indigo-500" /> 
+              Requested target
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="w-3 h-1.5 rounded-full bg-bloodred" /> 
+              Fulfilled load
+            </span>
           </div>
         </div>
 
-        {/* Chart 2: Radial Match time efficiency */}
-        <div className="p-6 rounded-[28px] glass-card border border-white/20 dark:border-white/05 dark:bg-darksurf/40 shadow-lg flex flex-col justify-between">
-          <h3 className="font-extrabold text-slate dark:text-white text-[14px] uppercase tracking-widest mb-4">Response Efficiency Dials</h3>
+        {/* Chart 2: Response Efficiency Target vs Actual (Bar Chart) */}
+        <div className="p-6 rounded-[28px] glass-card border border-white/20 dark:border-white/05 dark:bg-darksurf/40 shadow-lg flex flex-col justify-between relative overflow-hidden group min-h-[360px]">
+          {/* Subtle background glow */}
+          <div className="absolute -top-24 -right-24 w-48 h-48 rounded-full bg-emerald/02 dark:bg-emerald/04 filter blur-[60px] pointer-events-none" />
+
+          <div className="mb-6">
+            <h3 className="font-extrabold text-slate dark:text-white text-[14px] uppercase tracking-widest">Response SLA Analytics</h3>
+            <p className="text-muted text-[10px] font-bold uppercase tracking-wider mt-1">Actual speed vs benchmark target SLA</p>
+          </div>
           
-          <div className="flex justify-around items-center py-2">
-            {[
-              { 
-                title: 'Emergency', 
-                pct: Math.min(100, Math.round((24 / (avgMatch - 14)) * 98)), 
-                val: `${Math.round(avgMatch - 14.2)}s`, 
-                color: 'stroke-bloodred text-bloodred',
-                glow: 'shadow-bloodred/10'
-              },
-              { 
-                title: 'Urgent', 
-                pct: Math.min(100, Math.round((42 / (avgMatch + 4)) * 88)), 
-                val: `${Math.round(avgMatch + 3.8)}s`, 
-                color: 'stroke-amber text-amber',
-                glow: 'shadow-amber/10'
-              },
-              { 
-                title: 'Normal', 
-                pct: Math.min(100, Math.round((78 / (avgMatch + 40)) * 72)), 
-                val: `${Math.round(avgMatch + 39.8)}s`, 
-                color: 'stroke-emerald text-emerald',
-                glow: 'shadow-emerald/10'
-              }
-            ].map((dial) => {
-              const r = 24;
-              const circ = 2 * Math.PI * r;
-              const offset = circ - (dial.pct / 100) * circ;
-              return (
-                <div key={dial.title} className="flex flex-col items-center">
-                  <div className="relative w-18 h-18 flex items-center justify-center rounded-full bg-black/02 dark:bg-white/02 shadow-inner border border-black/05 dark:border-white/05">
-                    <svg width="68" height="68" className="-rotate-90">
-                      <circle cx="34" cy="34" r={r} fill="none" stroke="currentColor" strokeWidth="2.5" className="text-black/04 dark:text-white/04" />
-                      <motion.circle 
-                        cx="34" cy="34" r={r} fill="none" 
-                        strokeWidth="3.5" 
-                        strokeDasharray={circ}
-                        strokeDashoffset={offset}
-                        className={`${dial.color} transition-all duration-500`}
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                    <span className="absolute text-[11px] font-black text-slate dark:text-white">{dial.val}</span>
-                  </div>
-                  <span className="text-[10px] text-muted font-bold mt-2.5 uppercase tracking-wider">{dial.title}</span>
-                </div>
-              );
-            })}
+          {/* Recharts BarChart */}
+          <div className="h-56 w-full relative z-10">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart 
+                data={[
+                  { name: 'Emergency', Actual: Math.round(avgMatch - 14.2), Target: 25, color: '#D81B43' },
+                  { name: 'Urgent', Actual: Math.round(avgMatch + 3.8), Target: 45, color: '#F59E0B' },
+                  { name: 'Normal', Actual: Math.round(avgMatch + 39.8), Target: 90, color: '#10B981' }
+                ]}
+                margin={{ top: 10, right: 10, left: -25, bottom: 0 }}
+                barGap={8}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.08)" vertical={false} />
+                <XAxis 
+                  dataKey="name" 
+                  tickLine={false} 
+                  axisLine={false} 
+                  tick={{ fill: 'rgba(148,163,184,0.7)', fontSize: 10, fontWeight: 700 }}
+                  dy={10}
+                />
+                <YAxis 
+                  tickLine={false} 
+                  axisLine={false} 
+                  tick={{ fill: 'rgba(148,163,184,0.7)', fontSize: 10, fontWeight: 700 }}
+                  unit="s"
+                />
+                <Tooltip 
+                  cursor={{ fill: 'rgba(148,163,184,0.03)' }}
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      const data = payload[0].payload;
+                      const statusColors = {
+                        Emergency: 'text-bloodred',
+                        Urgent: 'text-amber',
+                        Normal: 'text-emerald'
+                      };
+                      return (
+                        <div className="bg-white/95 dark:bg-darksurf2/95 backdrop-blur-xl border border-black/10 dark:border-white/10 rounded-2xl p-4 shadow-premium text-[11px] min-w-44 select-none">
+                          <p className="font-black text-slate dark:text-white uppercase tracking-widest mb-2">{data.name} Speed</p>
+                          <div className="space-y-1.5 font-bold text-muted">
+                            <div className="flex justify-between items-center gap-4">
+                              <span>Actual Speed:</span>
+                              <span className={`${statusColors[data.name]} font-extrabold`}>{data.Actual}s</span>
+                            </div>
+                            <div className="flex justify-between items-center gap-4">
+                              <span>Target SLA:</span>
+                              <span className="text-slate dark:text-white font-extrabold">{data.Target}s</span>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
+                />
+                {/* Target SLA Bar */}
+                <Bar 
+                  dataKey="Target" 
+                  fill="rgba(148, 163, 184, 0.12)" 
+                  radius={[6, 6, 0, 0]}
+                  name="Target SLA"
+                />
+                {/* Actual Time Bar */}
+                <Bar 
+                  dataKey="Actual" 
+                  radius={[6, 6, 0, 0]}
+                  name="Actual Speed"
+                >
+                  {[
+                    { name: 'Emergency', color: '#D81B43' },
+                    { name: 'Urgent', color: '#F59E0B' },
+                    { name: 'Normal', color: '#10B981' }
+                  ].map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
           </div>
 
-          <p className="text-center text-[10px] text-muted font-bold mt-4 uppercase tracking-widest">
-            Overall response rate optimized by 12% this week
-          </p>
+          {/* Bottom Summary Pill */}
+          <div className="mt-4 flex items-center justify-center border-t border-black/03 dark:border-white/03 pt-4 relative z-10">
+            <span className="px-4 py-1.5 rounded-full bg-emerald/05 border border-emerald/10 text-emerald text-[10px] font-black uppercase tracking-widest flex items-center gap-2 shadow-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald animate-ping" />
+              Response rate optimized by 12% this week
+            </span>
+          </div>
         </div>
 
       </div>

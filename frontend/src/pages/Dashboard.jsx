@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useLocation } from '../context/LocationContext';
@@ -14,13 +15,20 @@ import DashboardHeader from '../components/dashboard/DashboardHeader';
 import OverviewTab from '../components/dashboard/OverviewTab';
 import RequestModal from '../components/dashboard/RequestModal';
 import HospitalSelectorModal from '../components/dashboard/HospitalSelectorModal';
-import VoiceCallModal from '../components/dashboard/VoiceCallModal';
 import { StatusBadge, ProgressRing, WidgetShell } from '../components/dashboard/shared';
 import { FiPlus, FiAlertTriangle, FiTrendingUp, FiCheck } from 'react-icons/fi';
 
 const Dashboard = () => {
   const { user, logout, requests, donors, inventory, notifications, createRequest, setNotifications } = useAuth();
   const { userLocation } = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!user && !token) {
+      navigate('/login');
+    }
+  }, [user, navigate]);
 
   const [activeTab, setActiveTab] = useState('overview');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -249,7 +257,7 @@ const Dashboard = () => {
 
               {activeTab === 'hospitals' && (
                 <NearbyHospitals 
-                  onCall={(hospital) => setActiveCall({ hospitalName: hospital.name, number: hospital.contact })} 
+                  onCall={(hospital) => { window.location.href = `tel:${hospital.contact}`; }} 
                 />
               )}
               {activeTab === 'donors' && <NearbyDonors />}
@@ -302,18 +310,8 @@ const Dashboard = () => {
             onClose={() => setShowHospitalSelector(false)}
             onSelectCall={(h) => {
               setShowHospitalSelector(false);
-              setActiveCall({ hospitalName: h.name, number: h.contact });
+              window.location.href = `tel:${h.contact}`;
             }}
-          />
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {activeCall && (
-          <VoiceCallModal
-            hospitalName={activeCall.hospitalName}
-            number={activeCall.number}
-            onClose={() => setActiveCall(null)}
           />
         )}
       </AnimatePresence>

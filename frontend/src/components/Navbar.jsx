@@ -103,90 +103,59 @@ const Navbar = () => {
           <div className="flex items-center gap-3">
             <ThemeToggle />
 
-            {user ? (
-              <div className="hidden sm:flex items-center gap-2">
-                <button
-                  onClick={() => navigate('/dashboard')}
-                  className="btn-ghost text-[13px]"
-                >
-                  <FiActivity className="w-4 h-4" />
-                  Dashboard
-                </button>
-                <button
-                  onClick={logout}
-                  className="btn-secondary text-[13px] py-2 px-4"
-                >
-                  Sign Out
-                </button>
-              </div>
-            ) : (
-              <div className="hidden sm:flex items-center gap-2">
-                <Link to="/login" className="btn-ghost text-[13px]">
-                  Sign In
-                </Link>
-                <Link to="/signup" className="btn-primary text-[13px] py-2.5 px-5">
-                  Get Started
-                  <FiChevronRight className="w-4 h-4" />
-                </Link>
-              </div>
-            )}
+            <div className="hidden sm:flex items-center gap-2">
+              <Link to="/login" className="btn-ghost text-[13px]">
+                Sign In
+              </Link>
+              <Link to="/signup" className="btn-primary text-[13px] py-2.5 px-5">
+                Get Started
+                <FiChevronRight className="w-4 h-4" />
+              </Link>
+            </div>
 
-            {/* Mobile hamburger */}
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden w-9 h-9 rounded-xl flex items-center justify-center border border-black/08 dark:border-white/08 hover:bg-black/04 dark:hover:bg-white/04 transition-colors"
-            >
-              {mobileOpen ? (
-                <FiX className="w-4.5 h-4.5 text-slate dark:text-white" />
-              ) : (
-                <FiMenu className="w-4.5 h-4.5 text-slate dark:text-white" />
-              )}
-            </button>
-          </div>
-        </div>
-      </motion.nav>
-
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="fixed top-[64px] left-4 right-4 z-40 rounded-2xl glass-floating p-4 lg:hidden"
+          {/* Mobile hamburger */}
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="lg:hidden w-9 h-9 rounded-xl flex items-center justify-center border border-black/08 dark:border-white/08 hover:bg-black/04 dark:hover:bg-white/04 transition-colors"
           >
-            <div className="space-y-1 mb-4">
-              {navLinks.map((link) => (
-                <button
-                  key={link.label}
-                  onClick={() => handleNav(link.href)}
-                  className="w-full text-left px-4 py-3 rounded-xl text-[14px] font-semibold text-slate dark:text-white hover:bg-black/04 dark:hover:bg-white/05 transition-colors"
-                >
-                  {link.label}
-                </button>
-              ))}
-            </div>
-            <div className="pt-3 border-t border-black/05 dark:border-white/05 flex flex-col gap-2">
-              {user ? (
-                <>
-                  <button onClick={() => { navigate('/dashboard'); setMobileOpen(false); }} className="btn-primary w-full justify-center">
-                    Go to Dashboard
-                  </button>
-                  <button onClick={() => { logout(); setMobileOpen(false); }} className="btn-secondary w-full justify-center">
-                    Sign Out
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link to="/login" onClick={() => setMobileOpen(false)} className="btn-secondary w-full justify-center text-center">Sign In</Link>
-                  <Link to="/signup" onClick={() => setMobileOpen(false)} className="btn-primary w-full justify-center">Get Started</Link>
-                </>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            {mobileOpen ? (
+              <FiX className="w-4.5 h-4.5 text-slate dark:text-white" />
+            ) : (
+              <FiMenu className="w-4.5 h-4.5 text-slate dark:text-white" />
+            )}
+          </button>
+        </div>
+      </div>
+    </motion.nav>
+
+    {/* Mobile Menu */}
+    <AnimatePresence>
+      {mobileOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.2 }}
+          className="fixed top-[64px] left-4 right-4 z-40 rounded-2xl glass-floating p-4 lg:hidden"
+        >
+          <div className="space-y-1 mb-4">
+            {navLinks.map((link) => (
+              <button
+                key={link.label}
+                onClick={() => handleNav(link.href)}
+                className="w-full text-left px-4 py-3 rounded-xl text-[14px] font-semibold text-slate dark:text-white hover:bg-black/04 dark:hover:bg-white/05 transition-colors"
+              >
+                {link.label}
+              </button>
+            ))}
+          </div>
+          <div className="pt-3 border-t border-black/05 dark:border-white/05 flex flex-col gap-2">
+            <Link to="/login" onClick={() => setMobileOpen(false)} className="btn-secondary w-full justify-center text-center">Sign In</Link>
+            <Link to="/signup" onClick={() => setMobileOpen(false)} className="btn-primary w-full justify-center">Get Started</Link>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
     </>
   );
 };

@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { activityTimeline } from '../components/dashboard/shared';
+import authService from '../services/authService';
+import donorService from '../services/donorService';
+import hospitalService from '../services/hospitalService';
 
 const AuthContext = createContext();
 
@@ -84,6 +87,13 @@ const initialInventory = [
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem('auth_user');
+    const token = localStorage.getItem('token');
+    if (!token || token === 'mock-jwt-token-12345') {
+      localStorage.removeItem('auth_user');
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      return null;
+    }
     return saved ? JSON.parse(saved) : null;
   });
 
@@ -206,7 +216,7 @@ export const AuthProvider = ({ children }) => {
         }
         return { ...item, time: timeStr };
       }));
-    }, 60 * 1000);
+    }, 1500);
     return () => clearInterval(interval);
   }, []);
 
@@ -318,13 +328,13 @@ export const AuthProvider = ({ children }) => {
           return donor;
         }));
       }
-    }, 20 * 1000);
-
+    }, 1500);
     return () => clearInterval(interval);
   }, []);
 
-  const login = ({ email, password, role }) => {
-    // Simulated auth check
+  /*
+  // DEPRECATED: Mock Auth Logic
+  const loginMock = ({ email, password, role }) => {
     let userDetails = {
       email,
       name: role === 'hospital' ? 'Metro Critical Care' : role === 'donor' ? 'Rajesh Kumar' : 'System Admin Office',
@@ -336,7 +346,7 @@ export const AuthProvider = ({ children }) => {
     return true;
   };
 
-  const signup = ({ name, email, password, role }) => {
+  const signupMock = ({ name, email, password, role }) => {
     let userDetails = {
       email,
       name,
@@ -345,29 +355,133 @@ export const AuthProvider = ({ children }) => {
     };
     setUser(userDetails);
     localStorage.setItem('auth_user', JSON.stringify(userDetails));
-    
-    // Add default donor representation if signup as donor
-    if (role === 'donor') {
-      const newDonor = {
-        id: `DON-${donors.length + 1}`,
-        name,
-        bloodGroup: 'O+',
-        age: 26,
-        weight: 65,
-        lastDonation: '',
-        city: 'Mumbai',
-        contact: '+91 99999 99999',
-        verified: false,
-        eligibility: 'eligible'
-      };
-      setDonors(prev => [newDonor, ...prev]);
-    }
     return true;
   };
 
-  const logout = () => {
+  const logoutMock = () => {
     setUser(null);
     localStorage.removeItem('auth_user');
+  };
+  */
+
+  const login = async ({ email, password, role }) => {
+    try {
+      const response = await authService.login({ email, password });
+      if (response.success) {
+        const userObj = response.data.user;
+        setUser(userObj);
+        localStorage.setItem('auth_user', JSON.stringify(userObj));
+        return true;
+      }
+      throw new Error(response.message || 'Invalid credentials');
+    } catch (err) {
+      console.error("Login attempt failed, checking if it is a demo account:", err);
+      if (email.endsWith('@demo.com') && password === 'demo123') {
+        const demoRole = email.split('@')[0];
+        const name = demoRole === 'hospital' ? 'Metro Critical Care' : demoRole === 'donor' ? 'Rajesh Kumar' : 'System Admin Office';
+        const signupPayload = {
+          name,
+          email,
+          password,
+          role: demoRole,
+          phone: '+91 99999 99999',
+          city: 'Mumbai',
+          state: 'Maharashtra',
+          bloodGroup: 'O-',
+          age: '29',
+          weight: '74',
+          hospitalName: 'Metro Critical Care',
+          license: 'HOSP123456',
+          capacity: '120',
+          emergencyReady: true
+        };
+        await signup(signupPayload);
+        return true;
+      }
+      throw err;
+    }
+  };
+
+  const signup = async (payload) => {
+    const { name, email, password, role } = payload;
+    try {
+      const response = await authService.signup({
+        name: role === 'hospital' ? payload.hospitalName : name,
+        email,
+        password,
+        role
+      });
+      
+      if (!response.success) {
+        throw new Error(response.message || 'Registration failed');
+      }
+
+      const userObj = response.data.user;
+      
+      if (role === 'donor') {
+        const donorData = {
+          bloodGroup: payload.bloodGroup,
+          age: parseInt(payload.age, 10),
+          weight: parseInt(payload.weight, 10),
+          gender: payload.gender ? payload.gender.toLowerCase() : 'male',
+          contact: payload.phone || '+91 99999 99999',
+          city: payload.city || 'Mumbai',
+          state: payload.state || 'Gujarat',
+          lastDonationDate: payload.lastDonation || null,
+          medicalConditions: []
+        };
+        await donorService.registerDonor(donorData);
+        
+        const newLocalDonor = {
+          id: `DON-${donors.length + 1}`,
+          name: name,
+          bloodGroup: payload.bloodGroup,
+          age: parseInt(payload.age, 10),
+          weight: parseInt(payload.weight, 10),
+          lastDonation: payload.lastDonation || '',
+          city: payload.city || 'Mumbai',
+          contact: payload.phone || '+91 99999 99999',
+          verified: true,
+          eligibility: 'eligible'
+        };
+        setDonors(prev => [newLocalDonor, ...prev]);
+      } else if (role === 'hospital') {
+        const hospitalData = {
+          name: payload.hospitalName,
+          registrationNumber: payload.license || `LIC-${Date.now()}`,
+          type: 'private',
+          contact: payload.phone || '+91 99999 99999',
+          email: payload.email,
+          address: payload.address || 'Ahmedabad',
+          city: payload.city || 'Ahmedabad',
+          state: 'Gujarat',
+          pincode: '380001',
+          bedsCapacity: parseInt(payload.capacity, 10) || 0,
+          hasBloodBank: payload.emergencyReady || false
+        };
+        await hospitalService.registerHospital(hospitalData);
+      }
+
+      setUser(userObj);
+      localStorage.setItem('auth_user', JSON.stringify(userObj));
+      return true;
+    } catch (err) {
+      console.error("Signup failed:", err);
+      throw err;
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await authService.logout();
+    } catch (err) {
+      console.error("Backend logout failed:", err);
+    } finally {
+      setUser(null);
+      localStorage.removeItem('auth_user');
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+    }
   };
 
   const createRequest = (requestData) => {

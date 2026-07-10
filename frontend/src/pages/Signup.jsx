@@ -100,7 +100,8 @@ const Signup = () => {
       setTimeout(() => navigate('/dashboard'), 1800);
     } catch (err) {
       setSyncing(false);
-      setError(err.message || 'Registration failed. Please try again.');
+      const serverError = err.response?.data?.message || err.response?.data?.errors?.[0]?.msg || err.message;
+      setError(serverError || 'Registration failed. Please try again.');
     }
   };
 

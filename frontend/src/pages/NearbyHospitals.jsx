@@ -370,20 +370,6 @@ const NearbyHospitals = ({ onCall }) => {
                         >
                           <FiNavigation className="w-3.5 h-3.5" />
                         </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (onCall) {
-                              onCall(h);
-                            } else {
-                              window.location.href = `tel:${h.contact}`;
-                            }
-                          }}
-                          className="p-2 rounded-xl border border-gray-200 dark:border-white/10 hover:bg-gray-105 dark:hover:bg-white/5 text-gray-500 dark:text-gray-400 transition-colors cursor-pointer"
-                          title="Call Hospital"
-                        >
-                          <FiPhone className="w-3.5 h-3.5" />
-                        </button>
                       </div>
                     </div>
                   </motion.div>

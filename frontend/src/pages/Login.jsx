@@ -69,7 +69,8 @@ const Login = () => {
       await login({ email, password, role });
       navigate('/dashboard');
     } catch (err) {
-      setError(err.message || 'Invalid credentials. Please try again.');
+      const serverError = err.response?.data?.message || err.message;
+      setError(serverError || 'Invalid credentials. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -86,8 +87,8 @@ const Login = () => {
     try {
       await login(demos[demoRole] || demos.hospital);
       navigate('/dashboard');
-    } catch {
-      navigate('/dashboard');
+    } catch (err) {
+      setError(err.message || 'Demo login failed. Please try again.');
     } finally {
       setLoading(false);
     }
