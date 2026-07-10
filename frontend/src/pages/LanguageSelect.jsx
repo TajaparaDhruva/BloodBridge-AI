@@ -15,6 +15,7 @@ const LanguageSelect = () => {
 
   const handleContinue = () => {
     changeLanguage(selectedLang);
+    window.dispatchEvent(new Event('language-selected'));
     navigate('/');
   };
 

@@ -7,7 +7,7 @@ module.exports = {
   JWT_SECRET: process.env.JWT_SECRET || 'dev_secret_key',
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '7d',
   BCRYPT_ROUNDS: parseInt(process.env.BCRYPT_ROUNDS || '12', 10),
-  CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:5173',
+  CLIENT_URL: (process.env.CLIENT_URL || 'http://localhost:5173').replace(/\/$/, ''),
   GOOGLE_MAPS_KEY: process.env.GOOGLE_MAPS_KEY || '',
   FIREBASE_SERVER_KEY: process.env.FIREBASE_SERVER_KEY || '',
   NODE_ENV: process.env.NODE_ENV || 'development',
