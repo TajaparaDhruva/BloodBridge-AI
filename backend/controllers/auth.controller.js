@@ -212,9 +212,90 @@ const getProfile = async (req, res, next) => {
   }
 };
 
+/**
+ * Update current profile (both User and Profile models)
+ */
+const updateProfile = async (req, res, next) => {
+  try {
+    const {
+      name,
+      avatar,
+      bio,
+      dateOfBirth,
+      address,
+      city,
+      state,
+      pincode,
+      emergencyContact,
+      preferences,
+      socialLinks
+    } = req.body;
+
+    // Update user name if provided
+    if (name) {
+      await User.findByIdAndUpdate(req.user._id, { name }, { runValidators: true });
+    }
+
+    // Update profile
+    let profile = await Profile.findOne({ user: req.user._id });
+    if (!profile) {
+      profile = new Profile({ user: req.user._id });
+    }
+
+    if (avatar !== undefined) profile.avatar = avatar;
+    if (bio !== undefined) profile.bio = bio;
+    if (dateOfBirth !== undefined) profile.dateOfBirth = dateOfBirth;
+    if (address !== undefined) profile.address = address;
+    if (city !== undefined) profile.city = city;
+    if (state !== undefined) profile.state = state;
+    if (pincode !== undefined) profile.pincode = pincode;
+    if (emergencyContact !== undefined) profile.emergencyContact = emergencyContact;
+    if (preferences !== undefined) profile.preferences = { ...profile.preferences, ...preferences };
+    if (socialLinks !== undefined) profile.socialLinks = { ...profile.socialLinks, ...socialLinks };
+
+    await profile.save();
+    
+    const updatedProfile = await Profile.findOne({ user: req.user._id }).populate('user');
+
+    return sendSuccess(res, updatedProfile, 'Profile updated successfully');
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * Change secure password
+ */
+const changePassword = async (req, res, next) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+    if (!oldPassword || !newPassword) {
+      return sendError(res, 'Both old and new passwords are required', 400);
+    }
+
+    const user = await User.findById(req.user._id).select('+password');
+    if (!user || !(await user.comparePassword(oldPassword))) {
+      return sendError(res, 'Invalid current password', 400);
+    }
+
+    if (newPassword.length < 6) {
+      return sendError(res, 'New password must be at least 6 characters long', 400);
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    return sendSuccess(res, {}, 'Password changed successfully');
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   signup,
   login,
   logout,
   getProfile,
+  updateProfile,
+  changePassword,
 };
