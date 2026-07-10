@@ -15,7 +15,6 @@ const LanguageSelect = () => {
 
   const handleContinue = () => {
     changeLanguage(selectedLang);
-    sessionStorage.setItem('splash_shown', 'true');
     window.dispatchEvent(new Event('language-selected'));
     navigate('/');
   };
