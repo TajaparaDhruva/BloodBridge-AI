@@ -28,6 +28,7 @@
   --color-darkslate: #1E2937;
 
   --font-family-sans: "Outfit", system-ui, sans-serif;
+  --font-poppins: "Outfit", sans-serif;
   --font-family-mono: "JetBrains Mono", "Fira Code", monospace;
 
   --shadow-xs: 0 1px 2px rgba(0,0,0,0.02);
@@ -41,15 +42,6 @@
   --shadow-glow-red: 0 0 35px rgba(216, 27, 67, 0.25), 0 0 70px rgba(216, 27, 67, 0.08);
   --shadow-glow-blue: 0 0 35px rgba(99, 102, 241, 0.2), 0 0 70px rgba(99, 102, 241, 0.06);
   --shadow-glass: 0 8px 32px rgba(31, 38, 135, 0.03);
-
-  --animate-dash: dash 20s linear infinite;
-  --animate-spin-slow: spin 12s linear infinite;
-
-  @keyframes dash {
-    to {
-      stroke-dashoffset: -1000;
-    }
-  }
 }
 
 @layer base {
@@ -943,4 +935,13 @@ div[style*="radial-gradient"] {
 /* Profile area separator alignment for vertical view */
 aside.glass-floating > div:last-of-type {
   background: transparent !important;
+}
+
+/* Premium startup-style grid background */
+.custom-bg-grid {
+  background-image: radial-gradient(rgba(225, 29, 72, 0.04) 1.2px, transparent 1.2px);
+  background-size: 24px 24px;
+}
+.dark .custom-bg-grid {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.025) 1.2px, transparent 1.2px);
 }

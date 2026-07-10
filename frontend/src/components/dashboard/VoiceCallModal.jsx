@@ -40,11 +40,6 @@ const VOICE_RESPONSES = [
     keywords: ['help', 'madad', 'tum kya karte ho', 'help me', 'मदद'],
     en: "I am your BloodBridge operations voice supervisor. I can call active donors, search for nearby hospitals, or check our current inventory stock. Just tell me what you need!",
     hi: "मैं आपका ब्लडब्रिज वॉइस सुपरवाइजर हूँ। मैं आपके लिए रक्तदाता ढूंढ सकता हूँ, नजदीकी अस्पताल का पता लगा सकता हूँ या स्टॉक चेक कर सकता हूँ। आप मुझे बताएं कि आपको क्या चाहिए।"
-  },
-  {
-    keywords: ['ahmedabad', 'gujarat', 'अहमदाबाद', 'અમદાવાદ', 'ahmedabad hospitals', 'nearest hospital in ahmedabad'],
-    en: "Ah, Ahmedabad! SVP Institute, SAL Hospital, and Zydus Hospital are fully active near you. We also have O-positive and O-negative donors on standby. Should I initiate an emergency callout?",
-    hi: "अहमदाबाद में हमारा नेटवर्क पूरी तरह तैयार है! आपके पास एसवीपी, साल हॉस्पिटल, और जाइडस हॉस्पिटल सक्रिय हैं। शहर में ओ-पॉजिटिव और ओ-नेगेटिव डोनर्स भी स्टैंडबाय पर हैं। क्या मैं उन्हें अलर्ट करूँ?"
   }
 ];
 
@@ -64,30 +59,10 @@ const VoiceCallModal = ({ hospitalName, number, onClose }) => {
   const [textInput, setTextInput] = useState('');
   const [statusMessage, setStatusMessage] = useState('Calling...');
   const [toastMessage, setToastMessage] = useState('');
-  const [userTranscript, setUserTranscript] = useState('');
-  const [operatorSpeech, setOperatorSpeech] = useState('');
 
   const ringToneRef = useRef(null);
   const recognitionRef = useRef(null);
   const durationIntervalRef = useRef(null);
-
-  const callStateRef = useRef(callState);
-  const isMutedRef = useRef(isMuted);
-  const isOnHoldRef = useRef(isOnHold);
-  const isSpeakingRef = useRef(false);
-
-  // Keep refs in sync with state updates
-  useEffect(() => {
-    callStateRef.current = callState;
-  }, [callState]);
-
-  useEffect(() => {
-    isMutedRef.current = isMuted;
-  }, [isMuted]);
-
-  useEffect(() => {
-    isOnHoldRef.current = isOnHold;
-  }, [isOnHold]);
 
   // Trigger a brief screen toast
   const triggerToast = (msg) => {
@@ -173,40 +148,21 @@ const VoiceCallModal = ({ hospitalName, number, onClose }) => {
     
     rec.onresult = (event) => {
       const speechToText = event.results[0][0].transcript;
-      setUserTranscript(speechToText);
       handleUserInput(speechToText);
     };
     
     rec.onerror = (e) => {
       console.log('Speech recognition error:', e.error);
       setIsListening(false);
-      if (callStateRef.current === 'connected' && !isOnHoldRef.current && !isMutedRef.current) {
+      if (callState === 'connected' && !isOnHold && !isMuted) {
         setStatusMessage('Call Active');
-      }
-      
-      // Auto-restart listening instantly
-      if (callStateRef.current === 'connected' && !isMutedRef.current && !isOnHoldRef.current && !isSpeakingRef.current) {
-        setTimeout(() => {
-          if (callStateRef.current === 'connected' && !isMutedRef.current && !isOnHoldRef.current && !isSpeakingRef.current) {
-            startListening();
-          }
-        }, 50);
       }
     };
     
     rec.onend = () => {
       setIsListening(false);
-      if (callStateRef.current === 'connected' && !isOnHoldRef.current && !isMutedRef.current) {
+      if (callState === 'connected' && !isOnHold && !isMuted) {
         setStatusMessage('Call Active');
-      }
-      
-      // Auto-restart listening instantly
-      if (callStateRef.current === 'connected' && !isMutedRef.current && !isOnHoldRef.current && !isSpeakingRef.current) {
-        setTimeout(() => {
-          if (callStateRef.current === 'connected' && !isMutedRef.current && !isOnHoldRef.current && !isSpeakingRef.current) {
-            startListening();
-          }
-        }, 50);
       }
     };
     
@@ -214,7 +170,7 @@ const VoiceCallModal = ({ hospitalName, number, onClose }) => {
   };
 
   const startListening = () => {
-    if (isMutedRef.current || isOnHoldRef.current) return;
+    if (isMuted || isOnHold) return;
     if (window.speechSynthesis) window.speechSynthesis.cancel();
     if (recognitionRef.current) {
       try {
@@ -239,13 +195,6 @@ const VoiceCallModal = ({ hospitalName, number, onClose }) => {
   const speakOutput = (text, isHindi) => {
     if (!('speechSynthesis' in window) || !isSpeakerOn) return;
     
-    // Set states synchronously to avoid microphone capture race conditions
-    isSpeakingRef.current = true;
-    stopListening();
-    setStatusMessage('Operator Speaking...');
-    setOperatorSpeech(text);
-    setUserTranscript('');
-    
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     
@@ -258,16 +207,14 @@ const VoiceCallModal = ({ hospitalName, number, onClose }) => {
     utterance.pitch = 1.05; // Slightly adjusted for clear, friendly human tone
     
     utterance.onstart = () => {
-      isSpeakingRef.current = true;
       stopListening();
       setStatusMessage('Operator Speaking...');
     };
     
     utterance.onend = () => {
-      isSpeakingRef.current = false;
       setStatusMessage('Call Active');
       // Automatically resume listening to create a continuous conversation
-      if (callStateRef.current === 'connected' && !isMutedRef.current && !isOnHoldRef.current) {
+      if (callState === 'connected' && !isMuted && !isOnHold) {
         startListening();
       }
     };
@@ -279,17 +226,11 @@ const VoiceCallModal = ({ hospitalName, number, onClose }) => {
   const handleUserInput = (inputText) => {
     if (!inputText.trim()) return;
     
-    // Detect Language - robust Hinglish & Hindi detection
+    // Detect Language
     const lower = inputText.toLowerCase();
     const hindiRegex = /[\u0900-\u097F]/;
     const isHindiText = hindiRegex.test(inputText) || 
-      [
-        'chahiye', 'kaha', 'karon', 'bhejo', 'bhai', 'dost', 'hai', 'hain', 'madad', 'mil', 
-        'donor', 'hospital', 'stock', 'aabhar', 'shukriya', 'dhanyawad', 'nathi', 'lohe',
-        'aap', 'tum', 'mera', 'ho', 'kya', 'ko', 'se', 'batao', 'suno', 'bol', 'kaise', 
-        'namaste', 'alvida', 'achha', 'theek', 'karo', 'kar', 'raha', 'rahi', 'he', 'ki', 
-        'ka', 'ke', 'aur', 'ya', 'na', 'ne', 'par', 'bhi', 'hi', 'to', 'toh', 'apko', 'tumko'
-      ].some(w => lower.includes(w));
+      ['chahiye', 'kaha', 'karon', 'bhejo', 'bhai', 'dost', 'hai', 'hain', 'madad', 'mil', 'donor', 'hospital', 'stock', 'aabhar', 'shukriya', 'dhanyawad', 'nathi', 'lohe'].some(w => lower.includes(w));
     
     // Find Response
     let match = null;
@@ -311,7 +252,6 @@ const VoiceCallModal = ({ hospitalName, number, onClose }) => {
   const toggleMute = () => {
     const nextMute = !isMuted;
     setIsMuted(nextMute);
-    isMutedRef.current = nextMute;
     if (nextMute) {
       stopListening();
       setStatusMessage('Microphone Muted');
@@ -319,7 +259,7 @@ const VoiceCallModal = ({ hospitalName, number, onClose }) => {
     } else {
       setStatusMessage('Call Active');
       triggerToast('Microphone Unmuted');
-      if (callStateRef.current === 'connected' && !isOnHoldRef.current) {
+      if (callState === 'connected' && !isOnHold) {
         startListening();
       }
     }
@@ -343,7 +283,6 @@ const VoiceCallModal = ({ hospitalName, number, onClose }) => {
   const toggleHold = () => {
     const nextHold = !isOnHold;
     setIsOnHold(nextHold);
-    isOnHoldRef.current = nextHold;
     if (nextHold) {
       stopListening();
       if (window.speechSynthesis) window.speechSynthesis.cancel();
@@ -379,7 +318,6 @@ const VoiceCallModal = ({ hospitalName, number, onClose }) => {
       const ringingTimeout = setTimeout(() => {
         if (ringToneRef.current) ringToneRef.current.stop();
         setCallState('connected');
-        callStateRef.current = 'connected';
         setStatusMessage('Call Active');
         
         // Start duration counter
@@ -511,30 +449,6 @@ const VoiceCallModal = ({ hospitalName, number, onClose }) => {
               </div>
             )}
           </div>
-
-          {/* Live Captioning Feed */}
-          {callState === 'connected' && (
-            <div className="px-4 py-2 w-full text-center space-y-2 mt-4 select-none max-h-24 overflow-y-auto custom-scrollbar">
-              {userTranscript && (
-                <motion.p 
-                  className="text-[11px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/15 p-2.5 rounded-2xl"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                >
-                  " {userTranscript} "
-                </motion.p>
-              )}
-              {operatorSpeech && !userTranscript && (
-                <motion.p 
-                  className="text-[11px] font-semibold text-gray-300 bg-white/05 border border-white/05 p-2.5 rounded-2xl leading-relaxed italic"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                >
-                  {operatorSpeech}
-                </motion.p>
-              )}
-            </div>
-          )}
         </div>
 
         {/* Bottom Control Controls */}

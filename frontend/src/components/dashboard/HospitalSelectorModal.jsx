@@ -4,20 +4,6 @@ import { FiX, FiPhone, FiMapPin } from 'react-icons/fi';
 import { MOCK_HOSPITALS } from '../../data/mockHospitals';
 
 const HospitalSelectorModal = ({ onClose, onSelectCall }) => {
-  // Retrieve selected city name dynamically from localStorage
-  const selectedCityData = localStorage.getItem('user_location');
-  const selectedCityName = selectedCityData 
-    ? JSON.parse(selectedCityData).name.toLowerCase() 
-    : 'ahmedabad';
-
-  // Filter hospitals to show only matches for the selected city
-  const filteredHospitals = MOCK_HOSPITALS.filter(
-    (h) => h.city.toLowerCase() === selectedCityName
-  );
-
-  // Fallback to all hospitals if no matching city data exists
-  const displayHospitals = filteredHospitals.length > 0 ? filteredHospitals : MOCK_HOSPITALS;
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <motion.div
@@ -51,7 +37,7 @@ const HospitalSelectorModal = ({ onClose, onSelectCall }) => {
 
         {/* List */}
         <div className="max-h-[350px] overflow-y-auto p-4 space-y-3">
-          {displayHospitals.map((h) => (
+          {MOCK_HOSPITALS.map((h) => (
             <div
               key={h.id}
               className="flex items-center justify-between p-3.5 rounded-2xl bg-black/02 dark:bg-white/02 border border-black/05 dark:border-white/05 hover:bg-black/04 dark:hover:bg-white/04 transition-colors"

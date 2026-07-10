@@ -99,7 +99,7 @@ const NotificationCenter = ({ isOpen, onClose, notifications, setNotifications }
             )}
 
             {/* Notifications List */}
-            <div className="flex-1 overflow-y-auto p-6 pb-28 flex flex-col gap-5">
+            <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-4">
               {notifications.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center text-gray-400">
                   <div className="w-16 h-16 rounded-full border-2 border-dashed border-gray-200 dark:border-white/10 flex items-center justify-center mb-4">
@@ -116,7 +116,7 @@ const NotificationCenter = ({ isOpen, onClose, notifications, setNotifications }
                       initial={{ opacity: 0, y: 10, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9, x: 20 }}
-                      className={`py-5 px-5.5 rounded-[22px] border flex gap-3.5 transition-all relative group overflow-hidden shadow-sm hover:shadow-md ${getBgColor(notif.type, notif.read)}`}
+                      className={`p-4 rounded-2xl border flex gap-3.5 transition-all relative group overflow-hidden ${getBgColor(notif.type, notif.read)}`}
                     >
                       {/* Read status dot */}
                       {!notif.read && (

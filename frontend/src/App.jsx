@@ -12,17 +12,12 @@ import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
+import HospitalPartnership from './pages/HospitalPartnership';
 import LocationPermissionModal from './components/LocationPermissionModal';
+import { AutoTranslate } from './utils/translator';
 
 // Route helper: redirect to splash if no language selected yet
 const HomeRouteWrapper = () => {
-  const sessionStarted = sessionStorage.getItem('session_started');
-  if (!sessionStarted) {
-    sessionStorage.setItem('session_started', 'true');
-    localStorage.removeItem('language');
-    return <Navigate to="/splash" replace />;
-  }
-
   const isLanguageSelected = localStorage.getItem('language');
   if (!isLanguageSelected) {
     return <Navigate to="/splash" replace />;
@@ -56,25 +51,30 @@ const App = () => {
             <BrowserRouter>
               
               {/* Location permission modal displayed globally if not yet set */}
-              <LocationPermissionModal />
+              <AutoTranslate>
+                <LocationPermissionModal />
+              </AutoTranslate>
 
               <Routes>
                 {/* Home — redirects to splash if no language chosen */}
-                <Route path="/" element={<HomeRouteWrapper />} />
+                <Route path="/" element={<AutoTranslate><HomeRouteWrapper /></AutoTranslate>} />
 
                 {/* Initial onboarding flow */}
-                <Route path="/splash" element={<SplashScreen />} />
-                <Route path="/language-select" element={<LanguageSelect />} />
+                <Route path="/splash" element={<AutoTranslate><SplashScreen /></AutoTranslate>} />
+                <Route path="/language-select" element={<AutoTranslate><LanguageSelect /></AutoTranslate>} />
 
                 {/* Auth */}
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
+                <Route path="/login" element={<AutoTranslate><Login /></AutoTranslate>} />
+                <Route path="/signup" element={<AutoTranslate><Signup /></AutoTranslate>} />
+
+                {/* Public pages */}
+                <Route path="/hospital-partnership" element={<AutoTranslate><HospitalPartnership /></AutoTranslate>} />
 
                 {/* Dashboard */}
-                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/dashboard" element={<AutoTranslate><Dashboard /></AutoTranslate>} />
 
                 {/* 404 Fallback */}
-                <Route path="*" element={<NotFound />} />
+                <Route path="*" element={<AutoTranslate><NotFound /></AutoTranslate>} />
               </Routes>
             </BrowserRouter>
           </AuthProvider>

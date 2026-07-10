@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Profile = require('../models/Profile');
+const Donor = require('../models/Donor');
+const Hospital = require('../models/Hospital');
 const { JWT_SECRET, JWT_EXPIRES_IN } = require('../config/env');
 const { sendSuccess, sendError } = require('../utils/helpers');
 
@@ -16,7 +18,25 @@ const signToken = (id) => {
  */
 const signup = async (req, res, next) => {
   try {
-    const { name, email, password, role } = req.body;
+    const {
+      name,
+      email,
+      password,
+      role,
+      phone,
+      city,
+      bloodGroup,
+      gender,
+      age,
+      weight,
+      lastDonation,
+      hospitalName,
+      license,
+      coordinator,
+      address,
+      capacity,
+      emergencyReady
+    } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -25,8 +45,89 @@ const signup = async (req, res, next) => {
 
     const user = await User.create({ name, email, password, role });
 
-    // Initialize an empty profile for this user
-    await Profile.create({ user: user._id });
+    try {
+      // Initialize an empty profile for this user
+      await Profile.create({ user: user._id });
+
+      // Create Donor or Hospital document depending on the role
+      if (role === 'donor') {
+        const cityToState = {
+          'mumbai': 'Maharashtra',
+          'pune': 'Maharashtra',
+          'ahmedabad': 'Gujarat',
+          'surat': 'Gujarat',
+          'delhi': 'Delhi',
+          'bangalore': 'Karnataka',
+          'hyderabad': 'Telangana',
+          'chennai': 'Tamil Nadu',
+          'kolkata': 'West Bengal',
+          'jaipur': 'Rajasthan'
+        };
+        const normalizedCity = (city || 'Mumbai').trim().toLowerCase();
+        const state = cityToState[normalizedCity] || 'Maharashtra';
+
+        await Donor.create({
+          user: user._id,
+          name: name || 'Anonymous Donor',
+          bloodGroup: bloodGroup || 'O+',
+          age: age ? Number(age) : 25,
+          weight: weight ? Number(weight) : 65,
+          gender: (gender || 'male').toLowerCase(),
+          contact: phone || '0000000000',
+          city: city || 'Mumbai',
+          state: state,
+          lastDonationDate: lastDonation ? new Date(lastDonation) : null,
+          isEligible: true,
+          isAvailable: true,
+          isVerified: false,
+          location: {
+            type: 'Point',
+            coordinates: [72.8777, 19.0760] // Default Mumbai coordinates [lng, lat]
+          }
+        });
+      } else if (role === 'hospital') {
+        const cityToState = {
+          'mumbai': 'Maharashtra',
+          'pune': 'Maharashtra',
+          'ahmedabad': 'Gujarat',
+          'surat': 'Gujarat',
+          'delhi': 'Delhi',
+          'bangalore': 'Karnataka',
+          'hyderabad': 'Telangana',
+          'chennai': 'Tamil Nadu',
+          'kolkata': 'West Bengal',
+          'jaipur': 'Rajasthan'
+        };
+        const normalizedCity = (city || 'Mumbai').trim().toLowerCase();
+        const state = cityToState[normalizedCity] || 'Maharashtra';
+
+        await Hospital.create({
+          user: user._id,
+          name: hospitalName || name || 'General Hospital',
+          registrationNumber: license || `HOSP-${Date.now()}`,
+          type: 'private',
+          contact: phone || '0000000000',
+          email: email,
+          address: address || '123 Hospital Street',
+          city: city || 'Mumbai',
+          state: state,
+          pincode: '400001', // Default pincode
+          location: {
+            type: 'Point',
+            coordinates: [72.8777, 19.0760] // Default Mumbai coordinates [lng, lat]
+          },
+          isVerified: true,
+          isActive: true,
+          emergencyContact: phone || '0000000000',
+          bedsCapacity: capacity ? Number(capacity) : 100,
+          hasBloodBank: true
+        });
+      }
+    } catch (creationError) {
+      // Rollback: delete the created user if subsequent profile/donor/hospital creation fails
+      await User.findByIdAndDelete(user._id);
+      throw creationError;
+    }
 
     const token = signToken(user._id);
 

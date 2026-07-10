@@ -1,8 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { activityTimeline } from '../components/dashboard/shared';
 import authService from '../services/authService';
-import donorService from '../services/donorService';
-import hospitalService from '../services/hospitalService';
 
 const AuthContext = createContext();
 
@@ -84,18 +82,128 @@ const initialInventory = [
   { group: 'AB-', units: 3, status: 'critical' }
 ];
 
+// ── Subscription helpers ─────────────────────────────────────────────────────
+const getSubKey = (email) => `bb_subscription_${email}`;
+
+const createInitialSubscription = () => {
+  const now = new Date();
+  const trialEnd = new Date(now);
+  trialEnd.setDate(trialEnd.getDate() + 7);
+  return {
+    plan: 'free_trial',
+    status: 'active',
+    trialStart: now.toISOString(),
+    trialEnd: trialEnd.toISOString(),
+    renewalDate: trialEnd.toISOString(),
+    paymentMethod: null,
+    autoRenew: true,
+    invoices: [],
+    coupons: [],
+    planHistory: [{ plan: 'free_trial', date: now.toISOString(), amount: 0 }]
+  };
+};
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('auth_user');
-    const token = localStorage.getItem('token');
-    if (!token || token === 'mock-jwt-token-12345') {
-      localStorage.removeItem('auth_user');
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      return null;
-    }
+    const saved = localStorage.getItem('auth_user') || localStorage.getItem('user');
     return saved ? JSON.parse(saved) : null;
   });
+
+  // ── Subscription State ──────────────────────────────────────────────────────
+  const [subscription, setSubscription] = useState(() => {
+    const savedUser = localStorage.getItem('auth_user') || localStorage.getItem('user');
+    if (!savedUser) return null;
+    const u = JSON.parse(savedUser);
+    if (u?.role !== 'hospital') return null;
+    const key = getSubKey(u.email);
+    const saved = localStorage.getItem(key);
+    if (saved) return JSON.parse(saved);
+    const fresh = createInitialSubscription();
+    localStorage.setItem(key, JSON.stringify(fresh));
+    return fresh;
+  });
+
+  // Persist subscription whenever it changes
+  useEffect(() => {
+    if (subscription && user?.email) {
+      localStorage.setItem(getSubKey(user.email), JSON.stringify(subscription));
+    }
+  }, [subscription, user?.email]);
+
+  // Initialise / load subscription when user changes
+  useEffect(() => {
+    if (user?.role === 'hospital') {
+      const key = getSubKey(user.email);
+      const saved = localStorage.getItem(key);
+      if (saved) {
+        setSubscription(JSON.parse(saved));
+      } else {
+        const fresh = createInitialSubscription();
+        localStorage.setItem(key, JSON.stringify(fresh));
+        setSubscription(fresh);
+      }
+    } else {
+      setSubscription(null);
+    }
+  }, [user?.email, user?.role]);
+
+  // Computed helpers
+  const isTrialExpired = () => {
+    if (!subscription) return false;
+    if (subscription.plan !== 'free_trial') return false;
+    return new Date() > new Date(subscription.trialEnd);
+  };
+
+  const daysRemaining = () => {
+    if (!subscription) return 0;
+    const end = new Date(subscription.trialEnd);
+    const diff = Math.ceil((end - new Date()) / (1000 * 60 * 60 * 24));
+    return Math.max(0, diff);
+  };
+
+  const upgradePlan = (newPlan) => {
+    const now = new Date();
+    const renewal = new Date(now);
+    renewal.setMonth(renewal.getMonth() + 1);
+    const amount = newPlan === 'enterprise' ? 7999 : 2999;
+    const invoice = {
+      id: `INV-${Date.now()}`,
+      date: now.toISOString(),
+      plan: newPlan,
+      amount,
+      status: 'paid',
+      currency: 'INR'
+    };
+    setSubscription(prev => ({
+      ...prev,
+      plan: newPlan,
+      status: 'active',
+      renewalDate: renewal.toISOString(),
+      invoices: [invoice, ...(prev?.invoices || [])],
+      planHistory: [
+        { plan: newPlan, date: now.toISOString(), amount },
+        ...(prev?.planHistory || [])
+      ]
+    }));
+  };
+
+  const cancelSubscription = () => {
+    setSubscription(prev => ({ ...prev, status: 'cancelled', autoRenew: false }));
+  };
+
+  const reactivateSubscription = () => {
+    setSubscription(prev => ({ ...prev, status: 'active', autoRenew: true }));
+  };
+
+  const simulateTrialExpiry = () => {
+    const past = new Date();
+    past.setDate(past.getDate() - 1);
+    setSubscription(prev => ({ ...prev, plan: 'free_trial', trialEnd: past.toISOString(), status: 'expired' }));
+  };
+
+  const addPaymentMethod = (method) => {
+    setSubscription(prev => ({ ...prev, paymentMethod: method }));
+  };
 
   const [requests, setRequests] = useState(() => {
     const saved = localStorage.getItem('requests');
@@ -216,7 +324,7 @@ export const AuthProvider = ({ children }) => {
         }
         return { ...item, time: timeStr };
       }));
-    }, 1500);
+    }, 60 * 1000);
     return () => clearInterval(interval);
   }, []);
 
@@ -328,13 +436,14 @@ export const AuthProvider = ({ children }) => {
           return donor;
         }));
       }
-    }, 1500);
+    }, 20 * 1000);
+
     return () => clearInterval(interval);
   }, []);
 
+  // --- DEPRECATED MOCK AUTH LOGIC ---
   /*
-  // DEPRECATED: Mock Auth Logic
-  const loginMock = ({ email, password, role }) => {
+  const loginMock = (email, password, role) => {
     let userDetails = {
       email,
       name: role === 'hospital' ? 'Metro Critical Care' : role === 'donor' ? 'Rajesh Kumar' : 'System Admin Office',
@@ -346,7 +455,7 @@ export const AuthProvider = ({ children }) => {
     return true;
   };
 
-  const signupMock = ({ name, email, password, role }) => {
+  const signupMock = (name, email, password, role) => {
     let userDetails = {
       email,
       name,
@@ -363,110 +472,78 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('auth_user');
   };
   */
+  // ----------------------------------
 
-  const login = async ({ email, password, role }) => {
+  // Live session check on mount
+  useEffect(() => {
+    const checkSession = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const res = await authService.getProfile();
+          if (res.success && res.data) {
+            const userObj = res.data.user || res.data;
+            setUser(userObj);
+            localStorage.setItem('auth_user', JSON.stringify(userObj));
+            localStorage.setItem('user', JSON.stringify(userObj));
+          }
+        } catch (err) {
+          console.error('Session validation error:', err);
+          if (err.response && err.response.status === 401) {
+            setUser(null);
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            localStorage.removeItem('auth_user');
+          }
+        }
+      }
+    };
+    checkSession();
+  }, []);
+
+  const login = async (emailOrCredentials, password, role) => {
     try {
-      const response = await authService.login({ email, password });
-      if (response.success) {
-        const userObj = response.data.user;
+      let credentials;
+      if (typeof emailOrCredentials === 'object' && emailOrCredentials !== null) {
+        credentials = emailOrCredentials;
+      } else {
+        credentials = { email: emailOrCredentials, password, role };
+      }
+
+      const res = await authService.login(credentials);
+      if (res.success && res.data) {
+        const userObj = res.data.user;
         setUser(userObj);
         localStorage.setItem('auth_user', JSON.stringify(userObj));
+        localStorage.setItem('user', JSON.stringify(userObj));
+        if (res.data.token) {
+          localStorage.setItem('token', res.data.token);
+        }
         return true;
       }
-      throw new Error(response.message || 'Invalid credentials');
+      throw new Error(res.message || 'Login failed');
     } catch (err) {
-      console.error("Login attempt failed, checking if it is a demo account:", err);
-      if (email.endsWith('@demo.com') && password === 'demo123') {
-        const demoRole = email.split('@')[0];
-        const name = demoRole === 'hospital' ? 'Metro Critical Care' : demoRole === 'donor' ? 'Rajesh Kumar' : 'System Admin Office';
-        const signupPayload = {
-          name,
-          email,
-          password,
-          role: demoRole,
-          phone: '+91 99999 99999',
-          city: 'Mumbai',
-          state: 'Maharashtra',
-          bloodGroup: 'O-',
-          age: '29',
-          weight: '74',
-          hospitalName: 'Metro Critical Care',
-          license: 'HOSP123456',
-          capacity: '120',
-          emergencyReady: true
-        };
-        await signup(signupPayload);
-        return true;
-      }
+      console.error('Login request failed:', err);
       throw err;
     }
   };
 
   const signup = async (payload) => {
-    const { name, email, password, role } = payload;
     try {
-      const response = await authService.signup({
-        name: role === 'hospital' ? payload.hospitalName : name,
-        email,
-        password,
-        role
-      });
-      
-      if (!response.success) {
-        throw new Error(response.message || 'Registration failed');
+      const res = await authService.signup(payload);
+      if (res.success && res.data) {
+        const userObj = res.data.user;
+        setUser(userObj);
+        localStorage.setItem('auth_user', JSON.stringify(userObj));
+        localStorage.setItem('user', JSON.stringify(userObj));
+        if (res.data.token) {
+          localStorage.setItem('token', res.data.token);
+        }
+        return true;
       }
-
-      const userObj = response.data.user;
-      
-      if (role === 'donor') {
-        const donorData = {
-          bloodGroup: payload.bloodGroup,
-          age: parseInt(payload.age, 10),
-          weight: parseInt(payload.weight, 10),
-          gender: payload.gender ? payload.gender.toLowerCase() : 'male',
-          contact: payload.phone || '+91 99999 99999',
-          city: payload.city || 'Mumbai',
-          state: payload.state || 'Gujarat',
-          lastDonationDate: payload.lastDonation || null,
-          medicalConditions: []
-        };
-        await donorService.registerDonor(donorData);
-        
-        const newLocalDonor = {
-          id: `DON-${donors.length + 1}`,
-          name: name,
-          bloodGroup: payload.bloodGroup,
-          age: parseInt(payload.age, 10),
-          weight: parseInt(payload.weight, 10),
-          lastDonation: payload.lastDonation || '',
-          city: payload.city || 'Mumbai',
-          contact: payload.phone || '+91 99999 99999',
-          verified: true,
-          eligibility: 'eligible'
-        };
-        setDonors(prev => [newLocalDonor, ...prev]);
-      } else if (role === 'hospital') {
-        const hospitalData = {
-          name: payload.hospitalName,
-          registrationNumber: payload.license || `LIC-${Date.now()}`,
-          type: 'private',
-          contact: payload.phone || '+91 99999 99999',
-          email: payload.email,
-          address: payload.address || 'Ahmedabad',
-          city: payload.city || 'Ahmedabad',
-          state: 'Gujarat',
-          pincode: '380001',
-          bedsCapacity: parseInt(payload.capacity, 10) || 0,
-          hasBloodBank: payload.emergencyReady || false
-        };
-        await hospitalService.registerHospital(hospitalData);
-      }
-
-      setUser(userObj);
-      localStorage.setItem('auth_user', JSON.stringify(userObj));
-      return true;
+      throw new Error(res.message || 'Signup failed');
     } catch (err) {
-      console.error("Signup failed:", err);
+      console.error('Signup request failed:', err);
       throw err;
     }
   };
@@ -475,12 +552,12 @@ export const AuthProvider = ({ children }) => {
     try {
       await authService.logout();
     } catch (err) {
-      console.error("Backend logout failed:", err);
+      console.error('Logout request error:', err);
     } finally {
       setUser(null);
       localStorage.removeItem('auth_user');
-      localStorage.removeItem('token');
       localStorage.removeItem('user');
+      localStorage.removeItem('token');
     }
   };
 
@@ -498,7 +575,8 @@ export const AuthProvider = ({ children }) => {
       timestamp: Date.now(),
       matchTime: 'AI Calculating...',
       donorsContacted: Math.floor(Math.random() * 30) + 10,
-      donorName: null
+      donorName: null,
+      isManual: true
     };
 
     setRequests(prev => [newReq, ...prev]);
@@ -612,11 +690,21 @@ export const AuthProvider = ({ children }) => {
       timeline,
       login,
       signup,
+      register: signup,
       logout,
       createRequest,
       registerDonor,
       updateRequestStatus,
-      setNotifications
+      setNotifications,
+      // Subscription
+      subscription,
+      isTrialExpired,
+      daysRemaining,
+      upgradePlan,
+      cancelSubscription,
+      reactivateSubscription,
+      simulateTrialExpiry,
+      addPaymentMethod
     }}>
       {children}
     </AuthContext.Provider>

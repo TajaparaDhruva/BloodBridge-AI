@@ -1,19 +1,4 @@
 // Extended donor dataset with AI matching fields
-const getCenterCoords = () => {
-  if (typeof localStorage !== 'undefined') {
-    try {
-      const saved = localStorage.getItem('user_location');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed && parsed.lat && parsed.lng) {
-          return { lat: parsed.lat, lng: parsed.lng };
-        }
-      }
-    } catch (e) {}
-  }
-  return { lat: 19.076, lng: 72.877 }; // fallback center (Mumbai)
-};
-
 export const NEARBY_DONORS = [
   {
     id: 'ND-001',
@@ -36,10 +21,7 @@ export const NEARBY_DONORS = [
     eligibility: 'eligible',
     totalDonations: 8,
     badges: ['Super Donor', 'Rapid Responder'],
-    get coordinates() {
-      const center = getCenterCoords();
-      return { lat: center.lat - 0.004, lng: center.lng - 0.007 };
-    },
+    coordinates: { lat: 19.072, lng: 72.870 },
   },
   {
     id: 'ND-002',
@@ -62,10 +44,7 @@ export const NEARBY_DONORS = [
     eligibility: 'eligible',
     totalDonations: 5,
     badges: ['Verified Donor'],
-    get coordinates() {
-      const center = getCenterCoords();
-      return { lat: center.lat + 0.006, lng: center.lng + 0.004 };
-    },
+    coordinates: { lat: 19.082, lng: 72.881 },
   },
   {
     id: 'ND-003',
@@ -88,10 +67,7 @@ export const NEARBY_DONORS = [
     eligibility: 'eligible',
     totalDonations: 12,
     badges: ['Regular Donor', 'Hero'],
-    get coordinates() {
-      const center = getCenterCoords();
-      return { lat: center.lat + 0.015, lng: center.lng - 0.019 };
-    },
+    coordinates: { lat: 19.091, lng: 72.858 },
   },
   {
     id: 'ND-004',
@@ -114,10 +90,7 @@ export const NEARBY_DONORS = [
     eligibility: 'eligible',
     totalDonations: 6,
     badges: ['Verified Donor', 'Fast Responder'],
-    get coordinates() {
-      const center = getCenterCoords();
-      return { lat: center.lat - 0.010, lng: center.lng - 0.012 };
-    },
+    coordinates: { lat: 19.066, lng: 72.865 },
   },
   {
     id: 'ND-005',
@@ -140,10 +113,7 @@ export const NEARBY_DONORS = [
     eligibility: 'temporary_ineligible',
     totalDonations: 9,
     badges: ['Regular Donor'],
-    get coordinates() {
-      const center = getCenterCoords();
-      return { lat: center.lat + 0.024, lng: center.lng + 0.013 };
-    },
+    coordinates: { lat: 19.100, lng: 72.890 },
   },
   {
     id: 'ND-006',
@@ -166,10 +136,7 @@ export const NEARBY_DONORS = [
     eligibility: 'eligible',
     totalDonations: 3,
     badges: ['New Donor'],
-    get coordinates() {
-      const center = getCenterCoords();
-      return { lat: center.lat - 0.021, lng: center.lng - 0.034 };
-    },
+    coordinates: { lat: 19.055, lng: 72.843 },
   },
   {
     id: 'ND-007',
@@ -192,10 +159,7 @@ export const NEARBY_DONORS = [
     eligibility: 'eligible',
     totalDonations: 18,
     badges: ['Lifetime Donor', 'Super Hero'],
-    get coordinates() {
-      const center = getCenterCoords();
-      return { lat: center.lat - 0.036, lng: center.lng - 0.017 };
-    },
+    coordinates: { lat: 19.040, lng: 72.860 },
   },
   {
     id: 'ND-008',
@@ -218,10 +182,7 @@ export const NEARBY_DONORS = [
     eligibility: 'eligible',
     totalDonations: 2,
     badges: ['New Donor'],
-    get coordinates() {
-      const center = getCenterCoords();
-      return { lat: center.lat + 0.036, lng: center.lng + 0.022 };
-    },
+    coordinates: { lat: 19.112, lng: 72.899 },
   },
 ];
 

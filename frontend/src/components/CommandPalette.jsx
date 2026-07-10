@@ -13,6 +13,7 @@ const QUICK_ACTIONS = [
   { label: 'Blood Inventory', icon: '🩸', action: 'inventory', category: 'Navigation' },
   { label: 'Donor Network', icon: '👥', action: 'donors', category: 'Navigation' },
   { label: 'AI Emergency Map', icon: '🗺️', action: 'map', category: 'Navigation' },
+  { label: 'Operations Tasks', icon: '📋', action: 'tasks', category: 'Navigation' },
   { label: 'AI Insights', icon: '🤖', action: 'ai', category: 'Navigation' },
 ];
 

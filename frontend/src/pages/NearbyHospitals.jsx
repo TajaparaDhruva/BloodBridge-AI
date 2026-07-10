@@ -121,63 +121,20 @@ const NearbyHospitals = ({ onCall }) => {
       group.addLayer(marker);
     });
 
-    // Draw route line to selected hospital if active
-    if (selectedHospital) {
-      const routePoints = [
-        [centerLat, centerLng],
-        [selectedHospital.coordinates.lat, selectedHospital.coordinates.lng]
-      ];
-      
-      const routeLine = window.L.polyline(routePoints, {
-        color: '#E11D48', // rose-600 / bloodred
-        weight: 4,
-        opacity: 0.85,
-        dashArray: '6, 8', // elegant dashed routing line
-        lineJoin: 'round'
-      });
-      
-      group.addLayer(routeLine);
-    }
-
   }, [filteredHospitals, selectedHospital, centerLat, centerLng]);
 
   // 3. Pan to selected hospital coordinate
   useEffect(() => {
     const map = mapInstanceRef.current;
     if (!map || !selectedHospital) return;
-    // Only fly to if we are not fitting bounds from directions click
-    // checking if map bounds already contain both center and hospital to prevent override
-    const routePoints = [
-      [centerLat, centerLng],
-      [selectedHospital.coordinates.lat, selectedHospital.coordinates.lng]
-    ];
-    const bounds = window.L.latLngBounds(routePoints);
-    const currentBounds = map.getBounds();
-    if (currentBounds && currentBounds.contains(bounds)) {
-      // already showing route, don't fly to single point
-      return;
-    }
-    
     map.flyTo([selectedHospital.coordinates.lat, selectedHospital.coordinates.lng], 14, {
       animate: true,
       duration: 1.5
     });
-  }, [selectedHospital, centerLat, centerLng]);
+  }, [selectedHospital]);
 
   const handleDirections = (h) => {
-    if (!h || !h.coordinates) return;
-    setSelectedHospital(h);
-    const map = mapInstanceRef.current;
-    if (map && window.L) {
-      const routePoints = [
-        [centerLat, centerLng],
-        [h.coordinates.lat, h.coordinates.lng]
-      ];
-      const bounds = window.L.latLngBounds(routePoints);
-      setTimeout(() => {
-        map.fitBounds(bounds, { padding: [40, 40], animate: true, duration: 1.2 });
-      }, 100);
-    }
+    alert(`Generating dynamic AI routing instructions to ${h.name}...\nAddress: ${h.address}\nETA: ${h.eta}`);
   };
 
   return (
@@ -369,6 +326,20 @@ const NearbyHospitals = ({ onCall }) => {
                           title="Get Directions"
                         >
                           <FiNavigation className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (onCall) {
+                              onCall(h);
+                            } else {
+                              window.location.href = `tel:${h.contact}`;
+                            }
+                          }}
+                          className="p-2 rounded-xl border border-gray-200 dark:border-white/10 hover:bg-gray-105 dark:hover:bg-white/5 text-gray-500 dark:text-gray-400 transition-colors cursor-pointer"
+                          title="Call Hospital"
+                        >
+                          <FiPhone className="w-3.5 h-3.5" />
                         </button>
                       </div>
                     </div>
