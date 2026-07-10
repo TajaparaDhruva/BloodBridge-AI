@@ -4,4 +4,4 @@ BloodBridge is an AI-powered blood donation platform for connecting donors, hosp
 
 ## Project Structure
 - backend: Node.js/Express API services
-- frontend: React/Vite client application
+- frontend: React/Vite client application..
