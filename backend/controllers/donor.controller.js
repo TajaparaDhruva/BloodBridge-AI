@@ -146,10 +146,26 @@ const deleteDonor = async (req, res, next) => {
   }
 };
 
+/**
+ * Get own donor profile
+ */
+const getDonorMe = async (req, res, next) => {
+  try {
+    const donor = await Donor.findOne({ user: req.user._id }).populate('user');
+    if (!donor) {
+      return sendError(res, 'Donor profile not found for this user', 404);
+    }
+    return sendSuccess(res, donor, 'Own donor profile retrieved');
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   registerDonor,
   getDonors,
   getDonorById,
   updateDonor,
   deleteDonor,
+  getDonorMe,
 };

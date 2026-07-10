@@ -143,8 +143,51 @@ const updateRequestStatus = async (req, res, next) => {
   }
 };
 
+/**
+ * Get single blood request by ID
+ */
+const getRequestById = async (req, res, next) => {
+  try {
+    const request = await BloodRequest.findById(req.params.id)
+      .populate({ path: 'hospital', select: 'name contact address city state pincode' })
+      .populate({ path: 'requestedBy', select: 'name email' });
+    
+    if (!request) {
+      return sendError(res, 'Blood request not found', 404);
+    }
+    return sendSuccess(res, request, 'Blood request retrieved');
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * Delete a blood request
+ */
+const deleteRequest = async (req, res, next) => {
+  try {
+    const request = await BloodRequest.findById(req.params.id);
+    if (!request) {
+      return sendError(res, 'Blood request not found', 404);
+    }
+
+    // Verify hospital owner or admin permissions
+    const hospital = await Hospital.findOne({ user: req.user._id });
+    if (req.user.role !== 'admin' && (!hospital || request.hospital.toString() !== hospital._id.toString())) {
+      return sendError(res, 'Unauthorized to delete this request', 403);
+    }
+
+    await BloodRequest.findByIdAndDelete(req.params.id);
+    return sendSuccess(res, {}, 'Blood request deleted successfully');
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   createRequest,
   getRequests,
   updateRequestStatus,
+  getRequestById,
+  deleteRequest,
 };
