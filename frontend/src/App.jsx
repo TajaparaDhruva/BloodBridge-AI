@@ -13,7 +13,6 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import HospitalPartnership from './pages/HospitalPartnership';
-import LocationPermissionModal from './components/LocationPermissionModal';
 import { AutoTranslate } from './utils/translator';
 
 // Route helper: redirect to splash if no language selected yet
@@ -50,11 +49,6 @@ const App = () => {
           <AuthProvider>
             <BrowserRouter>
               
-              {/* Location permission modal displayed globally if not yet set */}
-              <AutoTranslate>
-                <LocationPermissionModal />
-              </AutoTranslate>
-
               <Routes>
                 {/* Home — redirects to splash if no language chosen */}
                 <Route path="/" element={<AutoTranslate><HomeRouteWrapper /></AutoTranslate>} />

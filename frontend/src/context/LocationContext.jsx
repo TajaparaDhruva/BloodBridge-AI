@@ -20,23 +20,7 @@ export const LocationProvider = ({ children }) => {
 
   // Check if we need to show the location modal on mount
   // Only show after language has been selected (i.e. onboarding is complete)
-  useEffect(() => {
-    if (!userLocation && localStorage.getItem('language')) {
-      // Show modal after a short delay for UX
-      const timer = setTimeout(() => setShowLocationModal(true), 800);
-      return () => clearTimeout(timer);
-    }
-
-    // Also listen for the custom event fired when language is selected
-    const handleLanguageSelected = () => {
-      if (!userLocation) {
-        const timer = setTimeout(() => setShowLocationModal(true), 800);
-        return () => clearTimeout(timer);
-      }
-    };
-    window.addEventListener('language-selected', handleLanguageSelected);
-    return () => window.removeEventListener('language-selected', handleLanguageSelected);
-  }, [userLocation]);
+  // (Auto-trigger removed as per request to disable automatic location prompt)
 
   const saveLocation = useCallback((cityObj) => {
     setUserLocation(cityObj);

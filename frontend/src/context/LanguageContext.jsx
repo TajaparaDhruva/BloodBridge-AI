@@ -21,7 +21,6 @@ export const LanguageProvider = ({ children }) => {
     i18n.changeLanguage(langCode);
     localStorage.setItem('language', langCode);
     setCurrentLanguage(langCode);
-    window.location.reload();
   };
 
   return (

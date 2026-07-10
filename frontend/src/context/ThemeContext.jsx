@@ -4,7 +4,7 @@ const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => {
-    const savedTheme = localStorage.getItem('theme');
+    const savedTheme = localStorage.getItem('bloodbridge_theme_preference');
     if (savedTheme) return savedTheme;
     return 'light';
   });
@@ -16,7 +16,7 @@ export const ThemeProvider = ({ children }) => {
     } else {
       root.classList.remove('dark');
     }
-    localStorage.setItem('theme', theme);
+    localStorage.setItem('bloodbridge_theme_preference', theme);
   }, [theme]);
 
   const toggleTheme = () => {
