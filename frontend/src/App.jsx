@@ -16,10 +16,10 @@ import HospitalPartnership from './pages/HospitalPartnership';
 import LocationPermissionModal from './components/LocationPermissionModal';
 import { AutoTranslate } from './utils/translator';
 
-// Route helper: redirect to splash if no language selected yet
+// Route helper: redirect to splash on a new session load
 const HomeRouteWrapper = () => {
-  const isLanguageSelected = localStorage.getItem('language');
-  if (!isLanguageSelected) {
+  const isSplashShown = sessionStorage.getItem('splash_shown');
+  if (!isSplashShown) {
     return <Navigate to="/splash" replace />;
   }
   return <LandingPage />;
