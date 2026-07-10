@@ -131,11 +131,12 @@ const signup = async (req, res, next) => {
 
     const token = signToken(user._id);
 
-    // Set cookie
+    // Set cookie — use sameSite: 'none' for cross-origin (Netlify → Render)
+    const isProd = process.env.NODE_ENV === 'production';
     res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'strict',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
@@ -166,11 +167,12 @@ const login = async (req, res, next) => {
 
     const token = signToken(user._id);
 
-    // Set cookie
+    // Set cookie — use sameSite: 'none' for cross-origin (Netlify → Render)
+    const isProdLogin = process.env.NODE_ENV === 'production';
     res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      secure: isProdLogin,
+      sameSite: isProdLogin ? 'none' : 'strict',
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
