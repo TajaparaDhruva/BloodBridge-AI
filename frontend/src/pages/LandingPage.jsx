@@ -587,25 +587,25 @@ const LandingPage = () => {
 
             {/* Text */}
             <motion.div variants={fadeInUp} className="lg:col-span-5 text-left">
-              <span className="text-xs font-bold text-bloodred tracking-widest uppercase mb-3 block">SaaS Panel</span>
+              <span className="text-xs font-bold text-bloodred tracking-widest uppercase mb-3 block">{t('landing.saas.tag', 'SaaS Panel')}</span>
               <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-6">
-                Premium Panels Built for Hospitals & Donors
+                {t('landing.saas.title', 'Premium Panels Built for Hospitals & Donors')}
               </h2>
               <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-8">
-                Hospitals gain access to full donor availability timelines, live dispatcher maps, and predictive inventory warnings. Donors enjoy scheduling portals, medical eligibility tests, and digital badge metrics.
+                {t('landing.saas.desc', 'Hospitals gain access to full donor availability timelines, live dispatcher maps, and predictive inventory warnings. Donors enjoy scheduling portals, medical eligibility tests, and digital badge metrics.')}
               </p>
               <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-3">
                   <FiCheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0" />
-                  <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Live coordinates matching within 10km radius</span>
+                  <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">{t('landing.saas.feat1', 'Live coordinates matching within 10km radius')}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <FiCheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0" />
-                  <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">One-click scheduling with partner clinics</span>
+                  <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">{t('landing.saas.feat2', 'One-click scheduling with partner clinics')}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <FiCheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0" />
-                  <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Predictive replenishment queues powered by AI</span>
+                  <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">{t('landing.saas.feat3', 'Predictive replenishment queues powered by AI')}</span>
                 </div>
               </div>
               <div className="mt-10">
@@ -613,7 +613,7 @@ const LandingPage = () => {
                   to="/login"
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold bg-bloodred text-white hover:bg-crimson hover:scale-102 transition-all duration-300"
                 >
-                  Explore Dashboard Panel
+                  {t('landing.saas.cta', 'Explore Dashboard Panel')}
                   <FiChevronRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -633,36 +633,36 @@ const LandingPage = () => {
                 <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-4 mb-5">
                   <div className="flex items-center gap-2">
                     <span className="w-3 h-3 rounded-full bg-bloodred animate-pulse"></span>
-                    <span className="font-extrabold text-sm text-gray-800 dark:text-white">Metro Clinic Admin</span>
+                    <span className="font-extrabold text-sm text-gray-800 dark:text-white">{t('landing.saas.mockTitle', 'Metro Clinic Admin')}</span>
                   </div>
                   <div className="flex gap-2">
-                    <span className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-500 font-semibold text-[10px] uppercase">Critical stock</span>
-                    <span className="px-2 py-0.5 rounded bg-bloodred/10 text-bloodred font-semibold text-[10px] uppercase">Active Alerts</span>
+                    <span className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-500 font-semibold text-[10px] uppercase">{t('landing.saas.mockCritical', 'Critical stock')}</span>
+                    <span className="px-2 py-0.5 rounded bg-bloodred/10 text-bloodred font-semibold text-[10px] uppercase">{t('landing.saas.mockActiveAlerts', 'Active Alerts')}</span>
                   </div>
                 </div>
 
                 {/* Mock Widgets Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
                   <motion.div whileHover={{ scale: 1.02 }} className="border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-slate-800/40 p-4 rounded-2xl text-left transition-colors">
-                    <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Total Donors Match</span>
+                    <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">{t('landing.saas.mockTotalDonors', 'Total Donors Match')}</span>
                     <h4 className="text-2xl font-extrabold text-gray-900 dark:text-white mt-1">456</h4>
-                    <span className="text-[10px] text-emerald-500 font-semibold mt-1 block">↑ 12% this week</span>
+                    <span className="text-[10px] text-emerald-500 font-semibold mt-1 block">{t('landing.saas.mockWeeklyIncrease', '↑ 12% this week')}</span>
                   </motion.div>
                   <motion.div whileHover={{ scale: 1.02 }} className="border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-slate-800/40 p-4 rounded-2xl text-left transition-colors">
                     <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Active Alerts</span>
-                    <h4 className="text-2xl font-extrabold text-bloodred mt-1">3 Pending</h4>
+                    <h4 className="text-2xl font-extrabold text-bloodred mt-1">3 {t('common.status', 'Pending')}</h4>
                     <span className="text-[10px] text-gray-400 mt-1 block">A-, O-, AB-</span>
                   </motion.div>
                   <motion.div whileHover={{ scale: 1.02 }} className="border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-slate-800/40 p-4 rounded-2xl text-left transition-colors">
-                    <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Match Success</span>
+                    <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">{t('landing.saas.mockSuccess', 'Match Success')}</span>
                     <h4 className="text-2xl font-extrabold text-gray-900 dark:text-white mt-1">98.4%</h4>
-                    <span className="text-[10px] text-emerald-500 font-semibold mt-1 block">Highly stable</span>
+                    <span className="text-[10px] text-emerald-500 font-semibold mt-1 block">{t('landing.saas.mockStable', 'Highly stable')}</span>
                   </motion.div>
                 </div>
 
                 {/* Mock Chart Area */}
                 <div className="border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-slate-800/40 p-4 rounded-2xl text-left mb-4">
-                  <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-3 block">Replenishment Rate (Last 30 Days)</span>
+                  <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-3 block">{t('landing.saas.mockReplenishment', 'Replenishment Rate (Last 30 Days)')}</span>
                   <div className="h-28 flex items-end gap-3.5 pt-2">
                     {[30, 45, 60, 40, 75, 90, 85, 100, 70, 80, 95, 110].map((val, idx) => (
                       <div key={idx} className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
@@ -696,10 +696,10 @@ const LandingPage = () => {
           className="text-center mb-20"
         >
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-4 text-gray-900 dark:text-white">
-            Simple 3-Step Process
+            {t('landing.process.title', 'Simple 3-Step Process')}
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
-            How BloodBridge AI streamlines donation routing in emergencies.
+            {t('landing.process.subtitle', 'How BloodBridge AI streamlines donation routing in emergencies.')}
           </p>
         </motion.div>
 
@@ -717,24 +717,24 @@ const LandingPage = () => {
             <motion.div whileHover={{ scale: 1.05 }} className="w-20 h-20 rounded-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 shadow-md flex items-center justify-center text-xl font-bold text-bloodred mb-6 relative">
               01
             </motion.div>
-            <h3 className="text-lg font-bold text-gray-950 dark:text-white mb-2">Request is Made</h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs">Hospital fills out an emergency blood request through our secure cloud panel.</p>
+            <h3 className="text-lg font-bold text-gray-950 dark:text-white mb-2">{t('landing.process.step1Title', 'Request is Made')}</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs">{t('landing.process.step1Desc', 'Hospital fills out an emergency blood request through our secure cloud panel.')}</p>
           </motion.div>
 
           <motion.div variants={fadeInUp} className="flex flex-col items-center text-center">
             <motion.div whileHover={{ scale: 1.05 }} className="w-20 h-20 rounded-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 shadow-md flex items-center justify-center text-xl font-bold text-bloodred mb-6">
               02
             </motion.div>
-            <h3 className="text-lg font-bold text-gray-950 dark:text-white mb-2">AI Analyzes & Alerts</h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs">Geolocation algorithm matches nearby active, eligible donors, sending SMS and push notifications.</p>
+            <h3 className="text-lg font-bold text-gray-950 dark:text-white mb-2">{t('landing.process.step2Title', 'AI Analyzes & Alerts')}</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs">{t('landing.process.step2Desc', 'Geolocation algorithm matches nearby active, eligible donors, sending SMS and push notifications.')}</p>
           </motion.div>
 
           <motion.div variants={fadeInUp} className="flex flex-col items-center text-center">
             <motion.div whileHover={{ scale: 1.05 }} className="w-20 h-20 rounded-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 shadow-md flex items-center justify-center text-xl font-bold text-bloodred mb-6">
               03
             </motion.div>
-            <h3 className="text-lg font-bold text-gray-950 dark:text-white mb-2">Donation is Delivered</h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs">Donor accepts, travels, and donates, automatically updating local blood inventory registers.</p>
+            <h3 className="text-lg font-bold text-gray-950 dark:text-white mb-2">{t('landing.process.step3Title', 'Donation is Delivered')}</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs">{t('landing.process.step3Desc', 'Donor accepts, travels, and donates, automatically updating local blood inventory registers.')}</p>
           </motion.div>
         </motion.div>
 
@@ -748,20 +748,20 @@ const LandingPage = () => {
         >
           <motion.div variants={fadeInUp} className="relative">
             <div className="absolute -left-[35px] top-0 w-6 h-6 rounded-full bg-bloodred border-4 border-white dark:border-[#0F172A] shadow-md"></div>
-            <h4 className="text-base font-bold text-gray-950 dark:text-white mb-1">01. Request is Made</h4>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Hospital fills out an emergency blood request through our secure cloud panel.</p>
+            <h4 className="text-base font-bold text-gray-950 dark:text-white mb-1">01. {t('landing.process.step1Title', 'Request is Made')}</h4>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{t('landing.process.step1Desc', 'Hospital fills out an emergency blood request through our secure cloud panel.')}</p>
           </motion.div>
 
           <motion.div variants={fadeInUp} className="relative">
             <div className="absolute -left-[35px] top-0 w-6 h-6 rounded-full bg-bloodred border-4 border-white dark:border-[#0F172A] shadow-md"></div>
-            <h4 className="text-base font-bold text-gray-950 dark:text-white mb-1">02. AI Analyzes & Alerts</h4>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Geolocation algorithm matches nearby active, eligible donors, sending SMS and push notifications.</p>
+            <h4 className="text-base font-bold text-gray-950 dark:text-white mb-1">02. {t('landing.process.step2Title', 'AI Analyzes & Alerts')}</h4>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{t('landing.process.step2Desc', 'Geolocation algorithm matches nearby active, eligible donors, sending SMS and push notifications.')}</p>
           </motion.div>
 
           <motion.div variants={fadeInUp} className="relative">
             <div className="absolute -left-[35px] top-0 w-6 h-6 rounded-full bg-bloodred border-4 border-white dark:border-[#0F172A] shadow-md"></div>
-            <h4 className="text-base font-bold text-gray-950 dark:text-white mb-1">03. Donation is Delivered</h4>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Donor accepts, travels, and donates, automatically updating local blood inventory registers.</p>
+            <h4 className="text-base font-bold text-gray-950 dark:text-white mb-1">03. {t('landing.process.step3Title', 'Donation is Delivered')}</h4>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{t('landing.process.step3Desc', 'Donor accepts, travels, and donates, automatically updating local blood inventory registers.')}</p>
           </motion.div>
         </motion.div>
       </section>
@@ -778,10 +778,10 @@ const LandingPage = () => {
             className="text-center mb-20"
           >
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-4 text-gray-900 dark:text-white">
-              Trusted by the Medical Community
+              {t('landing.testimonials.title', 'Trusted by the Medical Community')}
             </h2>
             <p className="text-sm text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
-              Real testimonials from doctors, donors, and hospital administrators.
+              {t('landing.testimonials.subtitle', 'Real testimonials from doctors, donors, and hospital administrators.')}
             </p>
           </motion.div>
 
@@ -803,7 +803,7 @@ const LandingPage = () => {
                 <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
               </div>
               <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-6 italic">
-                "We had a case requiring rare AB- blood. BloodBridge AI notified 8 matching donors within 10 seconds. The donor arrived at our ICU in under 30 minutes. Incredible service!"
+                {t('landing.testimonials.card1Desc', '"We had a case requiring rare AB- blood. BloodBridge AI notified 8 matching donors within 10 seconds. The donor arrived at our ICU in under 30 minutes. Incredible service!"')}
               </p>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-bloodred to-rose-600 flex items-center justify-center text-white font-bold text-xs shadow-md">
@@ -811,7 +811,7 @@ const LandingPage = () => {
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-gray-950 dark:text-white">Dr. Vikram Rathore</h4>
-                  <span className="text-[11px] text-gray-400 dark:text-gray-500">ICU Chief, Metro Hospital</span>
+                  <span className="text-[11px] text-gray-400 dark:text-gray-500">{t('landing.testimonials.card1Role', 'ICU Chief, Metro Hospital')}</span>
                 </div>
               </div>
             </motion.div>
@@ -826,7 +826,7 @@ const LandingPage = () => {
                 <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
               </div>
               <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-6 italic">
-                "Signing up was incredibly simple. The SMS dispatch lists travel routing directions and hospital gate codes clearly. Being able to track my impact metrics keeps me motivated."
+                {t('landing.testimonials.card2Desc', '"Signing up was incredibly simple. The SMS dispatch lists travel routing directions and hospital gate codes clearly. Being able to track my impact metrics keeps me motivated."')}
               </p>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-rose-500 to-amber-600 flex items-center justify-center text-white font-bold text-xs shadow-md">
@@ -834,7 +834,7 @@ const LandingPage = () => {
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-gray-950 dark:text-white">Sagar Mehta</h4>
-                  <span className="text-[11px] text-gray-400 dark:text-gray-500">O+ Active Donor, 8 Donations</span>
+                  <span className="text-[11px] text-gray-400 dark:text-gray-500">{t('landing.testimonials.card2Role', 'O+ Active Donor, 8 Donations')}</span>
                 </div>
               </div>
             </motion.div>
@@ -849,7 +849,7 @@ const LandingPage = () => {
                 <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
               </div>
               <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-6 italic">
-                "Integrating BloodBridge AI resolved our inventory checking bottlenecks completely. Our blood reserve data syncs automatically, which has halved matching delays."
+                {t('landing.testimonials.card3Desc', '"Integrating BloodBridge AI resolved our inventory checking bottlenecks completely. Our blood reserve data syncs automatically, which has halved matching delays."')}
               </p>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold text-xs shadow-md">
@@ -857,7 +857,7 @@ const LandingPage = () => {
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-gray-950 dark:text-white">Sunita Kulkarni</h4>
-                  <span className="text-[11px] text-gray-400 dark:text-gray-500">Blood Bank Operations Lead</span>
+                  <span className="text-[11px] text-gray-400 dark:text-gray-500">{t('landing.testimonials.card3Role', 'Blood Bank Operations Lead')}</span>
                 </div>
               </div>
             </motion.div>
@@ -876,10 +876,10 @@ const LandingPage = () => {
           className="text-center mb-20"
         >
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-4 text-gray-900 dark:text-white">
-            Future Scale & National Vision
+            {t('landing.future.title', 'Future Scale & National Vision')}
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
-            Our technology roadmap to integrate with state-level disaster response frameworks.
+            {t('landing.future.subtitle', 'Our technology roadmap to integrate with state-level disaster response frameworks.')}
           </p>
         </motion.div>
 
@@ -895,24 +895,24 @@ const LandingPage = () => {
             <div className="w-10 h-10 rounded-xl bg-bloodred/10 text-bloodred flex items-center justify-center mb-4">
               <FiPlus className="w-5 h-5" />
             </div>
-            <h3 className="font-bold text-base text-gray-950 dark:text-white mb-2">Government Integration</h3>
-            <p className="text-sm text-gray-400 dark:text-gray-500 leading-relaxed">Direct synchronization with national digital health ID grids for authenticated medical histories.</p>
+            <h3 className="font-bold text-base text-gray-950 dark:text-white mb-2">{t('landing.future.card1Title', 'Government Integration')}</h3>
+            <p className="text-sm text-gray-400 dark:text-gray-500 leading-relaxed">{t('landing.future.card1Desc', 'Direct synchronization with national digital health ID grids for authenticated medical histories.')}</p>
           </motion.div>
 
           <motion.div variants={fadeInUp} whileHover={{ y: -4 }} className="p-8 bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm text-left flex flex-col items-start transition-all">
             <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center mb-4">
               <FiActivity className="w-5 h-5" />
             </div>
-            <h3 className="font-bold text-base text-gray-950 dark:text-white mb-2">Ambulance Dispatch</h3>
-            <p className="text-sm text-gray-400 dark:text-gray-500 leading-relaxed">Live emergency matching directly triggered from on-road ambulances during critical transit.</p>
+            <h3 className="font-bold text-base text-gray-950 dark:text-white mb-2">{t('landing.future.card2Title', 'Ambulance Dispatch')}</h3>
+            <p className="text-sm text-gray-400 dark:text-gray-500 leading-relaxed">{t('landing.future.card2Desc', 'Live emergency matching directly triggered from on-road ambulances during critical transit.')}</p>
           </motion.div>
 
           <motion.div variants={fadeInUp} whileHover={{ y: -4 }} className="p-8 bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm text-left flex flex-col items-start transition-all">
             <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-4">
               <FiShield className="w-5 h-5" />
             </div>
-            <h3 className="font-bold text-base text-gray-950 dark:text-white mb-2">National Donor Registry</h3>
-            <p className="text-sm text-gray-400 dark:text-gray-500 leading-relaxed">A unified cross-state alert grid enabling drone delivery logistics for ultra-rare blood types.</p>
+            <h3 className="font-bold text-base text-gray-950 dark:text-white mb-2">{t('landing.future.card3Title', 'National Donor Registry')}</h3>
+            <p className="text-sm text-gray-400 dark:text-gray-500 leading-relaxed">{t('landing.future.card3Desc', 'A unified cross-state alert grid enabling drone delivery logistics for ultra-rare blood types.')}</p>
           </motion.div>
 
         </motion.div>

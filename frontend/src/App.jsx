@@ -16,6 +16,13 @@ import LocationPermissionModal from './components/LocationPermissionModal';
 
 // Route helper: redirect to splash if no language selected yet
 const HomeRouteWrapper = () => {
+  const sessionStarted = sessionStorage.getItem('session_started');
+  if (!sessionStarted) {
+    sessionStorage.setItem('session_started', 'true');
+    localStorage.removeItem('language');
+    return <Navigate to="/splash" replace />;
+  }
+
   const isLanguageSelected = localStorage.getItem('language');
   if (!isLanguageSelected) {
     return <Navigate to="/splash" replace />;

@@ -3,10 +3,12 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import ThemeToggle from './ThemeToggle';
+import LanguageSwitcher from './LanguageSwitcher';
+import { useTranslation } from 'react-i18next';
 import { FiMenu, FiX, FiActivity, FiHeart, FiMapPin, FiChevronRight } from 'react-icons/fi';
 
 const Navbar = () => {
+  const { t } = useTranslation();
   const { user, logout } = useAuth();
   const { theme } = useTheme();
   const navigate = useNavigate();
@@ -25,10 +27,10 @@ const Navbar = () => {
   useEffect(() => setMobileOpen(false), [location.pathname]);
 
   const navLinks = [
-    { label: 'How It Works', href: '#how-it-works' },
-    { label: 'For Hospitals', href: '#hospitals' },
-    { label: 'For Donors', href: '#donors' },
-    { label: 'Impact', href: '#impact' },
+    { label: t('common.howItWorks', 'How It Works'), href: '#how-it-works' },
+    { label: t('common.forHospitals', 'For Hospitals'), href: '#hospitals' },
+    { label: t('common.forDonors', 'For Donors'), href: '#donors' },
+    { label: t('common.impact', 'Impact'), href: '#impact' },
   ];
 
   const handleNav = (href) => {
@@ -101,14 +103,14 @@ const Navbar = () => {
 
           {/* Right Controls */}
           <div className="flex items-center gap-3">
-            <ThemeToggle />
+            <LanguageSwitcher />
 
             <div className="hidden sm:flex items-center gap-2">
               <Link to="/login" className="btn-ghost text-[13px]">
-                Sign In
+                {t('common.login', 'Sign In')}
               </Link>
               <Link to="/signup" className="btn-primary text-[13px] py-2.5 px-5">
-                Get Started
+                {t('common.register', 'Get Started')}
                 <FiChevronRight className="w-4 h-4" />
               </Link>
             </div>
@@ -150,8 +152,8 @@ const Navbar = () => {
             ))}
           </div>
           <div className="pt-3 border-t border-black/05 dark:border-white/05 flex flex-col gap-2">
-            <Link to="/login" onClick={() => setMobileOpen(false)} className="btn-secondary w-full justify-center text-center">Sign In</Link>
-            <Link to="/signup" onClick={() => setMobileOpen(false)} className="btn-primary w-full justify-center">Get Started</Link>
+            <Link to="/login" onClick={() => setMobileOpen(false)} className="btn-secondary w-full justify-center text-center">{t('common.login', 'Sign In')}</Link>
+            <Link to="/signup" onClick={() => setMobileOpen(false)} className="btn-primary w-full justify-center">{t('common.register', 'Get Started')}</Link>
           </div>
         </motion.div>
       )}

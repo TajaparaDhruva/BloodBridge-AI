@@ -28,6 +28,11 @@ const resources = {
         action: 'Action',
         notifications: 'Notifications',
         welcome: 'Welcome back',
+        howItWorks: 'How It Works',
+        forHospitals: 'For Hospitals',
+        forDonors: 'For Donors',
+        impact: 'Impact',
+        request: 'Request',
         roles: {
           hospital: 'Hospital',
           donor: 'Donor',
@@ -40,6 +45,54 @@ const resources = {
         continue: 'Continue'
       },
       landing: {
+      saas: {
+        tag: 'SaaS Panel',
+        title: 'Premium Panels Built for Hospitals & Donors',
+        desc: 'Hospitals gain access to full donor availability timelines, live dispatcher maps, and predictive inventory warnings. Donors enjoy scheduling portals, medical eligibility tests, and digital badge metrics.',
+        feat1: 'Live coordinates matching within 10km radius',
+        feat2: 'One-click scheduling with partner clinics',
+        feat3: 'Predictive replenishment queues powered by AI',
+        cta: 'Explore Dashboard Panel',
+        mockTitle: 'Metro Clinic Admin',
+        mockCritical: 'Critical stock',
+        mockActiveAlerts: 'Active Alerts',
+        mockTotalDonors: 'Total Donors Match',
+        mockSuccess: 'Match Success',
+        mockWeeklyIncrease: '↑ 12% this week',
+        mockStable: 'Highly stable',
+        mockReplenishment: 'Replenishment Rate (Last 30 Days)'
+      },
+      process: {
+        title: 'Simple 3-Step Process',
+        subtitle: 'How BloodBridge AI streamlines donation routing in emergencies.',
+        step1Title: 'Request is Made',
+        step1Desc: 'Hospital fills out an emergency blood request through our secure cloud panel.',
+        step2Title: 'AI Analyzes & Alerts',
+        step2Desc: 'Geolocation algorithm matches nearby active, eligible donors, sending SMS and push notifications.',
+        step3Title: 'Donation is Delivered',
+        step3Desc: 'Donor accepts, travels, and donates, automatically updating local blood inventory registers.'
+      },
+      testimonials: {
+        title: 'Trusted by the Medical Community',
+        subtitle: 'Real testimonials from doctors, donors, and hospital administrators.',
+        card1Desc: '"We had a case requiring rare AB- blood. BloodBridge AI notified 8 matching donors within 10 seconds. The donor arrived at our ICU in under 30 minutes. Incredible service!"',
+        card1Role: 'ICU Chief, Metro Hospital',
+        card2Desc: '"Signing up was incredibly simple. The SMS dispatch lists travel routing directions and hospital gate codes clearly. Being able to track my impact metrics keeps me motivated."',
+        card2Role: 'O+ Active Donor, 8 Donations',
+        card3Desc: '"Integrating BloodBridge AI resolved our inventory checking bottlenecks completely. Our blood reserve data syncs automatically, which has halved matching delays."',
+        card3Role: 'Blood Bank Operations Lead'
+      },
+      future: {
+        title: 'Future Scale & National Vision',
+        subtitle: 'Our technology roadmap to integrate with state-level disaster response frameworks.',
+        card1Title: 'Government Integration',
+        card1Desc: 'Direct synchronization with national digital health ID grids for authenticated medical histories.',
+        card2Title: 'Ambulance Dispatch',
+        card2Desc: 'Live emergency matching directly triggered from on-road ambulances during critical transit.',
+        card3Title: 'National Donor Registry',
+        card3Desc: 'A unified cross-state alert grid enabling drone delivery logistics for ultra-rare blood types.'
+      },
+
         hero: {
           titleLine1: 'Finding Blood Saves Lives.',
           titleLine2: 'BloodBridge AI Finds It Faster.',
@@ -192,6 +245,11 @@ const resources = {
         action: 'कार्रवाई',
         notifications: 'सूचनाएं',
         welcome: 'स्वागत है',
+        howItWorks: 'यह कैसे काम करता है',
+        forHospitals: 'अस्पतालों के लिए',
+        forDonors: 'रक्तदाताओं के लिए',
+        impact: 'प्रभाव',
+        request: 'अनुरोध',
         roles: {
           hospital: 'अस्पताल',
           donor: 'रक्तदाता',
@@ -204,6 +262,54 @@ const resources = {
         continue: 'आगे बढ़ें'
       },
       landing: {
+      saas: {
+        tag: 'SaaS पैनल',
+        title: 'अस्पतालों और दाताओं के लिए बने प्रीमियम पैनल',
+        desc: 'अस्पतालों को पूर्ण दाता उपलब्धता समयसीमा, लाइव डिस्पैचर मानचित्र और भविष्य कहनेवाला इन्वेंट्री चेतावनियों तक पहुंच मिलती है। दाता शेड्यूलिंग पोर्टल, चिकित्सा पात्रता परीक्षण और डिजिटल बैज मेट्रिक्स का आनंद लेते हैं।',
+        feat1: '10 किमी के भीतर लाइव स्थान मिलान',
+        feat2: 'साझेदार क्लीनिकों के साथ एक-क्लिक शेड्यूलिंग',
+        feat3: 'AI द्वारा संचालित भविष्य कहनेवाला पुनर्भरण कतारें',
+        cta: 'डैशबोर्ड पैनल देखें',
+        mockTitle: 'मेट्रो क्लिनिक एडमिन',
+        mockCritical: 'गंभीर स्टॉक',
+        mockActiveAlerts: 'सक्रिय चेतावनियां',
+        mockTotalDonors: 'कुल दाताओं का मिलान',
+        mockSuccess: 'मिलान सफलता',
+        mockWeeklyIncrease: '↑ इस सप्ताह 12%',
+        mockStable: 'अत्यधिक स्थिर',
+        mockReplenishment: 'पुनर्भरण दर (पिछले 30 दिन)'
+      },
+      process: {
+        title: 'सरल 3-चरण प्रक्रिया',
+        subtitle: 'ब्लडब्रिज AI आपातकालीन स्थितियों में रक्तदान को कैसे सरल बनाता है।',
+        step1Title: 'अनुरोध किया जाता है',
+        step1Desc: 'अस्पताल हमारे सुरक्षित क्लाउड पैनल के माध्यम से आपातकालीन रक्त अनुरोध भरता है।',
+        step2Title: 'AI विश्लेषण और अलर्ट',
+        step2Desc: 'जियोलोकेशन एल्गोरिदम आस-पास के सक्रिय, योग्य दाताओं का मिलान करता है, एसएमएस और पुश नोटिफिकेशन भेजता है।',
+        step3Title: 'रक्तदान वितरित होता है',
+        step3Desc: 'दाता स्वीकार करता है, यात्रा करता है और दान करता है, जिससे स्थानीय रक्त सूची रजिस्टर स्वचालित रूप से अपडेट हो जाते हैं।'
+      },
+      testimonials: {
+        title: 'चिकित्सा समुदाय द्वारा विश्वसनीय',
+        subtitle: 'डॉक्टरों, दाताओं और अस्पताल प्रशासकों के वास्तविक प्रशंसापत्र।',
+        card1Desc: '"हमें दुर्लभ AB- रक्त की आवश्यकता थी। ब्लडब्रिज AI ने 10 सेकंड के भीतर 8 मिलान दाताओं को सूचित किया। दाता 30 मिनट से कम समय में हमारे आईसीयू में पहुंच गया। अविश्वसनीय सेवा!"',
+        card1Role: 'आईसीयू प्रमुख, मेट्रो अस्पताल',
+        card2Desc: '"साइन अप करना बेहद आसान था। एसएमएस डिस्पैच यात्रा मार्ग निर्देश और अस्पताल गेट कोड स्पष्ट रूप से सूचीबद्ध करता है। अपने प्रभाव मेट्रिक्स को ट्रैक करने में सक्षम होने से मुझे प्रेरणा मिलती है। "',
+        card2Role: 'O+ सक्रिय दाता, 8 दान',
+        card3Desc: '"ब्लडब्रिज AI को एकीकृत करने से हमारे इन्वेंट्री चेकिंग की बाधाएं पूरी तरह से दूर हो गईं। हमारा रक्त आरक्षित डेटा स्वचालित रूप से सिंक होता है, जिसने मिलान में होने वाली देरी को आधा कर दिया है।"',
+        card3Role: 'रक्त बैंक संचालन प्रमुख'
+      },
+      future: {
+        title: 'भविष्य का पैमाना और राष्ट्रीय दृष्टिकोण',
+        subtitle: 'राज्य स्तरीय आपदा प्रतिक्रिया प्रणालियों के साथ एकीकृत करने का हमारा तकनीकी रोडमैप।',
+        card1Title: 'सरकारी एकीकरण',
+        card1Desc: 'प्रमाणित चिकित्सा इतिहास के लिए राष्ट्रीय डिजिटल स्वास्थ्य आईडी ग्रिड के साथ सीधा तालमेल।',
+        card2Title: 'एम्बुलेंस डिस्पैच',
+        card2Desc: 'महत्वपूर्ण पारगमन के दौरान ऑन-रोड एम्बुलेंस से सीधे लाइव आपातकालीन मिलान ट्रिगर होता है।',
+        card3Title: 'राष्ट्रीय दाता रजिस्ट्री',
+        card3Desc: 'एक एकीकृत क्रॉस-स्टेट अलर्ट ग्रिड जो दुर्लभ रक्त प्रकारों के लिए ड्रोन डिलीवरी लॉजिस्टिक्स को सक्षम बनाता है।'
+      },
+
         hero: {
           titleLine1: 'रक्त खोजना जीवन बचाता है।',
           titleLine2: 'ब्लडब्रिज AI इसे तेज़ी से खोजता है।',
@@ -356,6 +462,11 @@ const resources = {
         action: 'પગલાં',
         notifications: 'સૂચનાઓ',
         welcome: 'સ્વાગત છે',
+        howItWorks: 'તે કેવી રીતે કામ કરે છે',
+        forHospitals: 'હોસ્પિટલો માટે',
+        forDonors: 'રક્તદાતાઓ માટે',
+        impact: 'અસર',
+        request: 'વિનંતી',
         roles: {
           hospital: 'હોસ્પિટલ',
           donor: 'રક્તદાતા',
@@ -368,6 +479,54 @@ const resources = {
         continue: 'આગળ વધો'
       },
       landing: {
+      saas: {
+        tag: 'SaaS પેનલ',
+        title: 'હોસ્પિટલો અને રક્તદાતાઓ માટે પ્રીમિયમ પેનલ્સ',
+        desc: 'હોસ્પિટલોને રક્તદાતાની ઉપલબ્ધતાની સમયરેખા, લાઇવ ડિસ્પેચ નકશા અને ઇન્વેન્ટરી ચેતવણીઓ મળે છે. રક્તદાતાઓ દાન શેડ્યૂલ કરવાના પોર્ટલ, યોગ્યતા પરીક્ષણો અને ડિજિટલ બેજ મેટ્રિક્સનો લાભ લઈ શકે છે।',
+        feat1: '૧૦ કિમી ત્રિજ્યામાં લાઇવ લોકેશન મેચિંગ',
+        feat2: 'ભાગીદાર ક્લિનિક્સ સાથે એક-ક્લિક શેડ્યૂલિંગ',
+        feat3: 'AI દ્વારા સંચાવિત આગાહીયુક્ત પુનઃપ્રાપ્તિ કતારો',
+        cta: 'ડેશબોર્ડ પેનલ શોધો',
+        mockTitle: 'મેટ્રો ક્લિનિક એડમિન',
+        mockCritical: 'કટોકટી સ્ટોક',
+        mockActiveAlerts: 'સક્રિય ચેતવણીઓ',
+        mockTotalDonors: 'કુલ દાતા મેચ',
+        mockSuccess: 'મેચ સફળતા',
+        mockWeeklyIncrease: '↑ આ અઠવાડિયે ૧૨%',
+        mockStable: 'ખૂબ જ સ્થિર',
+        mockReplenishment: 'પુનઃપ્રાપ્તિ દર (છેલ્લા ૩૦ દિવસ)'
+      },
+      process: {
+        title: 'સરળ ૩-પગલાની પ્રક્રિયા',
+        subtitle: 'બ્લડબ્રિજ AI કટોકટીમાં રક્તદાનના રૂટીંગને કેવી રીતે સરળ બનાવે છે।',
+        step1Title: 'વિનંતી કરવામાં આવે છે',
+        step1Desc: 'હોસ્પિટલ અમારી સુરક્ષિત ક્લાઉડ પેનલ દ્વારા કટોકટી રક્ત વિનંતી સબમિટ કરે છે।',
+        step2Title: 'AI વિશ્લેષણ અને એલર્ટ',
+        step2Desc: 'જીઓલોકેશન અલ્ગોરિધમ નજીકના સક્રિય, પાત્ર દાતાઓને શોધીને SMS અને પુશ નોટિફિકેશન મોકલે છે।',
+        step3Title: 'દાન વિતરિત થાય છે',
+        step3Desc: 'દાતા સ્વીકારે છે, મુસાફરી કરે છે અને દાન આપે છે, જે સ્થાનિક સ્ટોકને આપમેળે અપડેટ કરે છે।'
+      },
+      testimonials: {
+        title: 'તબીબી સમુદાય દ્વારા વિશ્વસનીય',
+        subtitle: 'ડોકટરો, દાતાઓ અને હોસ્પિટલ પ્રશાસકોના વાસ્તવિક અનુભવો।',
+        card1Desc: '"અમને દુર્લભ AB- લોહીની જરૂર હતી. બ્લડબ્રિજ AI એ ૧૦ સેકન્ડમાં ૮ દાતાઓને જાણ કરી. દાતા ૩૦ મિનિટથી ઓછા સમયમાં ICU પહોંચી ગયા. અદ્ભુત સેવા!"',
+        card1Role: 'ICU ચીફ, મેટ્રો હોસ્પિટલ',
+        card2Desc: '"노ધણી ખૂબ જ સરળ હતી. SMS ડિસ્પેચ લિસ્ટમાં રૂટીંગ દિશાઓ અને હોસ્પિટલ ગેટ કોડ સ્પષ્ટ રીતે બતાવે છે. મારા પ્રભાવ મેટ્રિક્સ જોવાથી હું પ્રોત્સાહિત રહું છું।"',
+        card2Role: 'O+ સક્રિય દાતા, ૮ દાન',
+        card3Desc: '"બ્લડબ્રિજ AI ને જોડવાથી અમારી સ્ટોક તપાસવાની અડચણો દૂર થઈ ગઈ. અમારો રક્ત અનામત ડેટા આપમેળે સમન્વયિત થાય છે, જેનાથી મેચિંગ વિલંબ અડધો થઈ ગયો છે।"',
+        card3Role: 'બ્લડ બેંક ઓપરેશન્સ લીડ'
+      },
+      future: {
+        title: 'ભવિષ્યના સ્કેલ અને રાષ્ટ્રીય વિઝન',
+        subtitle: 'રાજ્ય-સ્તરની આપત્તિ વ્યવસ્થાપન પ્રણાલીઓ સાથે જોડાણ માટેનો રોડમેપ।',
+        card1Title: 'સરકારી એકીકરણ',
+        card1Desc: 'તબીબી ઇતિહાસની ચકાસણી માટે રાષ્ટ્રીય ડિજિટલ હેલ્થ ID ગ્રીડ સાથે સીધું જોડાણ।',
+        card2Title: 'એમ્બ્યુલન્સ ડિસ્પેચ',
+        card2Desc: 'કટોકટીના પરિવહન દરમિયાન રસ્તા પરથી જ એમ્બ્યુલન્સ દ્વારા સીધું મેચિંગ સક્રિય થાય છે।',
+        card3Title: 'રાષ્ટ્રીય રક્તદાતા રજિસ્ટ્રી',
+        card3Desc: 'દુર્લભ રક્ત પ્રકારો માટે ડ્રોન ડિલિવરી લોજિસ્ટિક્સને સક્ષમ કરતી એકીકૃત ક્રોસ-સ્ટેટ એલર્ટ ગ્રીડ।'
+      },
+
         hero: {
           titleLine1: 'રક્ત શોધવું જીવન બચાવે છે.',
           titleLine2: 'બ્લડબ્રિજ AI તેને ઝડપથી શોધે છે.',
@@ -520,6 +679,11 @@ const resources = {
         action: 'कृती',
         notifications: 'सूचना',
         welcome: 'स्वागत आहे',
+        howItWorks: 'हे कसे कार्य करते',
+        forHospitals: 'रुग्णालयांसाठी',
+        forDonors: 'रक्तदात्यांसाठी',
+        impact: 'प्रभाव',
+        request: 'विनंती',
         roles: {
           hospital: 'रुग्णालय',
           donor: 'रक्तदाता',
@@ -532,6 +696,54 @@ const resources = {
         continue: 'पुढे जा'
       },
       landing: {
+      saas: {
+        tag: 'SaaS पॅनेल',
+        title: 'रुग्णालये आणि रक्तदात्यांसाठी बनवलेले प्रीमियम पॅनेल्स',
+        desc: 'रुग्णालयांना संपूर्ण रक्तदाता उपलब्धता टाइमलाइन, लाइव्ह डिस्पॅचर नकाशे आणि भविष्यसूचक इन्व्हेंटरी चेतावणी मिळतात. रक्तदाते शेड्युलिंग पोर्टल, वैद्यकीय पात्रता चाचण्या आणि डिजिटल बॅज मेट्रिक्सचा आनंद घेतात.',
+        feat1: '10 किमीच्या आत लाइव्ह स्थान मॅचिंग',
+        feat2: 'भागीदार क्लिनिकसह एक-क्लिक शेड्युलिंग',
+        feat3: 'AI द्वारे समर्थित भविष्यसूचक साठा पुनर्भरण रांगा',
+        cta: 'डॅशबोर्ड पॅनेल एक्सप्लोर करा',
+        mockTitle: 'मेट्रो क्लिनिक ॲडमिन',
+        mockCritical: 'गंभीर साठा',
+        mockActiveAlerts: 'सक्रिय चेतावणी',
+        mockTotalDonors: 'एकूण रक्तदाते मॅच',
+        mockSuccess: 'मॅच यश',
+        mockWeeklyIncrease: '↑ या आठवड्यात 12%',
+        mockStable: 'अत्यंत स्थिर',
+        mockReplenishment: 'साठा पुनर्भरण दर (गेले 30 दिवस)'
+      },
+      process: {
+        title: 'सोपी 3-चरण प्रक्रिया',
+        subtitle: 'ब्लडब्रिज AI आणीबाणीमध्ये रक्ताच्या विनंत्यांना कसे सुलभ करते.',
+        step1Title: 'विनंती केली जाते',
+        step1Desc: 'रुग्णालय आमच्या सुरक्षित क्लाउड पॅनेलद्वारे आणीबाणी रक्ताची विनंती सादर करते.',
+        step2Title: 'AI विश्लेषण आणि अलर्ट',
+        step2Desc: 'जिओलोकेशन अल्गोरिदम जवळील सक्रिय, पात्र दात्यांना शोधून एसएमएस आणि पुश सूचना पाठवतो.',
+        step3Title: 'रक्तदान वितरित होते',
+        step3Desc: 'दाता स्वीकारतो, प्रवास करतो आणि दान करतो, ज्यामुळे स्थानिक रक्त साठा नोंद आपोआप अपडेट होते.'
+      },
+      testimonials: {
+        title: 'वैद्यकीय समुदायाद्वारे विश्वसनीय',
+        subtitle: 'डॉक्टर, दाता आणि रुग्णालय प्रशासकांचे वास्तविक अनुभव.',
+        card1Desc: '"आम्हाला दुर्मिळ AB- रक्ताची आवश्यकता होती. ब्लडब्रिज AI ने अवघ्या 10 सेकंदात 8 मॅच दात्यांना सूचित केले. दाता 30 मिनिटांपेक्षा कमी वेळात आमच्या आयसीयूमध्ये पोहोचला. आश्चर्यकारक सेवा!"',
+        card1Role: 'आयसीयू प्रमुख, मेट्रो रुग्णालय',
+        card2Desc: '"नोंदणी करणे अत्यंत सोपे होते. एसएमएस डिस्पॅचमध्ये प्रवासाचा मार्ग आणि हॉस्पिटल गेट कोड स्पष्ट दिसतो. माझे प्रभाव मेट्रिक्स पाहिल्याने मला प्रेरणा मिळते."',
+        card2Role: 'O+ सक्रिय दाता, 8 दाने',
+        card3Desc: '"ब्लडब्रिज AI जोडल्याने आमच्या साठा तपासणीच्या अडचणी पूर्णपणे दूर झाल्या. आमचा रक्त राखीव डेटा स्वयंचलितपणे सिंक होतो, ज्यामुळे मॅचिंगमधील विलंब अर्धा झाला आहे."',
+        card3Role: 'ब्लड बँक ऑपरेशन्स प्रमुख',
+      },
+      future: {
+        title: 'भविष्यातील प्रमाण आणि राष्ट्रीय दृष्टीकोन',
+        subtitle: 'राज्यस्तरीय आपत्ती व्यवस्थापन यंत्रणेसोबत एकात्मिक होण्याचा आमचा तांत्रिक रोडमॅप.',
+        card1Title: 'शासकीय एकात्मता',
+        card1Desc: 'प्रमाणित वैद्यकीय इतिहासासाठी राष्ट्रीय डिजिटल आरोग्य आयडी ग्रिडसह थेट सिंक.',
+        card2Title: 'रुग्णवाहिका डिस्पॅच',
+        card2Desc: 'महत्त्वाच्या वाहतुकीदरम्यान रस्त्यावरील रुग्णवाहिकेवरून थेट लाइव्ह आपत्कालीन मॅचिंग ट्रिगर होते.',
+        card3Title: 'राष्ट्रीय दाता नोंदणी',
+        card3Desc: 'एक युनिफाइड क्रॉस-स्टेट अलर्ट ग्रिड जी दुर्मिळ रक्त प्रकारांसाठी ड्रोन वितरण सक्षम करते.'
+      },
+
         hero: {
           titleLine1: 'रक्त शोधणे जीवन वाचवते.',
           titleLine2: 'ब्लडब्रिज AI ते वेगाने शोधते.',

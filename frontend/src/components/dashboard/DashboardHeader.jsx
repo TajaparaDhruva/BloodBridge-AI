@@ -5,7 +5,8 @@ import {
   FiSearch, FiPlus, FiBell, FiZap, FiMapPin, FiCommand,
   FiGrid, FiAlertCircle, FiHeart, FiDatabase, FiActivity,
 } from 'react-icons/fi';
-import ThemeToggle from '../ThemeToggle';
+import LanguageSwitcher from '../LanguageSwitcher';
+import { useTranslation } from 'react-i18next';
 
 const tabLabels = {
   overview: 'Operations Control',
@@ -37,6 +38,7 @@ const DashboardHeader = ({
   onOpenAI,
   onLogout,
 }) => {
+  const { t } = useTranslation();
   const roleIcon = user?.role === 'hospital' ? '🏥' : user?.role === 'admin' ? '⚡' : '🩸';
   const displayName = user?.name || user?.role || 'Operator';
 
@@ -96,7 +98,7 @@ const DashboardHeader = ({
                   />
                 )}
                 <item.icon className="w-4 h-4 relative z-10" />
-                <span className="relative z-10">{item.label}</span>
+                <span className="relative z-10">{t(`dashboard.${item.id}`, item.label)}</span>
               </button>
             );
           })}
@@ -129,7 +131,7 @@ const DashboardHeader = ({
             className="btn-primary py-1.5 px-3.5 text-[12.5px] font-bold shadow-sm cursor-pointer flex items-center gap-1"
           >
             <FiPlus className="w-4 h-4" />
-            <span>Request</span>
+            <span>{t('common.request', 'Request')}</span>
           </button>
 
           {/* Notifications Center with heartbeat */}
@@ -145,8 +147,8 @@ const DashboardHeader = ({
             )}
           </button>
 
-          {/* Dark / Light Toggle */}
-          <ThemeToggle />
+          {/* Language Selection */}
+          <LanguageSwitcher />
 
           {/* User profile dropdown logout */}
           <button

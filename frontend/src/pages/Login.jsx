@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import ThemeToggle from '../components/ThemeToggle';
+import { useTranslation } from 'react-i18next';
 import bloodDonationPhoto from '../assets/blood_donation_photo.png';
 
 const containerVariants = {
@@ -35,6 +36,7 @@ import {
 } from 'react-icons/fi';
 
 const Login = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { login } = useAuth();
 
