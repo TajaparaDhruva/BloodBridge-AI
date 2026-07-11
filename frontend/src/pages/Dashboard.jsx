@@ -88,9 +88,6 @@ const Dashboard = () => {
     createRequest(form);
   };
 
-  const isExpired = user?.role === 'hospital' && subscription ? isTrialExpired() : false;
-  const isLocked = isExpired && activeTab !== 'billing';
-
   return (
     <div className="min-h-screen bg-[#FCFBFA] dark:bg-[#070B13] custom-bg-grid transition-colors duration-300 flex flex-col">
       <div className="flex-1 flex flex-col min-h-screen">
@@ -108,110 +105,10 @@ const Dashboard = () => {
         />
 
         <main className="flex-1 p-6 md:p-10 pt-24 md:pt-28 overflow-auto dashboard-main pb-24 lg:pb-10 relative">
-          {/* ── Hospital Trial Countdown Banner ── */}
-          {user?.role === 'hospital' && subscription && (() => {
-            const expired = isExpired;
-            const days = daysRemaining();
-            const trialPct = subscription.plan === 'free_trial' ? Math.max(0, Math.round((days / 7) * 100)) : 100;
-            if (subscription.plan !== 'free_trial') return null;
-            return (
-              <motion.div
-                initial={{ opacity: 0, y: -12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className={`max-w-[1440px] mx-auto mb-4 rounded-2xl px-5 py-4 flex flex-col sm:flex-row sm:items-center gap-3 border ${
-                  expired
-                    ? 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-800/40'
-                    : days <= 2
-                    ? 'bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800/40'
-                    : 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/40'
-                }`}
-              >
-                <div className="flex items-center gap-3 flex-1">
-                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                    expired ? 'bg-red-100 dark:bg-red-950/40 text-red-500' :
-                    days <= 2 ? 'bg-amber-100 dark:bg-amber-950/40 text-amber-600' :
-                    'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600'
-                  }`}>
-                    {expired ? <FiLock className="w-4.5 h-4.5" /> : <FiClock className="w-4.5 h-4.5" />}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                      <span className={`text-[13px] font-extrabold ${
-                        expired ? 'text-red-700 dark:text-red-400' :
-                        days <= 2 ? 'text-amber-700 dark:text-amber-400' :
-                        'text-emerald-700 dark:text-emerald-400'
-                      }`}>
-                        {expired ? 'Free Trial Ended' : `Free Trial · ${days} day${days !== 1 ? 's' : ''} remaining`}
-                      </span>
-                      <span className="text-[10px] font-black text-muted uppercase tracking-wider">
-                        {expired ? 'Upgrade to continue' : `Renews ${new Date(subscription.trialEnd).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}`}
-                      </span>
-                    </div>
-                    {!expired && (
-                      <div className="h-1.5 bg-black/05 dark:bg-white/10 rounded-full w-full max-w-xs overflow-hidden">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={{ width: `${trialPct}%` }}
-                          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                          className={`h-full rounded-full ${
-                            days <= 2 ? 'bg-amber-400' : 'bg-emerald-500'
-                          }`}
-                        />
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  {!expired && (
-                    <button
-                      onClick={simulateTrialExpiry}
-                      className="text-[10px] font-bold text-muted hover:text-slate-800 dark:hover:text-white border border-gray-200 dark:border-white/10 px-2.5 py-1.5 rounded-xl transition-colors"
-                      title="Developer tool: simulate trial expiry"
-                    >
-                      Simulate Expiry
-                    </button>
-                  )}
-                  <button
-                    onClick={() => setActiveTab('billing')}
-                    className={`flex items-center gap-1.5 px-4 py-2 rounded-xl font-bold text-[12px] text-white transition-all ${
-                      expired ? 'bg-[#E11D48] hover:bg-red-600' : 'bg-emerald-600 hover:bg-emerald-700'
-                    }`}
-                  >
-                    <FiCreditCard className="w-3.5 h-3.5" />
-                    {expired ? 'Upgrade Now' : 'Manage Plan'}
-                  </button>
-                </div>
-              </motion.div>
-            );
-          })()}
+
 
           <div className="relative">
-             {/* Lock Screen Overlay */}
-             {isLocked && (
-               <div className="absolute inset-0 z-50 flex items-center justify-center min-h-[500px]">
-                  <div className="absolute inset-0 bg-white/40 dark:bg-[#070B13]/40 backdrop-blur-md rounded-3xl" />
-                  <div className="relative text-center max-w-md p-8 bg-white dark:bg-[#0F1420] shadow-2xl rounded-3xl border border-gray-100 dark:border-white/10 mx-4 z-10">
-                     <div className="w-16 h-16 rounded-full bg-rose-50 dark:bg-rose-950/30 flex items-center justify-center mx-auto mb-5 text-[#E11D48]">
-                        <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        </svg>
-                     </div>
-                     <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-3 tracking-tight">Trial Expired</h3>
-                     <p className="text-[14px] font-medium text-slate-500 dark:text-slate-400 mb-8 leading-relaxed">
-                       Your 7-day free trial has ended. Upgrade your hospital partnership to continue using AI-powered emergency blood matching.
-                     </p>
-                     <button onClick={() => setActiveTab('billing')} className="px-6 py-4 bg-[#E11D48] hover:bg-rose-600 text-white font-bold rounded-2xl transition-all w-full shadow-lg shadow-rose-500/20 flex items-center justify-center gap-2">
-                       <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-                       </svg>
-                       Upgrade Now
-                     </button>
-                  </div>
-               </div>
-             )}
-
-             <div className={`${isLocked ? 'filter blur-md pointer-events-none opacity-40 select-none transition-all duration-500' : ''}`}>
+             <div className="">
                <AnimatePresence mode="wait">
                  <motion.div
                    key={activeTab}
