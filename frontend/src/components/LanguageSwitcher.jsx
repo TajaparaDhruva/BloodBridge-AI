@@ -19,6 +19,33 @@ const LanguageSwitcher = () => {
 
   const activeLang = languages.find(l => l.code === currentLanguage) || languages[0];
 
+  const triggerGoogleTranslate = (langCode) => {
+    const targetCode = langCode === 'en' ? 'en' : langCode;
+    const combo = document.querySelector('.goog-te-combo');
+    if (combo) {
+      combo.value = targetCode;
+      combo.dispatchEvent(new Event('change'));
+    } else {
+      // Fallback: set cookie and reload if widget not injected yet
+      document.cookie = `googtrans=/en/${langCode}; path=/`;
+      window.location.reload();
+    }
+  };
+  
+  // On mount, ensure google translate matches our context
+  useEffect(() => {
+    const attemptSync = setInterval(() => {
+      const combo = document.querySelector('.goog-te-combo');
+      if (combo) {
+        if (combo.value !== (currentLanguage === 'en' ? 'en' : currentLanguage)) {
+           triggerGoogleTranslate(currentLanguage || 'en');
+        }
+        clearInterval(attemptSync);
+      }
+    }, 500);
+    return () => clearInterval(attemptSync);
+  }, [currentLanguage]);
+
   return (
     <div className="relative" ref={dropdownRef}>
       <button
@@ -37,6 +64,7 @@ const LanguageSwitcher = () => {
               key={lang.code}
               onClick={() => {
                 changeLanguage(lang.code);
+                triggerGoogleTranslate(lang.code);
                 setIsOpen(false);
               }}
               className={`flex items-center gap-3 w-full px-3 py-2 text-left text-sm rounded-xl transition-all duration-200 ${
