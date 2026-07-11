@@ -168,64 +168,9 @@ const HospitalPartnership = () => {
               </button>
             </motion.div>
           </motion.div>
-
-          {/* Dashboard Preview Card */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.97 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-20 relative max-w-5xl mx-auto"
-          >
-            <div className="bg-white dark:bg-[#0F1420] border border-gray-100 dark:border-white/08 rounded-3xl shadow-2xl p-6 overflow-hidden">
-              {/* Mock dashboard header */}
-              <div className="flex items-center gap-3 mb-5 pb-4 border-b border-gray-100 dark:border-white/05">
-                <div className="w-8 h-8 rounded-xl bg-[#E11D48] flex items-center justify-center">
-                  <FiHeart className="w-4 h-4 text-white fill-current" />
-                </div>
-                <div>
-                  <span className="font-extrabold text-slate-900 dark:text-white text-[14px] block">BloodBridge AI</span>
-                  <span className="text-[9px] font-bold text-muted uppercase tracking-wider">Operations Control</span>
-                </div>
-                <div className="ml-auto flex items-center gap-1.5 text-[9px] font-black text-emerald-600 uppercase tracking-widest">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  System Live
-                </div>
-              </div>
-              {/* Mock stats grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-                {[
-                  { label: 'Active Requests', val: '24', color: 'text-rose-500', bg: 'bg-rose-50 dark:bg-rose-950/20' },
-                  { label: 'AI Matches Today', val: '138', color: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-950/20' },
-                  { label: 'Donors Online', val: '1,204', color: 'text-blue-500', bg: 'bg-blue-50 dark:bg-blue-950/20' },
-                  { label: 'Match Speed', val: '<45s', color: 'text-violet-500', bg: 'bg-violet-50 dark:bg-violet-950/20' },
-                ].map((s) => (
-                  <div key={s.label} className={`${s.bg} rounded-2xl p-4 border border-black/04 dark:border-white/04`}>
-                    <p className={`text-2xl font-black ${s.color}`}>{s.val}</p>
-                    <p className="text-[10px] font-bold text-muted mt-1">{s.label}</p>
-                  </div>
-                ))}
-              </div>
-              {/* Mock request rows */}
-              <div className="space-y-2">
-                {[
-                  { id: 'REQ-101', bg: 'O-', hospital: 'Metro Critical Care', status: 'Matching', statusColor: 'bg-rose-50 text-rose-600' },
-                  { id: 'REQ-102', bg: 'AB+', hospital: 'Apollo Speciality', status: 'Dispatched', statusColor: 'bg-emerald-50 text-emerald-600' },
-                  { id: 'REQ-103', bg: 'A+', hospital: 'Fortis Hiranandani', status: 'Completed', statusColor: 'bg-slate-100 dark:bg-white/10 text-slate-500 dark:text-slate-400' },
-                ].map((r) => (
-                  <div key={r.id} className="flex items-center justify-between bg-gray-50 dark:bg-white/03 rounded-xl px-4 py-2.5 border border-gray-100 dark:border-white/05">
-                    <span className="text-[11px] font-bold text-muted">{r.id}</span>
-                    <span className="text-[11px] font-black text-rose-600 bg-rose-50 dark:bg-rose-950/20 px-2 py-0.5 rounded-lg">{r.bg}</span>
-                    <span className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 hidden sm:block">{r.hospital}</span>
-                    <span className={`text-[10px] font-black px-2.5 py-1 rounded-lg ${r.statusColor}`}>{r.status}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            {/* Glow below card */}
-            <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-3/4 h-16 bg-rose-500/10 blur-2xl rounded-full pointer-events-none" />
-          </motion.div>
         </div>
       </section>
+
 
       {/* ── Trust Stats ─────────────────────────────────────────────────────── */}
       <section className="py-16 border-y border-gray-100 dark:border-white/05 bg-white/50 dark:bg-white/[0.02]">
