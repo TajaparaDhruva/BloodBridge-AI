@@ -7,7 +7,7 @@ import {
   FiCheck, FiZap, FiShield, FiTrendingUp, FiUsers, FiActivity,
   FiHeart, FiStar, FiArrowRight, FiClock, FiDatabase, FiAward,
   FiBell, FiFileText, FiLock, FiCalendar, FiGlobe,
-  FiChevronDown, FiPlay, FiPhone
+  FiChevronDown, FiPlay, FiPhone, FiRefreshCw, FiHeadphones
 } from 'react-icons/fi';
 
 const fadeUp = {
@@ -37,11 +37,31 @@ const FEATURES = [
 ];
 
 const FAQS = [
-  { q: 'How does the 7-day free trial work?', a: 'Your trial starts immediately after hospital registration — no credit card required. You get full access to all professional features for 7 days. At trial end, upgrade to a paid plan to keep access.' },
-  { q: 'What happens to my data after the trial ends?', a: 'Your data is securely retained for 30 days after trial expiry. Simply upgrade to a paid plan to restore full access instantly — no data loss occurs.' },
-  { q: 'Can I switch between Professional and Enterprise?', a: 'Yes, you can upgrade or downgrade your plan at any time from the Billing section of your dashboard. Changes take effect immediately.' },
-  { q: 'Is there a setup fee?', a: 'No. BloodBridge AI has zero setup fees. You start free, and only pay when you choose to subscribe. Annual billing options with discounts are coming soon.' },
-  { q: 'How is patient data protected?', a: 'We are fully HIPAA-compliant and use AES-256 encryption at rest and in transit. Access is role-based and all actions are audited. Our infrastructure is hosted on ISO 27001-certified data centers in India.' },
+  {
+    q: 'How does the 7-day free trial work?',
+    a: 'Your trial starts immediately after hospital registration — no credit card required. You get full access to all professional features for 7 days. At trial end, upgrade to a paid plan to keep access.',
+    icon: <FiClock className="w-5 h-5 text-[#E11D48]" />
+  },
+  {
+    q: 'What happens to my data after the trial ends?',
+    a: 'Your data is securely retained for 30 days after trial expiry. Simply upgrade to a paid plan to restore full access instantly — no data loss occurs.',
+    icon: <FiDatabase className="w-5 h-5 text-[#E11D48]" />
+  },
+  {
+    q: 'Can I switch between Professional and Enterprise?',
+    a: 'Yes, you can upgrade or downgrade your plan at any time from the Billing section of your dashboard. Changes take effect immediately.',
+    icon: <FiRefreshCw className="w-5 h-5 text-[#E11D48]" />
+  },
+  {
+    q: 'Is there a setup fee?',
+    a: 'No. BloodBridge AI has zero setup fees. You start free, and only pay when you choose to subscribe. Annual billing options with discounts are coming soon.',
+    icon: <FiZap className="w-5 h-5 text-[#E11D48]" />
+  },
+  {
+    q: 'How is patient data protected?',
+    a: 'We are fully HIPAA-compliant and use AES-256 encryption at rest and in transit. Access is role-based and all actions are audited. Our infrastructure is hosted on ISO 27001-certified data centers in India.',
+    icon: <FiShield className="w-5 h-5 text-[#E11D48]" />
+  }
 ];
 
 const HospitalPartnership = () => {
@@ -419,16 +439,21 @@ const HospitalPartnership = () => {
               <motion.div
                 key={i}
                 variants={fadeUp}
-                className="bg-white dark:bg-[#0F1420] border border-gray-100 dark:border-white/06 rounded-2xl overflow-hidden"
+                className="bg-white dark:bg-[#0F1420] border border-gray-100/80 dark:border-white/06 rounded-[20px] overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
               >
                 <button
                   onClick={() => setActiveFaq(activeFaq === i ? null : i)}
-                  className="w-full flex items-center justify-between px-6 py-4 text-left font-bold text-[14px] text-slate-800 dark:text-white hover:bg-gray-50 dark:hover:bg-white/03 transition-colors cursor-pointer"
+                  className="w-full flex items-center justify-between p-5 text-left focus:outline-none cursor-pointer"
                 >
-                  {faq.q}
-                  <motion.div animate={{ rotate: activeFaq === i ? 180 : 0 }} transition={{ duration: 0.2 }}>
-                    <FiChevronDown className="w-4 h-4 text-muted flex-shrink-0" />
-                  </motion.div>
+                  <div className="flex items-center">
+                    <div className="w-10 h-10 rounded-xl bg-rose-50 dark:bg-rose-950/30 text-[#E11D48] flex items-center justify-center flex-shrink-0 mr-4">
+                      {faq.icon}
+                    </div>
+                    <span className="font-extrabold text-sm sm:text-base text-gray-900 dark:text-white font-poppins">
+                      {faq.q}
+                    </span>
+                  </div>
+                  <FiChevronDown className={`w-5 h-5 text-[#E11D48] transition-transform duration-300 ${activeFaq === i ? 'rotate-180' : ''}`} />
                 </button>
                 <AnimatePresence>
                   {activeFaq === i && (
@@ -436,9 +461,11 @@ const HospitalPartnership = () => {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                      transition={{ duration: 0.25 }}
                     >
-                      <p className="px-6 pb-5 text-[13.5px] text-slate-500 dark:text-slate-400 leading-relaxed">{faq.a}</p>
+                      <div className="px-6 pb-6 pt-1 pl-6 sm:pl-[76px] text-[13.5px] text-slate-550 dark:text-slate-400 leading-relaxed font-medium">
+                        {faq.a}
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
