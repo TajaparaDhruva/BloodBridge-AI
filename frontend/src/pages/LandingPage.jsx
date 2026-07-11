@@ -8,7 +8,7 @@ import { useAuth } from '../context/AuthContext';
 import {
   FiHeart, FiActivity, FiMapPin, FiCheckCircle, FiBell, FiShield,
   FiClock, FiTrendingUp, FiSearch, FiSliders, FiDatabase, FiGrid,
-  FiPlus, FiChevronDown, FiPlay, FiMap, FiChevronRight, FiUsers, FiAward, FiArrowRight
+  FiPlus, FiChevronDown, FiPlay, FiMap, FiChevronRight, FiUsers, FiAward, FiArrowRight, FiCheck
 } from 'react-icons/fi';
 
 // AnimatedCounter Component for statistics counters
@@ -75,6 +75,71 @@ const LandingPage = () => {
   // States for FAQs
   const [activeFaq, setActiveFaq] = useState(null);
 
+  // Selected Pricing Plan State
+  const [activePlan, setActivePlan] = useState('professional');
+
+  // Pricing Plans Data Structure
+  const plansData = {
+    free_trial: {
+      name: '7-Day Free Trial',
+      price: 'FREE',
+      period: '/ 7 Days',
+      desc: 'Perfect for testing our AI donor matching engine and checking platform capabilities.',
+      badge: 'Recommended',
+      badgeColor: 'bg-emerald-500 text-white',
+      icon: <FiDatabase className="w-[1.1em] h-[1.1em] text-emerald-500 inline-block align-middle" />,
+      buttonText: 'Start Free Trial',
+      to: '/hospital-partnership',
+      features: [
+        'Full access to all premium features',
+        'AI Donor Matching Engine',
+        'Unlimited Blood Requests',
+        'Hospital Dashboard',
+        'Real-Time Notifications',
+        'Blood Inventory Dashboard',
+        'Analytics & Staff Accounts'
+      ]
+    },
+    professional: {
+      name: 'Professional Plan',
+      price: '₹2,999',
+      period: '/month',
+      desc: 'Ideal for clinics, single hospitals, and emergency dispatch centers looking to scale operations.',
+      badge: 'Most Popular',
+      badgeColor: 'bg-[#E11D48] text-white',
+      icon: <FiActivity className="w-[1.1em] h-[1.1em] text-rose-500 inline-block align-middle" />,
+      buttonText: 'Upgrade to Professional',
+      to: '/hospital-partnership',
+      features: [
+        'Everything in Free Trial',
+        'Unlimited AI Matching',
+        'Verified Partner Badge',
+        'Advanced Predictive Analytics',
+        'Hospital Collaboration Tools',
+        'Monthly Reports & API Access'
+      ]
+    },
+    enterprise: {
+      name: 'Enterprise Plan',
+      price: '₹7,999',
+      period: '/month',
+      desc: 'Designed for multi-facility networks, large healthcare systems, and government ID integrations.',
+      badge: 'Best Value',
+      badgeColor: 'bg-[#6366F1] text-white',
+      icon: <FiAward className="w-[1.1em] h-[1.1em] text-[#6366F1] inline-block align-middle" />,
+      buttonText: 'Contact Sales',
+      to: '/hospital-partnership',
+      features: [
+        'Everything in Professional',
+        'AI Priority Matching Priority Route',
+        'Predictive Network Analytics',
+        'Disaster Response Activation Mode',
+        'Unlimited Staff & Node Access',
+        'Custom API & Government ID Sync'
+      ]
+    }
+  };
+
   // Interactive Live Matching Simulator States
   const [simStep, setSimStep] = useState(0);
   const [simLogs, setSimLogs] = useState([]);
@@ -133,14 +198,57 @@ const LandingPage = () => {
         id="hero" 
         className="relative pt-32 pb-24 md:pt-40 md:pb-36 overflow-hidden min-h-screen flex items-center bg-[#FAF9F6] dark:bg-[#070B13] transition-colors"
       >
-        {/* Subtle dot-grid background pattern */}
-        <div className="absolute inset-0 bg-[radial-gradient(#e1183808_1.5px,transparent_1.5px)] bg-[size:28px_28px] pointer-events-none" />
-        {/* Soft red glow top-right */}
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-rose-500/5 rounded-full blur-[120px] pointer-events-none translate-x-1/3 -translate-y-1/4" />
-        
-        {/* Glow effect overlays */}
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-red-500/05 rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute bottom-10 right-10 w-[450px] h-[450px] bg-[#E11D48]/05 rounded-full blur-[130px] pointer-events-none" />
+        {/* === THEMED BACKGROUND SYSTEM === */}
+
+        {/* Layer 1: Radial gradient mesh — crimson aurora */}
+        <div className="absolute inset-0 pointer-events-none z-0">
+          <div className="absolute -top-40 -right-40 w-[900px] h-[900px] rounded-full bg-gradient-radial from-rose-200/60 via-rose-100/20 to-transparent dark:from-rose-900/25 dark:via-rose-900/10 dark:to-transparent blur-[80px]" />
+          <div className="absolute -bottom-60 -left-40 w-[700px] h-[700px] rounded-full bg-gradient-radial from-red-100/70 via-rose-50/30 to-transparent dark:from-red-950/30 dark:to-transparent blur-[100px]" />
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full bg-gradient-radial from-pink-100/40 to-transparent dark:from-rose-900/10 dark:to-transparent blur-[70px]" />
+        </div>
+
+        {/* Layer 2: Dot-grid pattern */}
+        <div className="absolute inset-0 bg-[radial-gradient(#E11D4810_1.5px,transparent_1.5px)] bg-[size:28px_28px] pointer-events-none z-0" />
+
+        {/* Layer 3: Decorative SVG — network nodes + heartbeat line */}
+        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+          <svg className="absolute inset-0 w-full h-full opacity-[0.07] dark:opacity-[0.12]" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+            {/* Network connection lines */}
+            <line x1="120" y1="200" x2="380" y2="420" stroke="#E11D48" strokeWidth="1.2" strokeDasharray="6 4"/>
+            <line x1="380" y1="420" x2="700" y2="280" stroke="#E11D48" strokeWidth="1.2" strokeDasharray="6 4"/>
+            <line x1="700" y1="280" x2="1050" y2="480" stroke="#E11D48" strokeWidth="1.2" strokeDasharray="6 4"/>
+            <line x1="1050" y1="480" x2="1340" y2="310" stroke="#E11D48" strokeWidth="1.2" strokeDasharray="6 4"/>
+            <line x1="220" y1="680" x2="580" y2="540" stroke="#E11D48" strokeWidth="1" strokeDasharray="4 6"/>
+            <line x1="580" y1="540" x2="900" y2="700" stroke="#E11D48" strokeWidth="1" strokeDasharray="4 6"/>
+            <line x1="900" y1="700" x2="1200" y2="580" stroke="#E11D48" strokeWidth="1" strokeDasharray="4 6"/>
+            {/* Heartbeat/ECG line across middle */}
+            <polyline points="0,450 160,450 200,450 230,350 260,580 290,420 320,420 440,420 470,300 500,580 530,420 560,420 720,420 750,350 780,520 810,420 840,420 1000,420 1030,380 1060,490 1090,420 1120,420 1440,420" stroke="#E11D48" strokeWidth="1.5" strokeDasharray="none" opacity="0.6"/>
+            {/* Node dots */}
+            <circle cx="120" cy="200" r="6" fill="#E11D48" opacity="0.5"/>
+            <circle cx="380" cy="420" r="8" fill="#E11D48" opacity="0.4"/>
+            <circle cx="700" cy="280" r="10" fill="#E11D48" opacity="0.35"/>
+            <circle cx="1050" cy="480" r="7" fill="#E11D48" opacity="0.45"/>
+            <circle cx="1340" cy="310" r="6" fill="#E11D48" opacity="0.4"/>
+            <circle cx="220" cy="680" r="5" fill="#E11D48" opacity="0.5"/>
+            <circle cx="580" cy="540" r="8" fill="#E11D48" opacity="0.4"/>
+            <circle cx="900" cy="700" r="6" fill="#E11D48" opacity="0.35"/>
+            <circle cx="1200" cy="580" r="7" fill="#E11D48" opacity="0.45"/>
+            {/* Ripple rings around key nodes */}
+            <circle cx="700" cy="280" r="22" stroke="#E11D48" strokeWidth="1" fill="none" opacity="0.25"/>
+            <circle cx="700" cy="280" r="38" stroke="#E11D48" strokeWidth="0.7" fill="none" opacity="0.15"/>
+            <circle cx="380" cy="420" r="18" stroke="#E11D48" strokeWidth="1" fill="none" opacity="0.2"/>
+          </svg>
+        </div>
+
+        {/* Layer 4: Large decorative blood-drop silhouette — right side */}
+        <div className="absolute right-[-60px] top-[-80px] w-[520px] h-[520px] pointer-events-none z-0 opacity-[0.04] dark:opacity-[0.06]">
+          <svg viewBox="0 0 200 260" fill="#E11D48" xmlns="http://www.w3.org/2000/svg">
+            <path d="M100 10 C100 10 20 100 20 160 C20 205 56 240 100 240 C144 240 180 205 180 160 C180 100 100 10 100 10Z"/>
+          </svg>
+        </div>
+
+        {/* Layer 5: Soft edge vignette to blend */}
+        <div className="absolute inset-0 pointer-events-none z-0 bg-gradient-to-br from-white/0 via-white/0 to-rose-50/40 dark:from-transparent dark:to-rose-950/10" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
@@ -213,10 +321,10 @@ const LandingPage = () => {
                 </button>
               </motion.div>
 
-              {/* Statistics Card Panel */}
               <motion.div
                 variants={fadeInUp}
-                className="bg-white/95 dark:bg-[#0F1420]/95 backdrop-blur-md border border-gray-100 dark:border-white/05 p-5 rounded-3xl shadow-lg shadow-black/02 flex items-center justify-between gap-1 max-w-lg w-full"
+                whileHover={{ y: -4, scale: 1.015, transition: { duration: 0.25, ease: "easeOut" } }}
+                className="bg-white/95 dark:bg-[#0F1420]/95 backdrop-blur-md border border-gray-100 dark:border-white/05 hover:border-rose-500/20 dark:hover:border-rose-500/10 p-5 rounded-3xl shadow-lg shadow-black/02 flex items-center justify-between gap-1 max-w-lg w-full transition-all duration-300"
               >
                 {/* Stat 1 */}
                 <div className="text-center flex-1">
@@ -260,14 +368,16 @@ const LandingPage = () => {
 
             </motion.div>
 
-            {/* Right Column (Simulator Panel Card Overlay) */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               className="lg:col-span-5 relative w-full flex flex-col items-center gap-8 justify-center z-10"
             >
-              <div className="w-full max-w-md bg-white/95 dark:bg-[#0F1420]/95 backdrop-blur-md rounded-3xl p-6 shadow-2xl relative border border-gray-100 dark:border-white/05 hover:scale-101 transition-all duration-300">
+              <motion.div 
+                whileHover={{ y: -6, transition: { duration: 0.25, ease: "easeOut" } }}
+                className="w-full max-w-md bg-white/95 dark:bg-[#0F1420]/95 backdrop-blur-md rounded-3xl p-6 shadow-2xl relative border border-gray-100 dark:border-white/05 hover:border-rose-500/20 dark:hover:border-rose-500/10 transition-all duration-300"
+              >
 
                 {/* Simulator Header */}
                 <div className="flex items-center justify-between border-b border-gray-100 dark:border-white/05 pb-4 mb-4 font-poppins">
@@ -278,65 +388,90 @@ const LandingPage = () => {
                   <span className="text-[9px] font-bold py-0.5 px-2 bg-red-50 dark:bg-red-950/20 text-[#E11D48] rounded-full uppercase tracking-wider">Simulator</span>
                 </div>
 
-                {/* Simulated Visual Dashboard */}
-                <div className="h-44 bg-gray-50 dark:bg-[#070B13]/40 rounded-2xl border border-slate-100 dark:border-white/05 relative overflow-hidden mb-4 flex items-center justify-center shadow-inner">
-                  {/* Map canvas dotted design */}
-                  <div className="absolute inset-0 bg-[radial-gradient(#d726380c_1.5px,transparent_1.5px)] bg-[size:14px_14px]" />
+                {/* Simulated Visual Dashboard — themed */}
+                <div className="h-44 bg-[#FAF9F6] dark:bg-[#070B13]/40 rounded-2xl border border-rose-100 dark:border-white/05 relative overflow-hidden mb-4 shadow-inner">
 
-                  {/* SVG dashed path connections matching the mockup flow */}
-                  <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
-                    {/* Left node (Hospital) to Center */}
-                    <path d="M 64 88 H 160" stroke="#3B82F6" strokeWidth="1.5" strokeDasharray="4 4" fill="none" opacity="0.5" />
-                    {/* Center to Top Right (Donors) */}
-                    <path d="M 210 88 L 290 48" stroke="#10B981" strokeWidth="1.5" strokeDasharray="4 4" fill="none" opacity="0.5" />
-                    {/* Center to Bottom Right (Ambulance) */}
-                    <path d="M 210 88 L 290 128" stroke="#F59E0B" strokeWidth="1.5" strokeDasharray="4 4" fill="none" opacity="0.5" />
+                  {/* Dot-grid — matches page background pattern */}
+                  <div className="absolute inset-0 bg-[radial-gradient(#E11D4812_1.5px,transparent_1.5px)] bg-[size:14px_14px]" />
+
+                  {/* Soft rose radial glow in center */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-rose-100/60 dark:bg-rose-900/10 blur-2xl pointer-events-none" />
+
+                  {/* Pulse rings from center */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+                    <div className="absolute inset-0 -m-8 rounded-full border border-[#E11D48]/20 animate-ping" style={{animationDuration:'2s'}} />
+                    <div className="absolute inset-0 -m-14 rounded-full border border-[#E11D48]/10 animate-ping" style={{animationDuration:'2.8s', animationDelay:'0.4s'}} />
+                    <div className="absolute inset-0 -m-20 rounded-full border border-[#E11D48]/06 animate-ping" style={{animationDuration:'3.5s', animationDelay:'0.8s'}} />
+                  </div>
+
+                  {/* SVG connections with moving dots */}
+                  <svg className="absolute inset-0 w-full h-full" viewBox="0 0 400 176" fill="none">
+                    {/* Hospital → Center */}
+                    <line x1="72" y1="88" x2="185" y2="88" stroke="#3B82F6" strokeWidth="1.5" strokeDasharray="5 3" opacity="0.5"/>
+                    {/* Center → Donor 1 */}
+                    <line x1="215" y1="88" x2="315" y2="46" stroke="#E11D48" strokeWidth="1.5" strokeDasharray="5 3" opacity="0.6"/>
+                    {/* Center → Donor 2 */}
+                    <line x1="215" y1="88" x2="320" y2="134" stroke="#E11D48" strokeWidth="1.5" strokeDasharray="5 3" opacity="0.5"/>
+                    {/* Moving dot — hospital to center */}
+                    <circle r="3" fill="#3B82F6" opacity="0.8">
+                      <animateMotion dur="2s" repeatCount="indefinite" path="M72,88 L185,88"/>
+                    </circle>
+                    {/* Moving dot — center to donor 1 */}
+                    <circle r="3" fill="#E11D48" opacity="0.8">
+                      <animateMotion dur="1.8s" repeatCount="indefinite" path="M215,88 L315,46"/>
+                    </circle>
+                    {/* Moving dot — center to donor 2 */}
+                    <circle r="3" fill="#E11D48" opacity="0.7">
+                      <animateMotion dur="2.3s" repeatCount="indefinite" path="M215,88 L320,134"/>
+                    </circle>
                   </svg>
 
-                  {/* Pulsing hospital, group, and ambulance nodes */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    
-                    {/* Pulsing center blood drop badge */}
-                    <div className="relative z-10 flex items-center justify-center">
-                      <div className="w-14 h-14 rounded-full bg-white dark:bg-[#1E293B] shadow-md border border-gray-100 dark:border-white/05 flex items-center justify-center relative">
-                        <span className="text-[#E11D48] text-2xl">🩸</span>
-                        {/* Radial expansion waves */}
-                        <div className="absolute inset-0 w-full h-full rounded-full bg-[#E11D48]/10 animate-ping pointer-events-none" />
-                        <div className="absolute -inset-3 rounded-full border border-dashed border-[#E11D48]/20 animate-[spin_16s_linear_infinite]" />
-                      </div>
+                  {/* Center blood-drop badge */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+                    <div className="w-12 h-12 rounded-full bg-white dark:bg-[#1E293B] shadow-lg border border-rose-100 dark:border-white/05 flex items-center justify-center relative">
+                      <span className="text-[#E11D48] text-xl">🩸</span>
+                      <div className="absolute inset-0 rounded-full bg-[#E11D48]/08 animate-ping pointer-events-none" />
                     </div>
-
-                    {/* Left Node: Hospital - White shadow badge */}
-                    <div className="absolute left-6 top-1/2 -translate-y-1/2 flex items-center justify-center z-10">
-                      <div className="w-10 h-10 rounded-xl bg-white dark:bg-[#1E293B] shadow-md border border-gray-100 dark:border-white/05 flex items-center justify-center text-blue-500">
-                        <svg className="w-5.5 h-5.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                          <path d="M3 21h18M5 21V5a2 2 0 012-2h10a2 2 0 012 2v16M9 21v-4a2 2 0 012-2h2a2 2 0 012 2v4" />
-                        </svg>
-                      </div>
-                    </div>
-
-                    {/* Top-Right Node: Donor Group - White shadow badge */}
-                    <div className="absolute right-8 top-8 flex items-center justify-center z-10">
-                      <div className="w-10 h-10 rounded-xl bg-white dark:bg-[#1E293B] shadow-md border border-gray-100 dark:border-white/05 flex items-center justify-center text-emerald-500">
-                        <svg className="w-5.5 h-5.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zm14 10v-2a4 4 0 00-3-3.87m-4-12a4 4 0 010 7.75" />
-                        </svg>
-                      </div>
-                    </div>
-
-                    {/* Bottom-Right Node: Ambulance - White shadow badge */}
-                    <div className="absolute right-8 bottom-8 flex items-center justify-center z-10">
-                      <div className="w-10 h-10 rounded-xl bg-white dark:bg-[#1E293B] shadow-md border border-gray-100 dark:border-white/05 flex items-center justify-center text-amber-500">
-                        <svg className="w-5.5 h-5.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                          <rect x="1" y="3" width="15" height="13" />
-                          <polygon points="16 8 20 8 23 11 23 16 16 16" />
-                          <circle cx="5.5" cy="18.5" r="2.5" />
-                          <circle cx="18.5" cy="18.5" r="2.5" />
-                        </svg>
-                      </div>
-                    </div>
-
                   </div>
+
+                  {/* Hospital badge — left */}
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex flex-col items-center gap-1">
+                    <div className="w-10 h-10 rounded-xl bg-white dark:bg-[#1E293B] shadow-md border border-blue-100 dark:border-white/05 flex items-center justify-center text-blue-500">
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M3 21h18M5 21V5a2 2 0 012-2h10a2 2 0 012 2v16M9 21v-4a2 2 0 012-2h2a2 2 0 012 2v4"/>
+                      </svg>
+                    </div>
+                    <span className="text-[7px] font-bold text-slate-400 tracking-wider uppercase">Hospital</span>
+                  </div>
+
+                  {/* Donor 1 badge — top right */}
+                  <div className="absolute right-10 top-4 z-10 flex flex-col items-center gap-1">
+                    <div className="w-10 h-10 rounded-xl bg-white dark:bg-[#1E293B] shadow-md border border-rose-100 dark:border-white/05 flex items-center justify-center text-[#E11D48]">
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/>
+                      </svg>
+                    </div>
+                    <span className="text-[7px] font-bold text-slate-400 tracking-wider uppercase">Donor</span>
+                  </div>
+
+                  {/* Donor 2 badge — bottom right */}
+                  <div className="absolute right-8 bottom-4 z-10 flex flex-col items-center gap-1">
+                    <div className="w-10 h-10 rounded-xl bg-white dark:bg-[#1E293B] shadow-md border border-rose-100 dark:border-white/05 flex items-center justify-center text-[#E11D48]">
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/>
+                      </svg>
+                    </div>
+                    <span className="text-[7px] font-bold text-slate-400 tracking-wider uppercase">Donor</span>
+                  </div>
+
+                  {/* AI Matching pill — top center */}
+                  <div className="absolute top-2.5 left-1/2 -translate-x-1/2 z-10">
+                    <div className="flex items-center gap-1.5 bg-white/90 dark:bg-[#0F1420]/90 backdrop-blur border border-rose-100 dark:border-white/05 rounded-full px-3 py-1 shadow-sm">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#E11D48] animate-pulse" />
+                      <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 tracking-widest uppercase">AI Matching</span>
+                    </div>
+                  </div>
+
                 </div>
 
                 {/* Match progress bar box */}
@@ -358,7 +493,7 @@ const LandingPage = () => {
                   </div>
                 </div>
 
-                {/* Simulator Trigger - Mixed case match */}
+                {/* Simulator Trigger */}
                 <button
                   type="button"
                   disabled={isSimulating}
@@ -371,14 +506,14 @@ const LandingPage = () => {
                       Matching Logistics...
                     </span>
                   ) : (
-                    <>
+                    <span className="flex items-center gap-2">
                       <span>Run Match Simulation</span>
                       <FiArrowRight className="w-4 h-4" />
-                    </>
+                    </span>
                   )}
                 </button>
 
-              </div>
+              </motion.div>
 
             </motion.div>
 
@@ -411,13 +546,14 @@ const LandingPage = () => {
             { name: 'HEALTHALLIANCE', sub: 'NETWORK', color: 'text-indigo-500', bg: 'bg-indigo-50', icon: <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> },
           ].map((item, i) => (
             <motion.div key={i} variants={fadeInUp}
-              className={`bg-white dark:bg-slate-900 border border-gray-100 dark:border-gray-800 rounded-2xl px-5 py-5 flex items-center gap-4 shadow-sm hover:shadow-md transition-all duration-200 ${i === 4 ? 'col-span-2 sm:col-span-1' : ''}`}
+              whileHover={{ y: -5, scale: 1.025, transition: { duration: 0.2 } }}
+              className={`group bg-white dark:bg-slate-900 border border-gray-100 dark:border-gray-800 rounded-2xl px-5 py-5 flex items-center gap-4 shadow-sm hover:shadow-md hover:border-rose-500/20 dark:hover:border-rose-500/10 transition-all duration-300 ${i === 4 ? 'col-span-2 sm:col-span-1' : ''}`}
             >
-              <div className={`w-10 h-10 rounded-xl ${item.bg} dark:bg-white/5 flex items-center justify-center flex-shrink-0 ${item.color}`}>
+              <div className={`w-10 h-10 rounded-xl ${item.bg} dark:bg-white/5 flex items-center justify-center flex-shrink-0 ${item.color} transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6`}>
                 {item.icon}
               </div>
               <div className="text-left leading-tight">
-                <p className="font-black text-[12px] text-slate-700 dark:text-slate-200 tracking-tight">{item.name}</p>
+                <p className="font-black text-[12px] text-slate-700 dark:text-slate-200 tracking-tight transition-colors duration-300 group-hover:text-[#E11D48]">{item.name}</p>
                 <p className="text-[9px] font-semibold text-slate-400 tracking-widest mt-0.5">{item.sub}</p>
               </div>
             </motion.div>
@@ -449,14 +585,18 @@ const LandingPage = () => {
           className="grid grid-cols-2 lg:grid-cols-5 gap-5"
         >
           {/* Stat 1 — Donors (rose) */}
-          <motion.div variants={fadeInUp} className="bg-white dark:bg-slate-900 rounded-2xl pt-8 pb-0 px-4 text-center border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center relative overflow-hidden">
-            <div className="w-14 h-14 rounded-full bg-rose-50 dark:bg-rose-950/30 text-[#E11D48] flex items-center justify-center mb-4 relative z-10">
+          <motion.div 
+            variants={fadeInUp} 
+            whileHover={{ y: -8, transition: { duration: 0.25, ease: "easeOut" } }}
+            className="group bg-white dark:bg-slate-900 rounded-2xl pt-8 pb-0 px-4 text-center border border-gray-100/70 dark:border-gray-800/80 shadow-sm hover:shadow-md hover:border-rose-500/20 dark:hover:border-rose-500/10 flex flex-col items-center relative overflow-hidden transition-all duration-300"
+          >
+            <div className="w-14 h-14 rounded-full bg-rose-50 dark:bg-rose-950/30 text-[#E11D48] flex items-center justify-center mb-4 relative z-10 transition-transform duration-300 group-hover:scale-110">
               <FiUsers className="w-6 h-6" />
             </div>
-            <h3 className="text-4xl font-black text-[#E11D48] mb-2 relative z-10"><AnimatedCounter value="5,842" /></h3>
+            <h3 className="text-4xl font-black text-[#E11D48] mb-2 relative z-10 transition-transform duration-300 group-hover:scale-105"><AnimatedCounter value="5,842" /></h3>
             <p className="text-[9px] font-black text-slate-600 dark:text-slate-300 uppercase tracking-widest mb-1 relative z-10">Registered Donors</p>
             <p className="text-[10px] text-slate-400 leading-snug mb-16 relative z-10">Generous donors ready<br/>to save lives</p>
-            <div className="absolute bottom-0 left-0 right-0 z-0">
+            <div className="absolute bottom-0 left-0 right-0 z-0 transition-transform duration-500 group-hover:scale-105">
               <svg viewBox="0 0 300 70" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-16">
                 <path d="M0,45 C50,15 100,60 150,35 C200,10 250,55 300,30 L300,70 L0,70 Z" fill="#FFE4E6"/>
                 <path d="M0,55 C60,35 120,65 180,45 C230,28 270,60 300,45 L300,70 L0,70 Z" fill="#FECDD3" opacity="0.6"/>
@@ -465,14 +605,18 @@ const LandingPage = () => {
           </motion.div>
 
           {/* Stat 2 — Hospitals (blue) */}
-          <motion.div variants={fadeInUp} className="bg-white dark:bg-slate-900 rounded-2xl pt-8 pb-0 px-4 text-center border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center relative overflow-hidden">
-            <div className="w-14 h-14 rounded-full bg-blue-50 dark:bg-blue-950/30 text-blue-500 flex items-center justify-center mb-4 relative z-10">
+          <motion.div 
+            variants={fadeInUp} 
+            whileHover={{ y: -8, transition: { duration: 0.25, ease: "easeOut" } }}
+            className="group bg-white dark:bg-slate-900 rounded-2xl pt-8 pb-0 px-4 text-center border border-gray-100/70 dark:border-gray-800/80 shadow-sm hover:shadow-md hover:border-blue-500/20 dark:hover:border-blue-500/10 flex flex-col items-center relative overflow-hidden transition-all duration-300"
+          >
+            <div className="w-14 h-14 rounded-full bg-blue-50 dark:bg-blue-950/30 text-blue-500 flex items-center justify-center mb-4 relative z-10 transition-transform duration-300 group-hover:scale-110">
               <FiActivity className="w-6 h-6" />
             </div>
-            <h3 className="text-4xl font-black text-blue-500 mb-2 relative z-10"><AnimatedCounter value="142" /></h3>
+            <h3 className="text-4xl font-black text-blue-500 mb-2 relative z-10 transition-transform duration-300 group-hover:scale-105"><AnimatedCounter value="142" /></h3>
             <p className="text-[9px] font-black text-slate-600 dark:text-slate-300 uppercase tracking-widest mb-1 relative z-10">Connected Hospitals</p>
             <p className="text-[10px] text-slate-400 leading-snug mb-16 relative z-10">Hospitals connected<br/>across the nation</p>
-            <div className="absolute bottom-0 left-0 right-0 z-0">
+            <div className="absolute bottom-0 left-0 right-0 z-0 transition-transform duration-500 group-hover:scale-105">
               <svg viewBox="0 0 300 70" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-16">
                 <path d="M0,35 C70,10 130,60 190,30 C240,5 270,50 300,25 L300,70 L0,70 Z" fill="#DBEAFE"/>
                 <path d="M0,50 C80,30 150,65 210,40 C260,20 285,55 300,40 L300,70 L0,70 Z" fill="#BFDBFE" opacity="0.6"/>
@@ -481,14 +625,18 @@ const LandingPage = () => {
           </motion.div>
 
           {/* Stat 3 — Requests (amber) */}
-          <motion.div variants={fadeInUp} className="bg-white dark:bg-slate-900 rounded-2xl pt-8 pb-0 px-4 text-center border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center relative overflow-hidden">
-            <div className="w-14 h-14 rounded-full bg-amber-50 dark:bg-amber-950/30 text-amber-500 flex items-center justify-center mb-4 relative z-10">
+          <motion.div 
+            variants={fadeInUp} 
+            whileHover={{ y: -8, transition: { duration: 0.25, ease: "easeOut" } }}
+            className="group bg-white dark:bg-slate-900 rounded-2xl pt-8 pb-0 px-4 text-center border border-gray-100/70 dark:border-gray-800/80 shadow-sm hover:shadow-md hover:border-amber-500/20 dark:hover:border-amber-500/10 flex flex-col items-center relative overflow-hidden transition-all duration-300"
+          >
+            <div className="w-14 h-14 rounded-full bg-amber-50 dark:bg-amber-950/30 text-amber-500 flex items-center justify-center mb-4 relative z-10 transition-transform duration-300 group-hover:scale-110">
               <FiBell className="w-6 h-6" />
             </div>
-            <h3 className="text-4xl font-black text-amber-500 mb-2 relative z-10"><AnimatedCounter value="1,945" /></h3>
+            <h3 className="text-4xl font-black text-amber-500 mb-2 relative z-10 transition-transform duration-300 group-hover:scale-105"><AnimatedCounter value="1,945" /></h3>
             <p className="text-[9px] font-black text-slate-600 dark:text-slate-300 uppercase tracking-widest mb-1 relative z-10">Emergency Requests</p>
             <p className="text-[10px] text-slate-400 leading-snug mb-16 relative z-10">Urgent requests<br/>handled instantly</p>
-            <div className="absolute bottom-0 left-0 right-0 z-0">
+            <div className="absolute bottom-0 left-0 right-0 z-0 transition-transform duration-500 group-hover:scale-105">
               <svg viewBox="0 0 300 70" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-16">
                 <path d="M0,40 C60,15 110,65 170,35 C220,10 265,55 300,30 L300,70 L0,70 Z" fill="#FEF3C7"/>
                 <path d="M0,55 C70,35 130,65 190,48 C240,30 275,60 300,48 L300,70 L0,70 Z" fill="#FDE68A" opacity="0.6"/>
@@ -497,14 +645,18 @@ const LandingPage = () => {
           </motion.div>
 
           {/* Stat 4 — Lives (emerald) */}
-          <motion.div variants={fadeInUp} className="bg-white dark:bg-slate-900 rounded-2xl pt-8 pb-0 px-4 text-center border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center relative overflow-hidden">
-            <div className="w-14 h-14 rounded-full bg-emerald-50 dark:bg-emerald-950/30 text-emerald-500 flex items-center justify-center mb-4 relative z-10">
+          <motion.div 
+            variants={fadeInUp} 
+            whileHover={{ y: -8, transition: { duration: 0.25, ease: "easeOut" } }}
+            className="group bg-white dark:bg-slate-900 rounded-2xl pt-8 pb-0 px-4 text-center border border-gray-100/70 dark:border-gray-800/80 shadow-sm hover:shadow-md hover:border-emerald-500/20 dark:hover:border-emerald-500/10 flex flex-col items-center relative overflow-hidden transition-all duration-300"
+          >
+            <div className="w-14 h-14 rounded-full bg-emerald-50 dark:bg-emerald-950/30 text-emerald-500 flex items-center justify-center mb-4 relative z-10 transition-transform duration-300 group-hover:scale-110">
               <FiHeart className="w-6 h-6" />
             </div>
-            <h3 className="text-4xl font-black text-emerald-500 mb-2 relative z-10"><AnimatedCounter value="3,480" /></h3>
+            <h3 className="text-4xl font-black text-emerald-500 mb-2 relative z-10 transition-transform duration-300 group-hover:scale-105"><AnimatedCounter value="3,480" /></h3>
             <p className="text-[9px] font-black text-slate-600 dark:text-slate-300 uppercase tracking-widest mb-1 relative z-10">Lives Saved</p>
             <p className="text-[10px] text-slate-400 leading-snug mb-16 relative z-10">Real people.<br/>Real impact.</p>
-            <div className="absolute bottom-0 left-0 right-0 z-0">
+            <div className="absolute bottom-0 left-0 right-0 z-0 transition-transform duration-500 group-hover:scale-105">
               <svg viewBox="0 0 300 70" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-16">
                 <path d="M0,38 C55,12 115,62 175,32 C225,8 268,52 300,28 L300,70 L0,70 Z" fill="#D1FAE5"/>
                 <path d="M0,52 C65,32 125,65 185,45 C235,28 272,58 300,44 L300,70 L0,70 Z" fill="#A7F3D0" opacity="0.6"/>
@@ -513,14 +665,18 @@ const LandingPage = () => {
           </motion.div>
 
           {/* Stat 5 — Match Time (pink) */}
-          <motion.div variants={fadeInUp} className="bg-white dark:bg-slate-900 rounded-2xl pt-8 pb-0 px-4 col-span-2 lg:col-span-1 text-center border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center relative overflow-hidden">
-            <div className="w-14 h-14 rounded-full bg-rose-50 dark:bg-rose-950/30 text-rose-400 flex items-center justify-center mb-4 relative z-10">
+          <motion.div 
+            variants={fadeInUp} 
+            whileHover={{ y: -8, transition: { duration: 0.25, ease: "easeOut" } }}
+            className="group bg-white dark:bg-slate-900 rounded-2xl pt-8 pb-0 px-4 col-span-2 lg:col-span-1 text-center border border-gray-100/70 dark:border-gray-800/80 shadow-sm hover:shadow-md hover:border-pink-500/20 dark:hover:border-pink-500/10 flex flex-col items-center relative overflow-hidden transition-all duration-300"
+          >
+            <div className="w-14 h-14 rounded-full bg-rose-50 dark:bg-rose-950/30 text-rose-400 flex items-center justify-center mb-4 relative z-10 transition-transform duration-300 group-hover:scale-110">
               <FiClock className="w-6 h-6" />
             </div>
-            <h3 className="text-4xl font-black text-rose-400 mb-2 relative z-10"><AnimatedCounter value="< 45s" /></h3>
+            <h3 className="text-4xl font-black text-rose-400 mb-2 relative z-10 transition-transform duration-300 group-hover:scale-105"><AnimatedCounter value="< 45s" /></h3>
             <p className="text-[9px] font-black text-slate-600 dark:text-slate-300 uppercase tracking-widest mb-1 relative z-10">Avg Match Time</p>
             <p className="text-[10px] text-slate-400 leading-snug mb-16 relative z-10">Fastest average match<br/>time in India</p>
-            <div className="absolute bottom-0 left-0 right-0 z-0">
+            <div className="absolute bottom-0 left-0 right-0 z-0 transition-transform duration-500 group-hover:scale-105">
               <svg viewBox="0 0 300 70" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-16">
                 <path d="M0,42 C65,18 120,62 180,36 C228,14 268,56 300,32 L300,70 L0,70 Z" fill="#FCE7F3"/>
                 <path d="M0,55 C70,38 130,66 192,48 C242,30 278,62 300,48 L300,70 L0,70 Z" fill="#FBCFE8" opacity="0.6"/>
@@ -566,15 +722,19 @@ const LandingPage = () => {
           >
 
             {/* Feature 1 — Smart AI Matching */}
-            <motion.div variants={fadeInUp} className="bg-white dark:bg-slate-900 rounded-2xl p-7 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col items-start text-left relative overflow-hidden min-h-[280px]">
-              <div className="w-12 h-12 rounded-xl bg-rose-50 dark:bg-rose-950/30 text-[#E11D48] flex items-center justify-center mb-5">
+            <motion.div 
+              variants={fadeInUp} 
+              whileHover={{ y: -8, transition: { duration: 0.25, ease: "easeOut" } }}
+              className="group bg-white dark:bg-slate-900 rounded-2xl p-7 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-lg hover:border-[#E11D48]/20 dark:hover:border-[#E11D48]/10 transition-all duration-300 flex flex-col items-start text-left relative overflow-hidden min-h-[280px]"
+            >
+              <div className="w-12 h-12 rounded-xl bg-rose-50 dark:bg-rose-950/30 text-[#E11D48] flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
                 <FiActivity className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Smart AI Matching</h3>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 transition-colors duration-300 group-hover:text-[#E11D48]">Smart AI Matching</h3>
               <div className="w-8 h-[3px] bg-[#E11D48] rounded-full mb-3"></div>
               <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-[220px]">Our predictive routing connects requests with matching eligible donors in milliseconds.</p>
               {/* Decorative Illustration */}
-              <svg className="absolute bottom-4 right-4 w-28 h-28 opacity-60 dark:opacity-30" viewBox="0 0 120 120" fill="none">
+              <svg className="absolute bottom-4 right-4 w-28 h-28 opacity-60 dark:opacity-30 transition-transform duration-500 group-hover:scale-105 group-hover:rotate-3" viewBox="0 0 120 120" fill="none">
                 <circle cx="90" cy="90" r="25" stroke="#E11D48" strokeWidth="2" strokeDasharray="4 3" />
                 <circle cx="90" cy="90" r="5" fill="#E11D48" opacity="0.7" />
                 <path d="M30 60 L60 40 L90 65" stroke="#E11D48" strokeWidth="2" strokeDasharray="3 3" fill="none" />
@@ -586,15 +746,19 @@ const LandingPage = () => {
             </motion.div>
 
             {/* Feature 2 — Emergency Alerts */}
-            <motion.div variants={fadeInUp} className="bg-white dark:bg-slate-900 rounded-2xl p-7 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col items-start text-left relative overflow-hidden min-h-[280px]">
-              <div className="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-950/30 text-amber-500 flex items-center justify-center mb-5">
+            <motion.div 
+              variants={fadeInUp} 
+              whileHover={{ y: -8, transition: { duration: 0.25, ease: "easeOut" } }}
+              className="group bg-white dark:bg-slate-900 rounded-2xl p-7 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-lg hover:border-amber-500/20 dark:hover:border-amber-500/10 transition-all duration-300 flex flex-col items-start text-left relative overflow-hidden min-h-[280px]"
+            >
+              <div className="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-950/30 text-amber-500 flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
                 <FiBell className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Emergency Alerts</h3>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 transition-colors duration-300 group-hover:text-amber-550">Emergency Alerts</h3>
               <div className="w-8 h-[3px] bg-[#E11D48] rounded-full mb-3"></div>
               <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-[220px]">Instant push and SMS notifications broadcasted to high-priority donor circles.</p>
               {/* Decorative Illustration */}
-              <svg className="absolute bottom-4 right-4 w-28 h-28 opacity-60 dark:opacity-30" viewBox="0 0 120 120" fill="none">
+              <svg className="absolute bottom-4 right-4 w-28 h-28 opacity-60 dark:opacity-30 transition-transform duration-500 group-hover:scale-105 group-hover:-rotate-3" viewBox="0 0 120 120" fill="none">
                 <rect x="60" y="30" width="40" height="50" rx="6" stroke="#F59E0B" strokeWidth="2" fill="none" />
                 <rect x="68" y="42" width="24" height="3" rx="1.5" fill="#F59E0B" opacity="0.7" />
                 <rect x="68" y="50" width="18" height="3" rx="1.5" fill="#F59E0B" opacity="0.6" />
@@ -607,15 +771,19 @@ const LandingPage = () => {
             </motion.div>
 
             {/* Feature 3 — Verified Donors */}
-            <motion.div variants={fadeInUp} className="bg-white dark:bg-slate-900 rounded-2xl p-7 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col items-start text-left relative overflow-hidden min-h-[280px]">
-              <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-500 flex items-center justify-center mb-5">
+            <motion.div 
+              variants={fadeInUp} 
+              whileHover={{ y: -8, transition: { duration: 0.25, ease: "easeOut" } }}
+              className="group bg-white dark:bg-slate-900 rounded-2xl p-7 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-lg hover:border-emerald-500/20 dark:hover:border-emerald-500/10 transition-all duration-300 flex flex-col items-start text-left relative overflow-hidden min-h-[280px]"
+            >
+              <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-500 flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
                 <FiShield className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Verified Donors</h3>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 transition-colors duration-300 group-hover:text-emerald-550">Verified Donors</h3>
               <div className="w-8 h-[3px] bg-[#E11D48] rounded-full mb-3"></div>
               <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-[220px]">Rigorous donor profiling and medical log synchronization to ensure blood safety.</p>
               {/* Decorative Illustration */}
-              <svg className="absolute bottom-2 right-2 w-32 h-32 opacity-60 dark:opacity-30" viewBox="0 0 130 130" fill="none">
+              <svg className="absolute bottom-2 right-2 w-32 h-32 opacity-60 dark:opacity-30 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6" viewBox="0 0 130 130" fill="none">
                 <circle cx="85" cy="75" r="30" stroke="#10B981" strokeWidth="2" fill="none" />
                 <path d="M73 75 L81 83 L97 67" stroke="#10B981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
                 <circle cx="105" cy="100" r="10" stroke="#10B981" strokeWidth="1.5" fill="none" opacity="0.8" />
@@ -624,15 +792,19 @@ const LandingPage = () => {
             </motion.div>
 
             {/* Feature 4 — Hospital Dashboard */}
-            <motion.div variants={fadeInUp} className="bg-white dark:bg-slate-900 rounded-2xl p-7 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col items-start text-left relative overflow-hidden min-h-[280px]">
-              <div className="w-12 h-12 rounded-xl bg-violet-50 dark:bg-violet-950/30 text-violet-500 flex items-center justify-center mb-5">
+            <motion.div 
+              variants={fadeInUp} 
+              whileHover={{ y: -8, transition: { duration: 0.25, ease: "easeOut" } }}
+              className="group bg-white dark:bg-slate-900 rounded-2xl p-7 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-lg hover:border-violet-500/20 dark:hover:border-violet-500/10 transition-all duration-300 flex flex-col items-start text-left relative overflow-hidden min-h-[280px]"
+            >
+              <div className="w-12 h-12 rounded-xl bg-violet-50 dark:bg-violet-950/30 text-violet-500 flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
                 <FiGrid className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Hospital Dashboard</h3>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 transition-colors duration-300 group-hover:text-violet-550">Hospital Dashboard</h3>
               <div className="w-8 h-[3px] bg-[#E11D48] rounded-full mb-3"></div>
               <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-[220px]">Real-time blood bank status, predictive stock metrics, and request trackers.</p>
               {/* Decorative Illustration */}
-              <svg className="absolute bottom-4 right-4 w-32 h-24 opacity-60 dark:opacity-30" viewBox="0 0 140 100" fill="none">
+              <svg className="absolute bottom-4 right-4 w-32 h-24 opacity-60 dark:opacity-30 transition-transform duration-500 group-hover:scale-105" viewBox="0 0 140 100" fill="none">
                 <rect x="20" y="20" width="100" height="65" rx="6" stroke="#8B5CF6" strokeWidth="2" fill="none" />
                 <line x1="20" y1="35" x2="120" y2="35" stroke="#8B5CF6" strokeWidth="1.5" opacity="0.6" />
                 <rect x="30" y="45" width="8" height="30" rx="2" fill="#8B5CF6" opacity="0.35" />
@@ -645,15 +817,19 @@ const LandingPage = () => {
             </motion.div>
 
             {/* Feature 5 — Real-Time Tracking */}
-            <motion.div variants={fadeInUp} className="bg-white dark:bg-slate-900 rounded-2xl p-7 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col items-start text-left relative overflow-hidden min-h-[280px]">
-              <div className="w-12 h-12 rounded-xl bg-rose-50 dark:bg-rose-950/30 text-[#E11D48] flex items-center justify-center mb-5">
+            <motion.div 
+              variants={fadeInUp} 
+              whileHover={{ y: -8, transition: { duration: 0.25, ease: "easeOut" } }}
+              className="group bg-white dark:bg-slate-900 rounded-2xl p-7 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-lg hover:border-[#E11D48]/20 dark:hover:border-[#E11D48]/10 transition-all duration-300 flex flex-col items-start text-left relative overflow-hidden min-h-[280px]"
+            >
+              <div className="w-12 h-12 rounded-xl bg-rose-50 dark:bg-rose-950/30 text-[#E11D48] flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
                 <FiMapPin className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Real-Time Tracking</h3>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 transition-colors duration-300 group-hover:text-[#E11D48]">Real-Time Tracking</h3>
               <div className="w-8 h-[3px] bg-[#E11D48] rounded-full mb-3"></div>
               <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-[220px]">Live donor dispatch maps show exactly when and where help is arriving.</p>
               {/* Decorative Illustration */}
-              <svg className="absolute bottom-4 right-2 w-32 h-28 opacity-60 dark:opacity-30" viewBox="0 0 140 120" fill="none">
+              <svg className="absolute bottom-4 right-2 w-32 h-28 opacity-60 dark:opacity-30 transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" viewBox="0 0 140 120" fill="none">
                 <path d="M20 90 Q50 50 80 70 Q110 90 130 60" stroke="#E11D48" strokeWidth="2.5" strokeDasharray="5 4" fill="none" />
                 <circle cx="20" cy="90" r="5" fill="#E11D48" opacity="0.6" />
                 <circle cx="80" cy="70" r="5" fill="#E11D48" opacity="0.6" />
@@ -664,15 +840,19 @@ const LandingPage = () => {
             </motion.div>
 
             {/* Feature 6 — Blood Inventory */}
-            <motion.div variants={fadeInUp} className="bg-white dark:bg-slate-900 rounded-2xl p-7 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col items-start text-left relative overflow-hidden min-h-[280px]">
-              <div className="w-12 h-12 rounded-xl bg-teal-50 dark:bg-teal-950/30 text-teal-500 flex items-center justify-center mb-5">
+            <motion.div 
+              variants={fadeInUp} 
+              whileHover={{ y: -8, transition: { duration: 0.25, ease: "easeOut" } }}
+              className="group bg-white dark:bg-slate-900 rounded-2xl p-7 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-lg hover:border-teal-500/20 dark:hover:border-teal-500/10 transition-all duration-300 flex flex-col items-start text-left relative overflow-hidden min-h-[280px]"
+            >
+              <div className="w-12 h-12 rounded-xl bg-teal-50 dark:bg-teal-950/30 text-teal-500 flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
                 <FiDatabase className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Blood Inventory</h3>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 transition-colors duration-300 group-hover:text-teal-555">Blood Inventory</h3>
               <div className="w-8 h-[3px] bg-[#E11D48] rounded-full mb-3"></div>
               <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-[220px]">Live cloud analytics sync with hospital blood banks to check reserves instantly.</p>
               {/* Decorative Illustration */}
-              <svg className="absolute bottom-4 right-2 w-32 h-28 opacity-60 dark:opacity-30" viewBox="0 0 140 120" fill="none">
+              <svg className="absolute bottom-4 right-2 w-32 h-28 opacity-60 dark:opacity-30 transition-transform duration-500 group-hover:scale-105" viewBox="0 0 140 120" fill="none">
                 <ellipse cx="90" cy="40" rx="30" ry="12" stroke="#14B8A6" strokeWidth="2" fill="none" />
                 <path d="M60 40 L60 55 Q60 67 90 67 Q120 67 120 55 L120 40" stroke="#14B8A6" strokeWidth="2" fill="none" />
                 <line x1="75" y1="52" x2="105" y2="52" stroke="#14B8A6" strokeWidth="1.5" opacity="0.6" />
@@ -1604,32 +1784,212 @@ const LandingPage = () => {
           variants={staggerContainer}
           className="grid grid-cols-1 md:grid-cols-3 gap-8"
         >
-
-          <motion.div variants={fadeInUp} whileHover={{ y: -4 }} className="p-8 bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm text-left flex flex-col items-start transition-all">
-            <div className="w-10 h-10 rounded-xl bg-bloodred/10 text-bloodred flex items-center justify-center mb-4">
+          {/* Card 1: Government Integration */}
+          <motion.div 
+            variants={fadeInUp} 
+            whileHover={{ y: -8, transition: { duration: 0.25, ease: "easeOut" } }} 
+            className="group p-8 bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-gray-800/80 shadow-sm hover:shadow-lg hover:border-rose-500/20 dark:hover:border-rose-500/10 text-left flex flex-col items-start transition-all duration-300"
+          >
+            <div className="w-10 h-10 rounded-xl bg-bloodred/10 text-bloodred flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6 group-hover:bg-[#E11D48]/20">
               <FiPlus className="w-5 h-5" />
             </div>
-            <h3 className="font-bold text-base text-gray-950 dark:text-white mb-2">Government Integration</h3>
+            <h3 className="font-bold text-base text-gray-950 dark:text-white mb-2 transition-colors duration-300 group-hover:text-[#E11D48]">Government Integration</h3>
             <p className="text-sm text-gray-400 dark:text-gray-500 leading-relaxed">Direct synchronization with national digital health ID grids for authenticated medical histories.</p>
           </motion.div>
 
-          <motion.div variants={fadeInUp} whileHover={{ y: -4 }} className="p-8 bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm text-left flex flex-col items-start transition-all">
-            <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center mb-4">
+          {/* Card 2: Ambulance Dispatch */}
+          <motion.div 
+            variants={fadeInUp} 
+            whileHover={{ y: -8, transition: { duration: 0.25, ease: "easeOut" } }} 
+            className="group p-8 bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-gray-800/80 shadow-sm hover:shadow-lg hover:border-rose-500/20 dark:hover:border-rose-500/10 text-left flex flex-col items-start transition-all duration-300"
+          >
+            <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6 group-hover:bg-blue-500/20">
               <FiActivity className="w-5 h-5" />
             </div>
-            <h3 className="font-bold text-base text-gray-950 dark:text-white mb-2">Ambulance Dispatch</h3>
+            <h3 className="font-bold text-base text-gray-950 dark:text-white mb-2 transition-colors duration-300 group-hover:text-[#E11D48]">Ambulance Dispatch</h3>
             <p className="text-sm text-gray-400 dark:text-gray-500 leading-relaxed">Live emergency matching directly triggered from on-road ambulances during critical transit.</p>
           </motion.div>
 
-          <motion.div variants={fadeInUp} whileHover={{ y: -4 }} className="p-8 bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm text-left flex flex-col items-start transition-all">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-4">
+          {/* Card 3: National Donor Registry */}
+          <motion.div 
+            variants={fadeInUp} 
+            whileHover={{ y: -8, transition: { duration: 0.25, ease: "easeOut" } }} 
+            className="group p-8 bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-gray-800/80 shadow-sm hover:shadow-lg hover:border-rose-500/20 dark:hover:border-rose-500/10 text-left flex flex-col items-start transition-all duration-300"
+          >
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-550 flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6 group-hover:bg-emerald-500/20">
               <FiShield className="w-5 h-5" />
             </div>
-            <h3 className="font-bold text-base text-gray-950 dark:text-white mb-2">National Donor Registry</h3>
-            <p className="text-sm text-gray-400 dark:text-gray-500 leading-relaxed">A unified cross-state alert grid enabling drone delivery logistics for ultra-rare blood types.</p>
+            <h3 className="font-bold text-base text-gray-950 dark:text-white mb-2 transition-colors duration-300 group-hover:text-[#E11D48]">National Donor Registry</h3>
+            <p className="text-sm text-gray-400 dark:text-gray-500 leading-relaxed">A unified health system-wide secure donor registry for regional and local clinics.</p>
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* 11b. Partnership Plans Section */}
+      <section id="partnership-plans" className="relative py-28 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#FAF9F6] to-white dark:from-[#070B13] dark:to-slate-950/40 border-t border-b border-gray-100 dark:border-slate-800/40 overflow-hidden">
+        {/* Soft background glow decoration */}
+        <div className="absolute top-1/4 left-1/4 w-[550px] h-[550px] bg-rose-500/03 dark:bg-rose-950/05 rounded-full blur-[130px] pointer-events-none -translate-x-1/2" />
+        <div className="absolute bottom-1/4 right-1/4 w-[550px] h-[550px] bg-[#E11D48]/03 dark:bg-[#E11D48]/05 rounded-full blur-[130px] pointer-events-none translate-x-1/2" />
+
+        <div className="max-w-7xl mx-auto relative z-10">
+          {/* Header */}
+          <motion.div
+            className="text-center mb-20"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-80px' }}
+            variants={staggerContainer}
+          >
+            <motion.div variants={fadeInUp} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 dark:bg-rose-950/20 border border-rose-100/60 dark:border-rose-900/30 mb-4">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#E11D48] animate-pulse" />
+              <span className="text-[10px] font-bold text-[#E11D48] dark:text-rose-400 uppercase tracking-widest">Revenue Model</span>
+            </motion.div>
+            <motion.h2 variants={fadeInUp} className="text-4xl sm:text-5xl font-black tracking-tight text-slate-900 dark:text-white mb-5 font-poppins">
+              Partnership <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#E11D48] to-rose-500 dark:from-red-500 dark:to-rose-400">Plans</span>
+            </motion.h2>
+            <motion.p variants={fadeInUp} className="text-slate-500 dark:text-slate-400 text-base sm:text-lg max-w-xl mx-auto font-medium leading-relaxed">
+              AI-powered emergency blood supply network for clinics, hospitals, and healthcare systems.
+            </motion.p>
           </motion.div>
 
-        </motion.div>
+          {/* Interactive Plans Dashboard */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch max-w-6xl mx-auto px-2 sm:px-0 mb-12">
+            {/* Left Column: Tab Selectors */}
+            <div className="lg:col-span-5 flex flex-col gap-4">
+              {Object.entries(plansData).map(([key, plan]) => {
+                const isActive = activePlan === key;
+                return (
+                  <motion.button
+                    key={key}
+                    onClick={() => setActivePlan(key)}
+                    whileHover={{ scale: 1.015, x: 4, transition: { duration: 0.2 } }}
+                    whileTap={{ scale: 0.985 }}
+                    className={`w-full text-left p-6 rounded-3xl relative flex items-center justify-between cursor-pointer border ${
+                      isActive 
+                        ? 'border-rose-500/0 dark:border-rose-500/0 text-[#E11D48] dark:text-[#F43F5E] shadow-md' 
+                        : 'border-slate-100 dark:border-slate-800/60 bg-white/70 dark:bg-slate-900/60 hover:bg-white dark:hover:bg-slate-900 shadow-sm'
+                    }`}
+                  >
+                    {/* Morphing Background Pill Slider */}
+                    {isActive && (
+                      <motion.div
+                        layoutId="activePricingTab"
+                        className="absolute inset-0 border border-[#E11D48] bg-rose-50/40 dark:bg-rose-950/15 rounded-3xl -z-10 shadow-lg shadow-rose-500/[0.03]"
+                        transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+                      />
+                    )}
+
+                    <div className="flex flex-col gap-1.5 relative z-10">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl">{plan.icon}</span>
+                        <span className={`text-[15px] font-black ${isActive ? 'text-[#E11D48] dark:text-[#F43F5E]' : 'text-slate-800 dark:text-slate-200'}`}>{plan.name}</span>
+                      </div>
+                      <span className="text-[12px] text-slate-400 dark:text-slate-500 font-medium">
+                        {key === 'free_trial' && 'Ideal for testing platform limits'}
+                        {key === 'professional' && 'Best for clinics & single hospitals'}
+                        {key === 'enterprise' && 'For multi-facility systems'}
+                      </span>
+                    </div>
+                    <div className="text-right relative z-10">
+                      <p className={`text-[18px] font-extrabold ${isActive ? 'text-[#E11D48] dark:text-[#F43F5E]' : 'text-slate-900 dark:text-white'}`}>{plan.price}</p>
+                      <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold">{plan.period}</p>
+                    </div>
+                  </motion.button>
+                );
+              })}
+            </div>
+
+            {/* Right Column: Focused Details Card */}
+            <div className="lg:col-span-7">
+              <div className="border border-slate-100 dark:border-slate-800/60 rounded-[32px] p-8 md:p-10 bg-white/80 dark:bg-slate-900/65 backdrop-blur-md shadow-xl shadow-black/[0.02] h-full relative overflow-hidden flex flex-col justify-between">
+                {/* Soft inner glow decoration */}
+                <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#E11D48]/05 rounded-full blur-2xl pointer-events-none" />
+
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activePlan}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.25, ease: 'easeOut' }}
+                    className="flex flex-col justify-between h-full"
+                  >
+                    <div>
+                      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+                        <div className="flex items-center gap-2.5">
+                          <span className="text-3xl">{plansData[activePlan].icon}</span>
+                          <h3 className="text-2xl font-black text-slate-950 dark:text-white font-poppins">{plansData[activePlan].name}</h3>
+                        </div>
+                        <span className={`px-3 py-1 rounded-full text-[9.5px] font-black uppercase tracking-wider shadow-sm ${plansData[activePlan].badgeColor}`}>
+                          {plansData[activePlan].badge}
+                        </span>
+                      </div>
+
+                      <p className="text-[14.5px] text-slate-500 dark:text-slate-400 mb-8 leading-relaxed font-medium font-poppins">
+                        {plansData[activePlan].desc}
+                      </p>
+
+                      <div className="flex items-baseline gap-1.5 mb-8 pb-6 border-b border-slate-100 dark:border-white/05">
+                        <span className="text-5xl font-black text-slate-900 dark:text-white tracking-tight">{plansData[activePlan].price}</span>
+                        <span className="text-slate-400 dark:text-slate-500 font-semibold text-[14px]">{plansData[activePlan].period}</span>
+                      </div>
+
+                      <div className="mb-8">
+                        <p className="text-[11px] font-black text-[#E11D48] uppercase tracking-widest mb-4 font-poppins">Features Included:</p>
+                        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          {plansData[activePlan].features.map((feat) => (
+                            <motion.li 
+                              key={feat} 
+                              whileHover={{ x: 2 }}
+                              className="flex items-start gap-3 text-[13.5px] text-slate-650 dark:text-slate-350 font-medium leading-tight group"
+                            >
+                              <motion.span 
+                                whileHover={{ scale: 1.2, rotate: 10 }}
+                                className="w-5 h-5 rounded-full bg-rose-50 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/30 flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm transition-colors group-hover:bg-rose-100/60 dark:group-hover:bg-rose-900/40"
+                              >
+                                <FiCheck className="w-3.5 h-3.5 text-[#E11D48] stroke-[2.5]" />
+                              </motion.span>
+                              <span>{feat}</span>
+                            </motion.li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
+                    <motion.div
+                      whileHover={{ scale: 1.015, y: -2 }}
+                      whileTap={{ scale: 0.985 }}
+                    >
+                      <Link
+                        to="/hospital-partnership"
+                        className="block w-full py-4.5 rounded-2xl text-white font-bold text-[14px] text-center transition-all bg-[#E11D48] hover:bg-rose-600 shadow-lg shadow-rose-500/20 hover:shadow-rose-500/30 font-poppins"
+                      >
+                        {plansData[activePlan].buttonText}
+                      </Link>
+                    </motion.div>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </div>
+          </div>
+
+          {/* Big CTA button to go to full Hospital Partnership page */}
+          <motion.div 
+            className="flex justify-center mt-20"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeInUp}
+          >
+            <Link
+              to="/hospital-partnership"
+              className="inline-flex items-center gap-2.5 px-8 py-4.5 rounded-2xl font-bold bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-slate-900 shadow-xl shadow-slate-950/10 dark:shadow-none transition-all duration-300 group hover:-translate-y-0.5"
+            >
+              <span>Explore Full Hospital Partnership Program</span>
+              <FiArrowRight className="w-4.5 h-4.5 transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
+          </motion.div>
+        </div>
       </section>
 
       {/* 12. FAQ Accordion */}
