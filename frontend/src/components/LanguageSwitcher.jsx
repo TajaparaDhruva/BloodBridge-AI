@@ -74,7 +74,7 @@ const LanguageSwitcher = () => {
               }`}
             >
               <span className="text-lg">{lang.flag}</span>
-              <span>{lang.name}</span>
+              <span>{lang.label}</span>
             </button>
           ))}
         </div>

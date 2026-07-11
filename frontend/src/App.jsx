@@ -13,6 +13,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import HospitalPartnership from './pages/HospitalPartnership';
+import ScheduleDemo from './pages/ScheduleDemo';
 import { AutoTranslate } from './utils/translator';
 
 // Route helper: redirect to splash if no language selected yet
@@ -58,6 +59,7 @@ const RootApp = () => {
 
         {/* Public pages */}
         <Route path="/hospital-partnership" element={<HospitalPartnership />} />
+        <Route path="/schedule-demo" element={<ScheduleDemo />} />
 
         {/* Dashboard */}
         <Route path="/dashboard" element={<Dashboard />} />
