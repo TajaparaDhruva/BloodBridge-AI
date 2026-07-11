@@ -1973,21 +1973,46 @@ const LandingPage = () => {
             </div>
           </div>
 
-          {/* Big CTA button to go to full Hospital Partnership page */}
+          {/* Custom CTA Banner to go to full Hospital Partnership page */}
           <motion.div 
-            className="flex justify-center mt-20"
+            className="mt-20 max-w-5xl mx-auto px-4 sm:px-6"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeInUp}
           >
-            <Link
-              to="/hospital-partnership"
-              className="inline-flex items-center gap-2.5 px-8 py-4.5 rounded-2xl font-bold bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-slate-900 shadow-xl shadow-slate-950/10 dark:shadow-none transition-all duration-300 group hover:-translate-y-0.5"
-            >
-              <span>Explore Full Hospital Partnership Program</span>
-              <FiArrowRight className="w-4.5 h-4.5 transition-transform duration-300 group-hover:translate-x-1" />
-            </Link>
+            <div className="relative overflow-hidden rounded-[32px] border border-rose-100/80 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60 backdrop-blur-md p-8 sm:p-10 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 shadow-xl shadow-black/[0.02]">
+              {/* Soft decorative background glows */}
+              <div className="absolute -top-32 -left-32 w-64 h-64 bg-[#E11D48]/05 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-rose-500/05 rounded-full blur-3xl pointer-events-none" />
+
+              <div className="text-left max-w-2xl relative z-10 font-poppins">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 dark:bg-rose-950/20 border border-rose-100/50 dark:border-rose-900/30 mb-4">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#E11D48] animate-pulse" />
+                  <span className="text-[10px] font-bold text-[#E11D48] dark:text-rose-400 uppercase tracking-widest">Enterprise & Custom Solutions</span>
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-3">
+                  Explore the Complete Hospital Partnership Program
+                </h3>
+                <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+                  Learn how we handle hospital integrations, custom API synchronization, SLAs, and direct ambulance dispatch routes.
+                </p>
+              </div>
+
+              <motion.div 
+                whileHover={{ scale: 1.025, y: -2 }}
+                whileTap={{ scale: 0.975 }}
+                className="w-full md:w-auto relative z-10 flex-shrink-0"
+              >
+                <Link
+                  to="/hospital-partnership"
+                  className="w-full md:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4.5 rounded-2xl font-bold bg-gradient-to-r from-[#E11D48] to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white shadow-lg shadow-rose-500/20 transition-all duration-300 group"
+                >
+                  <span>Explore Program</span>
+                  <FiArrowRight className="w-4.5 h-4.5 transition-transform duration-300 group-hover:translate-x-1" />
+                </Link>
+              </motion.div>
+            </div>
           </motion.div>
         </div>
       </section>
