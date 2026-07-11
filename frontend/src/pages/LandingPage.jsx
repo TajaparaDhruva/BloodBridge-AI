@@ -2205,8 +2205,7 @@ const LandingPage = () => {
             <div className="flex items-center gap-4 text-left">
               <div className="w-10 h-10 rounded-full bg-rose-100/50 dark:bg-rose-950/30 flex items-center justify-center text-[#E11D48] flex-shrink-0">
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
-                  <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                 </svg>
               </div>
               <div>
