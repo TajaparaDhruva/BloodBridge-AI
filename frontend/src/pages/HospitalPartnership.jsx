@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '../components/Navbar';
@@ -11,8 +11,8 @@ import {
 } from 'react-icons/fi';
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
 };
 
 const stagger = {
@@ -114,6 +114,10 @@ const HospitalPartnership = () => {
     }
   };
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="bg-[#FAF9F6] dark:bg-[#070B13] text-slate-900 dark:text-white min-h-screen transition-colors duration-300">
       <Navbar />
@@ -167,8 +171,8 @@ const HospitalPartnership = () => {
 
           {/* Dashboard Preview Card */}
           <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="mt-20 relative max-w-5xl mx-auto"
           >
@@ -301,10 +305,10 @@ const HospitalPartnership = () => {
             viewport={{ once: true, margin: '-80px' }}
             variants={stagger}
           >
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 border border-rose-100 mb-3">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#E11D48] animate-pulse" />
-              <span className="text-[10px] font-black text-[#E11D48] uppercase tracking-widest">Revenue Model</span>
-            </div>
+             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 border border-rose-100 mb-3">
+               <span className="w-1.5 h-1.5 rounded-full bg-[#E11D48] animate-pulse" />
+               <span className="text-[10px] font-black text-[#E11D48] uppercase tracking-widest">Revenue Model</span>
+             </div>
             <h2 className="text-4xl sm:text-5xl font-black tracking-tight text-slate-900 mb-4 font-poppins">
               Partnership <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#E11D48] to-rose-500">Plans</span>
             </h2>
@@ -550,9 +554,9 @@ const HospitalPartnership = () => {
             onClick={() => setDemoModal(false)}
           >
             <motion.div
-              initial={{ scale: 0.9, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
               className="bg-white dark:bg-[#0F1420] border border-gray-100 dark:border-white/10 rounded-3xl p-8 max-w-md w-full shadow-2xl"
               onClick={(e) => e.stopPropagation()}

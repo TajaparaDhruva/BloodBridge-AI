@@ -38,6 +38,7 @@ const Dashboard = () => {
   const [showHospitalSelector, setShowHospitalSelector] = useState(false);
   const [activeCall, setActiveCall] = useState(null);
 
+
   const [tasks, setTasks] = useState(() => {
     const saved = localStorage.getItem('bloodbridge_tasks');
     return saved ? JSON.parse(saved) : upcomingTasks;
@@ -103,94 +104,20 @@ const Dashboard = () => {
           onLogout={logout}
         />
 
-        <main className="flex-1 p-4 md:p-6 overflow-auto dashboard-main pb-24 lg:pb-6">
-          {/* ── Hospital Trial Countdown Banner ── */}
-          {user?.role === 'hospital' && subscription && (() => {
-            const expired = isTrialExpired();
-            const days = daysRemaining();
-            const trialPct = subscription.plan === 'free_trial' ? Math.max(0, Math.round((days / 7) * 100)) : 100;
-            if (subscription.plan !== 'free_trial') return null;
-            return (
-              <motion.div
-                initial={{ opacity: 0, y: -12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className={`max-w-[1440px] mx-auto mb-4 rounded-2xl px-5 py-4 flex flex-col sm:flex-row sm:items-center gap-3 border ${
-                  expired
-                    ? 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-800/40'
-                    : days <= 2
-                    ? 'bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800/40'
-                    : 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/40'
-                }`}
-              >
-                <div className="flex items-center gap-3 flex-1">
-                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                    expired ? 'bg-red-100 dark:bg-red-950/40 text-red-500' :
-                    days <= 2 ? 'bg-amber-100 dark:bg-amber-950/40 text-amber-600' :
-                    'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600'
-                  }`}>
-                    {expired ? <FiLock className="w-4.5 h-4.5" /> : <FiClock className="w-4.5 h-4.5" />}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                      <span className={`text-[13px] font-extrabold ${
-                        expired ? 'text-red-700 dark:text-red-400' :
-                        days <= 2 ? 'text-amber-700 dark:text-amber-400' :
-                        'text-emerald-700 dark:text-emerald-400'
-                      }`}>
-                        {expired ? 'Free Trial Ended' : `Free Trial · ${days} day${days !== 1 ? 's' : ''} remaining`}
-                      </span>
-                      <span className="text-[10px] font-black text-muted uppercase tracking-wider">
-                        {expired ? 'Upgrade to continue' : `Renews ${new Date(subscription.trialEnd).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}`}
-                      </span>
-                    </div>
-                    {!expired && (
-                      <div className="h-1.5 bg-black/05 dark:bg-white/10 rounded-full w-full max-w-xs overflow-hidden">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={{ width: `${trialPct}%` }}
-                          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                          className={`h-full rounded-full ${
-                            days <= 2 ? 'bg-amber-400' : 'bg-emerald-500'
-                          }`}
-                        />
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  {!expired && (
-                    <button
-                      onClick={simulateTrialExpiry}
-                      className="text-[10px] font-bold text-muted hover:text-slate-800 dark:hover:text-white border border-gray-200 dark:border-white/10 px-2.5 py-1.5 rounded-xl transition-colors"
-                      title="Developer tool: simulate trial expiry"
-                    >
-                      Simulate Expiry
-                    </button>
-                  )}
-                  <button
-                    onClick={() => setActiveTab('billing')}
-                    className={`flex items-center gap-1.5 px-4 py-2 rounded-xl font-bold text-[12px] text-white transition-all ${
-                      expired ? 'bg-[#E11D48] hover:bg-red-600' : 'bg-emerald-600 hover:bg-emerald-700'
-                    }`}
-                  >
-                    <FiCreditCard className="w-3.5 h-3.5" />
-                    {expired ? 'Upgrade Now' : 'Manage Plan'}
-                  </button>
-                </div>
-              </motion.div>
-            );
-          })()}
+        <main className="flex-1 p-6 md:p-10 pt-24 md:pt-28 overflow-auto dashboard-main pb-24 lg:pb-10 relative">
 
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="h-full max-w-[1440px] mx-auto"
-            >
+
+          <div className="relative">
+             <div className="">
+               <AnimatePresence mode="wait">
+                 <motion.div
+                   key={activeTab}
+                   initial={{ opacity: 0, y: 12 }}
+                   animate={{ opacity: 1, y: 0 }}
+                   exit={{ opacity: 0, y: -6 }}
+                   transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                   className="h-full max-w-[1440px] mx-auto"
+                 >
               {/* Overview Bento tab */}
               {activeTab === 'overview' && (
                 <OverviewTab
@@ -413,13 +340,13 @@ const Dashboard = () => {
                         return (
                           <motion.div
                             key={req.id}
-                            className="bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 rounded-3xl p-5 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative shadow-sm hover:shadow-md hover:border-slate-200 dark:hover:border-slate-700 transition-all text-left"
+                            className="bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 rounded-2xl p-6 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative shadow-sm hover:shadow-md hover:border-slate-200 dark:hover:border-slate-700 transition-all text-left"
                             initial={{ opacity: 0, y: 15 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: i * 0.05 }}
                           >
                             {/* Accent left border */}
-                            <div className={`absolute left-0 top-0 bottom-0 w-1.5 rounded-l-3xl ${sideBorder}`} />
+                            <div className={`absolute left-0 top-0 bottom-0 w-1.5 rounded-l-2xl ${sideBorder}`} />
 
                             <div className="flex items-center gap-4 flex-1 w-full">
                               {/* Blood Group Circle */}
@@ -576,12 +503,14 @@ const Dashboard = () => {
               )}
               {activeTab === 'donors' && <NearbyDonors />}
               {activeTab === 'map' && (
-                <div className="h-[calc(100vh-160px)] rounded-3xl overflow-hidden border border-black/05 dark:border-white/05 shadow-md">
+                <div className="h-[calc(100vh-200px)] rounded-2xl overflow-hidden border border-black/05 dark:border-white/05 shadow-md">
                   <EmergencyMap />
                 </div>
               )}
-            </motion.div>
-          </AnimatePresence>
+              </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
         </main>
       </div>
 

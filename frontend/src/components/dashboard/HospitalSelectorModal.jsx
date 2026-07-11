@@ -15,7 +15,7 @@ const HospitalSelectorModal = ({ onClose, onSelectCall }) => {
       />
       
       <motion.div
-        className="glass-floating w-full max-w-md rounded-3xl overflow-hidden shadow-2xl relative border border-white/10 dark:border-white/5 z-10 bg-white dark:bg-slate-900"
+        className="glass-floating w-full max-w-md rounded-2xl overflow-hidden shadow-2xl relative border border-white/10 dark:border-white/5 z-10 bg-white dark:bg-slate-900"
         initial={{ opacity: 0, scale: 0.95, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 15 }}

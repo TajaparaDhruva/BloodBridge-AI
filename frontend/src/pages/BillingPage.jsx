@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
+import { jsPDF } from 'jspdf';
 import {
   FiCreditCard, FiCheck, FiAlertTriangle, FiDownload, FiRefreshCw,
   FiZap, FiShield, FiX, FiTrendingUp, FiArrowRight, FiCalendar,
@@ -80,6 +81,7 @@ const BillingPage = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [upgrading, setUpgrading] = useState(null);
   const [toast, setToast] = useState(null);
+  const [activePaymentMethod, setActivePaymentMethod] = useState('card');
 
   const expired = isTrialExpired();
   const days = daysRemaining();
@@ -113,7 +115,76 @@ const BillingPage = () => {
     showToast('Subscription reactivated successfully!');
   };
 
+  const handlePaymentMethodSelect = (method) => {
+    setActivePaymentMethod(method);
+    showToast(`Default payment method updated to ${method.toUpperCase()}`);
+  };
+
   const handleDownloadInvoice = (inv) => {
+    const doc = new jsPDF();
+    
+    // Header
+    doc.setFontSize(22);
+    doc.setTextColor('#E11D48');
+    doc.text('BloodBridge AI', 20, 20);
+    
+    doc.setFontSize(10);
+    doc.setTextColor('#64748b');
+    doc.text('Emergency Blood Supply Network', 20, 28);
+    
+    // Title
+    doc.setFontSize(16);
+    doc.setTextColor('#0f172a');
+    doc.text('INVOICE / RECEIPT', 130, 20);
+    
+    // Details
+    doc.setFontSize(11);
+    doc.text(`Invoice ID: ${inv.id}`, 130, 30);
+    doc.text(`Date: ${fmt(inv.date)}`, 130, 36);
+    doc.text(`Status: PAID`, 130, 42);
+    
+    // Line separator
+    doc.setDrawColor(226, 232, 240);
+    doc.line(20, 50, 190, 50);
+    
+    // Body
+    doc.setFontSize(12);
+    doc.setTextColor('#0f172a');
+    doc.text('Billed To:', 20, 65);
+    doc.setFontSize(10);
+    doc.setTextColor('#475569');
+    doc.text(`${user?.name || user?.hospitalName || 'Hospital Admin'}`, 20, 72);
+    doc.text(`Partner Hospital`, 20, 78);
+    
+    // Table Header
+    doc.setFillColor(248, 250, 252);
+    doc.rect(20, 90, 170, 12, 'F');
+    doc.setFontSize(10);
+    doc.setTextColor('#0f172a');
+    doc.text('Description', 25, 98);
+    doc.text('Amount', 160, 98);
+    
+    // Table Body
+    doc.setTextColor('#475569');
+    doc.text(`${PLAN_META[inv.plan]?.label || inv.plan} Plan Subscription`, 25, 112);
+    doc.text(`Rs ${inv.amount.toLocaleString('en-IN')}`, 160, 112);
+    
+    // Line separator
+    doc.setDrawColor(226, 232, 240);
+    doc.line(20, 120, 190, 120);
+    
+    // Total
+    doc.setFontSize(12);
+    doc.setTextColor('#0f172a');
+    doc.text('Total Paid:', 130, 130);
+    doc.text(`Rs ${inv.amount.toLocaleString('en-IN')}`, 160, 130);
+    
+    // Footer
+    doc.setFontSize(9);
+    doc.setTextColor('#94a3b8');
+    doc.text('Thank you for partnering with BloodBridge AI to save lives.', 20, 280);
+    
+    doc.save(`Invoice_${inv.id}.pdf`);
     showToast(`Invoice ${inv.id} downloaded`);
   };
 
@@ -332,12 +403,17 @@ const BillingPage = () => {
             <p className="text-[10px] font-black text-muted uppercase tracking-widest mb-3">Available Methods</p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {/* Credit / Debit Card */}
-              <div className="bg-gray-50 dark:bg-white/03 border-2 border-[#E11D48]/20 dark:border-[#E11D48]/15 rounded-2xl p-4 relative">
-                <div className="absolute top-3 right-3">
-                  <span className="w-4 h-4 rounded-full bg-[#E11D48] flex items-center justify-center">
-                    <FiCheck className="w-2.5 h-2.5 text-white stroke-[3]" />
-                  </span>
-                </div>
+              <div 
+                onClick={() => handlePaymentMethodSelect('card')}
+                className={`rounded-2xl p-4 relative cursor-pointer transition-colors ${activePaymentMethod === 'card' ? 'bg-gray-50 dark:bg-white/03 border-2 border-[#E11D48]/20 dark:border-[#E11D48]/30 shadow-sm' : 'bg-transparent border border-gray-100 dark:border-white/06 hover:border-gray-300 dark:hover:border-white/15'}`}
+              >
+                {activePaymentMethod === 'card' && (
+                  <div className="absolute top-3 right-3">
+                    <span className="w-4 h-4 rounded-full bg-[#E11D48] flex items-center justify-center">
+                      <FiCheck className="w-2.5 h-2.5 text-white stroke-[3]" />
+                    </span>
+                  </div>
+                )}
                 <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center mb-3">
                   <FiCreditCard className="w-4.5 h-4.5 text-white" />
                 </div>
@@ -357,7 +433,17 @@ const BillingPage = () => {
               </div>
 
               {/* UPI */}
-              <div className="bg-gray-50 dark:bg-white/03 border border-gray-100 dark:border-white/06 rounded-2xl p-4 hover:border-gray-300 dark:hover:border-white/15 transition-colors cursor-pointer">
+              <div 
+                onClick={() => handlePaymentMethodSelect('upi')}
+                className={`rounded-2xl p-4 relative cursor-pointer transition-colors ${activePaymentMethod === 'upi' ? 'bg-gray-50 dark:bg-white/03 border-2 border-[#E11D48]/20 dark:border-[#E11D48]/30 shadow-sm' : 'bg-transparent border border-gray-100 dark:border-white/06 hover:border-gray-300 dark:hover:border-white/15'}`}
+              >
+                {activePaymentMethod === 'upi' && (
+                  <div className="absolute top-3 right-3">
+                    <span className="w-4 h-4 rounded-full bg-[#E11D48] flex items-center justify-center">
+                      <FiCheck className="w-2.5 h-2.5 text-white stroke-[3]" />
+                    </span>
+                  </div>
+                )}
                 <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center mb-3">
                   <svg className="w-4.5 h-4.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="4"/></svg>
                 </div>
@@ -377,7 +463,17 @@ const BillingPage = () => {
               </div>
 
               {/* Net Banking */}
-              <div className="bg-gray-50 dark:bg-white/03 border border-gray-100 dark:border-white/06 rounded-2xl p-4 hover:border-gray-300 dark:hover:border-white/15 transition-colors cursor-pointer">
+              <div 
+                onClick={() => handlePaymentMethodSelect('netbanking')}
+                className={`rounded-2xl p-4 relative cursor-pointer transition-colors ${activePaymentMethod === 'netbanking' ? 'bg-gray-50 dark:bg-white/03 border-2 border-[#E11D48]/20 dark:border-[#E11D48]/30 shadow-sm' : 'bg-transparent border border-gray-100 dark:border-white/06 hover:border-gray-300 dark:hover:border-white/15'}`}
+              >
+                {activePaymentMethod === 'netbanking' && (
+                  <div className="absolute top-3 right-3">
+                    <span className="w-4 h-4 rounded-full bg-[#E11D48] flex items-center justify-center">
+                      <FiCheck className="w-2.5 h-2.5 text-white stroke-[3]" />
+                    </span>
+                  </div>
+                )}
                 <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center mb-3">
                   <FiShield className="w-4.5 h-4.5 text-white" />
                 </div>
@@ -501,114 +597,45 @@ const BillingPage = () => {
                 </p>
               </div>
 
-              <div className="grid md:grid-cols-3 gap-6 items-stretch">
-                {/* Starter Plan */}
-                <div className="border border-slate-200 dark:border-slate-800 rounded-3xl p-6 flex flex-col justify-between hover:shadow-md transition-all bg-white dark:bg-[#070B13]/30">
-                  <div>
-                    <p className="text-[14px] font-extrabold text-slate-900 dark:text-white mb-4">Starter</p>
-                    <div className="flex items-baseline gap-1 mb-6">
-                      <span className="text-3xl font-black text-slate-900 dark:text-white">₹9,999</span>
-                      <span className="text-muted font-bold text-[12px]">/month</span>
+              <div className="grid md:grid-cols-2 max-w-3xl mx-auto gap-6 items-stretch">
+                {UPGRADE_PLANS.map((plan) => (
+                  <div key={plan.id} className={`border-2 ${plan.id === 'professional' ? 'border-[#E11D48] bg-white dark:bg-[#070B13]/60' : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-[#070B13]/30'} rounded-3xl p-8 flex flex-col justify-between hover:shadow-xl transition-all relative`}>
+                    {plan.badge && (
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-[#E11D48] text-white text-[9px] font-black uppercase tracking-wider shadow-sm">
+                        {plan.badge}
+                      </div>
+                    )}
+                    {plan.id === 'professional' && !plan.badge && (
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-[#E11D48] text-white text-[9px] font-black uppercase tracking-wider shadow-sm">
+                        Most Popular
+                      </div>
+                    )}
+                    <div>
+                      <p className={`text-[14px] font-extrabold ${plan.id === 'professional' ? 'text-[#E11D48]' : 'text-slate-900 dark:text-white'} mb-4`}>{plan.name}</p>
+                      <div className="flex items-baseline gap-1 mb-8">
+                        <span className="text-4xl font-black text-slate-900 dark:text-white">{plan.price}</span>
+                        <span className="text-muted font-bold text-[13px]">{plan.period}</span>
+                      </div>
+                      <ul className="space-y-4 mb-8">
+                        {plan.features.map((feat) => (
+                          <li key={feat} className={`flex items-start gap-3 text-[13px] ${plan.id === 'professional' ? 'text-slate-800 dark:text-slate-300 font-semibold' : 'text-slate-600 dark:text-slate-400'}`}>
+                            <span className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${plan.id === 'professional' ? 'bg-rose-500/10 border border-[#E11D48]/30' : 'border border-slate-300 dark:border-slate-700'}`}>
+                              <FiCheck className={`w-3 h-3 ${plan.id === 'professional' ? 'text-[#E11D48] stroke-[3]' : 'text-slate-400'}`} />
+                            </span>
+                            {feat}
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                    <ul className="space-y-3 mb-6">
-                      {[
-                        'AI Donor Matching Engine',
-                        'Basic supply analytics',
-                        'Up to 50 active dispatches',
-                        '1 Hospital location node',
-                        'Up to 10 staff accounts',
-                        'Standard email support'
-                      ].map((feat) => (
-                        <li key={feat} className="flex items-start gap-2.5 text-[12px] text-slate-600 dark:text-slate-400">
-                          <span className="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <FiCheck className="w-2.5 h-2.5 text-slate-400" />
-                          </span>
-                          {feat}
-                        </li>
-                      ))}
-                    </ul>
+                    <button
+                      onClick={() => handleUpgrade(plan.id)}
+                      disabled={!!upgrading}
+                      className={`w-full py-4 rounded-2xl font-bold text-[14px] transition-all ${plan.id === 'professional' ? 'bg-[#E11D48] hover:bg-rose-600 text-white shadow-md shadow-rose-500/20' : 'border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-white/05 text-slate-700 dark:text-slate-300'}`}
+                    >
+                      {upgrading === plan.id ? 'Upgrading...' : plan.cta}
+                    </button>
                   </div>
-                  <button
-                    onClick={() => handleUpgrade('starter')}
-                    disabled={!!upgrading}
-                    className="w-full py-3 rounded-2xl border border-[#E11D48] hover:bg-rose-50 text-[#E11D48] font-bold text-[13px] transition-all"
-                  >
-                    {upgrading === 'starter' ? 'Upgrading...' : 'Get Industry Access'}
-                  </button>
-                </div>
-
-                {/* Professional Plan (Highlighted) */}
-                <div className="border-2 border-[#E11D48] rounded-3xl p-6 flex flex-col justify-between hover:shadow-lg transition-all bg-white dark:bg-[#070B13]/60 relative">
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-[#E11D48] text-white text-[9px] font-black uppercase tracking-wider shadow-sm">
-                    Most Popular
-                  </div>
-                  <div>
-                    <p className="text-[14px] font-extrabold text-[#E11D48] mb-4">Professional</p>
-                    <div className="flex items-baseline gap-1 mb-6">
-                      <span className="text-3xl font-black text-slate-900 dark:text-white">₹24,999</span>
-                      <span className="text-muted font-bold text-[12px]">/month</span>
-                    </div>
-                    <ul className="space-y-3 mb-6">
-                      {[
-                        'Everything in Starter',
-                        'Advanced predictive analytics',
-                        'Unlimited emergency requests',
-                        'Auto dispatch dispatchers',
-                        'Up to 250 staff accounts',
-                        'Priority 24/7 hotline support'
-                      ].map((feat) => (
-                        <li key={feat} className="flex items-start gap-2.5 text-[12px] text-slate-800 dark:text-slate-300">
-                          <span className="w-4 h-4 rounded-full bg-rose-500/10 border border-[#E11D48]/30 flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <FiCheck className="w-2.5 h-2.5 text-[#E11D48] stroke-[3]" />
-                          </span>
-                          {feat}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <button
-                    onClick={() => handleUpgrade('professional')}
-                    disabled={!!upgrading}
-                    className="w-full py-3 rounded-2xl bg-[#E11D48] hover:bg-rose-600 text-white font-bold text-[13px] transition-all shadow-md shadow-rose-500/20"
-                  >
-                    {upgrading === 'professional' ? 'Upgrading...' : 'Get Industry Access'}
-                  </button>
-                </div>
-
-                {/* Enterprise Plan */}
-                <div className="border border-slate-200 dark:border-slate-800 rounded-3xl p-6 flex flex-col justify-between hover:shadow-md transition-all bg-white dark:bg-[#070B13]/30">
-                  <div>
-                    <p className="text-[14px] font-extrabold text-slate-900 dark:text-white mb-4">Enterprise</p>
-                    <div className="flex items-baseline gap-1 mb-6">
-                      <span className="text-3xl font-black text-slate-900 dark:text-white">Custom</span>
-                      <span className="text-muted font-bold text-[12px] ml-1">Pricing</span>
-                    </div>
-                    <ul className="space-y-3 mb-6">
-                      {[
-                        'Everything in Professional',
-                        'Multi-facility network intelligence',
-                        'Government portal integrations',
-                        'AI forecasting dashboard',
-                        'Unlimited staff & structures',
-                        'Dedicated account executive'
-                      ].map((feat) => (
-                        <li key={feat} className="flex items-start gap-2.5 text-[12px] text-slate-600 dark:text-slate-400">
-                          <span className="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <FiCheck className="w-2.5 h-2.5 text-slate-400" />
-                          </span>
-                          {feat}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <button
-                    onClick={() => handleUpgrade('enterprise')}
-                    disabled={!!upgrading}
-                    className="w-full py-3 rounded-2xl border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-white/05 text-slate-700 dark:text-slate-300 font-bold text-[13px] transition-all"
-                  >
-                    {upgrading === 'enterprise' ? 'Connecting...' : 'Contact Sales'}
-                  </button>
-                </div>
+                ))}
               </div>
             </motion.div>
           </motion.div>
