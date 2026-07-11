@@ -7,6 +7,7 @@ const { sendError } = require('../utils/helpers');
 const validateResults = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    console.error('Validation Errors:', errors.array());
     const formattedErrors = errors.array().map(err => ({
       field: err.path,
       message: err.msg

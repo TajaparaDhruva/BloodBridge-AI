@@ -18,6 +18,9 @@ const tabLabels = {
   tasks: 'Tasks',
   billing: 'Billing',
   adminPanel: 'Admin',
+  profile: 'Profile & Health',
+  history: 'History & Schedule',
+  settings: 'Settings'
 };
 
 const BASE_NAV_ITEMS = [
@@ -30,7 +33,17 @@ const BASE_NAV_ITEMS = [
   { id: 'tasks', icon: FiLayers, label: 'Tasks' },
 ];
 
-const getNavItems = (user) => {
+const DONOR_NAV_ITEMS = [
+  { id: 'overview', icon: FiGrid, label: 'Overview' },
+  { id: 'profile', icon: FiHeart, label: 'Profile & Health' },
+  { id: 'history', icon: FiActivity, label: 'History & Schedule' },
+  { id: 'settings', icon: FiLayers, label: 'Settings' }
+];
+
+const getNavItems = (user, isDonor) => {
+  if (isDonor || user?.role === 'donor') {
+    return DONOR_NAV_ITEMS;
+  }
   const items = [...BASE_NAV_ITEMS];
   if (user?.role === 'hospital') {
     items.push({ id: 'billing', icon: FiCreditCard, label: 'Billing' });
@@ -52,9 +65,10 @@ const DashboardHeader = ({
   onOpenNotifications,
   onOpenAI,
   onLogout,
+  isDonor = false
 }) => {
   const displayName = user?.name || user?.role || 'Operator';
-  const navItems = getNavItems(user);
+  const navItems = getNavItems(user, isDonor);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -141,13 +155,15 @@ const DashboardHeader = ({
           </button>
 
           {/* Quick Dispatch request trigger */}
-          <button 
-            onClick={onNewRequest} 
-            className="btn-primary py-2 px-4 text-[13px] font-bold shadow-sm transition-all cursor-pointer flex items-center gap-1"
-          >
-            <FiPlus className="w-4 h-4" />
-            <span>Request</span>
-          </button>
+          {!isDonor && (
+            <button 
+              onClick={onNewRequest} 
+              className="btn-primary py-2 px-4 text-[13px] font-bold shadow-sm transition-all cursor-pointer flex items-center gap-1"
+            >
+              <FiPlus className="w-4 h-4" />
+              <span>Request</span>
+            </button>
+          )}
 
           {/* Notifications Center with heartbeat */}
           <button

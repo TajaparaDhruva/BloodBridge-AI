@@ -82,6 +82,11 @@ const Signup = () => {
         setError('Please fill in all required fields.');
         return;
       }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(form.email)) {
+        setError('Please enter a valid email address.');
+        return;
+      }
       if (form.password.length < 6) { setError('Password must be at least 6 characters.'); return; }
     }
     if (step === 2 && role === 'donor') {
