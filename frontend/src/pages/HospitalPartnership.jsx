@@ -472,27 +472,6 @@ const HospitalPartnership = () => {
               </motion.div>
             ))}
           </motion.div>
-
-          {/* Support CTA Banner */}
-          <div className="bg-rose-50/20 dark:bg-rose-950/10 border border-rose-100/40 dark:border-rose-900/10 p-5 rounded-[24px] mt-12 flex flex-col sm:flex-row items-center justify-between gap-6 relative z-10">
-            <div className="flex items-center gap-4 text-left">
-              <div className="w-10 h-10 rounded-full bg-rose-100/50 dark:bg-rose-950/30 flex items-center justify-center text-[#E11D48] flex-shrink-0">
-                <FiHeadphones className="w-5 h-5" />
-              </div>
-              <div className="font-poppins">
-                <h4 className="text-sm font-bold text-gray-900 dark:text-white leading-tight">Still have questions?</h4>
-                <p className="text-[11px] text-[#E11D48] dark:text-[#E11D48]/70 font-semibold mt-0.5">Our support team is here to help you 24/7.</p>
-              </div>
-            </div>
-            
-            <button
-              onClick={() => setDemoModal(true)}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#E11D48] text-white text-xs font-bold hover:bg-red-600 shadow-md shadow-rose-500/10 hover:shadow-lg transition-all duration-300 flex-shrink-0 cursor-pointer"
-            >
-              <span>Contact Support</span>
-              <FiArrowRight className="w-4 h-4" />
-            </button>
-          </div>
         </div>
       </section>
 
