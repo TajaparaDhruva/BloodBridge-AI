@@ -49,6 +49,71 @@ const HospitalPartnership = () => {
   const [activeFaq, setActiveFaq] = useState(null);
   const [demoModal, setDemoModal] = useState(false);
 
+  // Selected Pricing Plan State
+  const [activePlan, setActivePlan] = useState('professional');
+
+  // Pricing Plans Data Structure
+  const plansData = {
+    free_trial: {
+      name: '7-Day Free Trial',
+      price: 'FREE',
+      period: '/ 7 Days',
+      desc: 'Perfect for testing our AI donor matching engine and checking platform capabilities.',
+      badge: 'Recommended',
+      badgeColor: 'bg-emerald-500 text-white',
+      icon: <FiDatabase className="w-[1.1em] h-[1.1em] text-emerald-500 inline-block align-middle" />,
+      buttonText: 'Start Free Trial',
+      to: '/signup',
+      features: [
+        'Full access to all premium features',
+        'AI Donor Matching Engine',
+        'Unlimited Blood Requests',
+        'Hospital Dashboard',
+        'Real-Time Notifications',
+        'Blood Inventory Dashboard',
+        'Analytics & Staff Accounts'
+      ]
+    },
+    professional: {
+      name: 'Professional Plan',
+      price: '₹2,999',
+      period: '/month',
+      desc: 'Ideal for clinics, single hospitals, and emergency dispatch centers looking to scale operations.',
+      badge: 'Most Popular',
+      badgeColor: 'bg-[#E11D48] text-white',
+      icon: <FiActivity className="w-[1.1em] h-[1.1em] text-rose-500 inline-block align-middle" />,
+      buttonText: 'Upgrade to Professional',
+      to: '/signup',
+      features: [
+        'Everything in Free Trial',
+        'Unlimited AI Matching',
+        'Verified Partner Badge',
+        'Advanced Predictive Analytics',
+        'Hospital Collaboration Tools',
+        'Monthly Reports & API Access'
+      ]
+    },
+    enterprise: {
+      name: 'Enterprise Plan',
+      price: '₹7,999',
+      period: '/month',
+      desc: 'Designed for multi-facility networks, large healthcare systems, and government ID integrations.',
+      badge: 'Best Value',
+      badgeColor: 'bg-[#6366F1] text-white',
+      icon: <FiAward className="w-[1.1em] h-[1.1em] text-[#6366F1] inline-block align-middle" />,
+      buttonText: 'Contact Sales',
+      to: '/signup',
+      features: [
+        'Everything in Professional',
+        'AI Priority Matching Priority Route',
+        'Predictive Network Analytics',
+        'Disaster Response Activation Mode',
+        'Unlimited Staff & Node Access',
+        'Custom API & Government ID Sync'
+      ]
+    }
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -226,152 +291,161 @@ const HospitalPartnership = () => {
         </div>
       </section>
 
-      {/* ── Pricing Section (Fully Light Themed) ───────────────────────────────── */}
-      <section id="pricing" className="py-24 px-4 sm:px-6 lg:px-8 bg-[#F8F9FA] border-t border-slate-100">
-        <div className="max-w-7xl mx-auto">
+      {/* ── Pricing Section (Redesigned Premium Look) ─────────────────────────── */}
+      <section id="pricing" className="relative py-28 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#F8F9FA] to-white overflow-hidden border-t border-slate-100">
+        {/* Soft background glow decoration */}
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-rose-500/03 rounded-full blur-[120px] pointer-events-none -translate-x-1/2" />
+        <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-[#E11D48]/03 rounded-full blur-[120px] pointer-events-none translate-x-1/2" />
+
+        <div className="max-w-7xl mx-auto relative z-10">
           <motion.div
-            className="text-center mb-16"
+            className="text-center mb-20"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-80px' }}
             variants={stagger}
           >
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 border border-rose-100 mb-3">
-              <span className="text-[10px] font-black text-[#E11D48] uppercase tracking-widest">Revenue Model</span>
-            </div>
-            <h2 className="text-4xl sm:text-5xl font-black tracking-tight text-slate-900 mb-4">
-              Partnership <span className="text-[#E11D48]">Plans</span>
+             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 border border-rose-100 mb-3">
+               <span className="w-1.5 h-1.5 rounded-full bg-[#E11D48] animate-pulse" />
+               <span className="text-[10px] font-black text-[#E11D48] uppercase tracking-widest">Revenue Model</span>
+             </div>
+            <h2 className="text-4xl sm:text-5xl font-black tracking-tight text-slate-900 mb-4 font-poppins">
+              Partnership <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#E11D48] to-rose-500">Plans</span>
             </h2>
-            <p className="text-slate-500 text-lg max-w-xl mx-auto font-medium">
+            <p className="text-slate-500 text-lg max-w-xl mx-auto font-medium leading-relaxed">
               AI-powered emergency blood supply network for clinics, hospitals, and healthcare systems.
             </p>
           </motion.div>
 
-          <motion.div
-            className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch max-w-6xl mx-auto"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-80px' }}
-            variants={stagger}
-          >
-            {/* Free Trial Plan */}
-            <motion.div
-              variants={fadeUp}
-              className="border border-slate-200/80 rounded-[24px] p-8 flex flex-col justify-between hover:shadow-lg hover:border-slate-300/80 transition-all bg-white relative"
-            >
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-emerald-500 text-white text-[9.5px] font-black uppercase tracking-wider shadow-sm">
-                Recommended
-              </div>
-              <div>
-                <p className="text-[14px] font-black text-slate-800 mb-4">7-Day Free Trial</p>
-                <div className="flex items-baseline gap-1 mb-6">
-                  <span className="text-4xl font-black text-slate-900">FREE</span>
-                  <span className="text-slate-400 font-bold text-[13px] ml-1">/ 7 Days</span>
-                </div>
-                <ul className="space-y-3.5 mb-8">
-                  {[
-                    'Full access to all premium features',
-                    'AI Donor Matching',
-                    'Unlimited Blood Requests',
-                    'Hospital Dashboard',
-                    'Real-Time Notifications',
-                    'Blood Inventory Dashboard',
-                    'Analytics & Staff Accounts'
-                  ].map((feat) => (
-                    <li key={feat} className="flex items-start gap-2.5 text-[13px] text-slate-600 font-medium">
-                      <span className="w-4.5 h-4.5 rounded-full border border-slate-200 flex items-center justify-center flex-shrink-0 mt-0.5 bg-slate-50">
-                        <FiCheck className="w-3 h-3 text-slate-500" />
-                      </span>
-                      {feat}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <Link
-                to="/signup"
-                className="w-full py-3.5 rounded-2xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-[14px] text-center transition-all block"
-              >
-                Start Free Trial
-              </Link>
-            </motion.div>
+          {/* Interactive Plans Dashboard */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch max-w-6xl mx-auto px-2 sm:px-0 mb-12">
+            {/* Left Column: Tab Selectors */}
+            <div className="lg:col-span-5 flex flex-col gap-4">
+              {Object.entries(plansData).map(([key, plan]) => {
+                const isActive = activePlan === key;
+                return (
+                  <motion.button
+                    key={key}
+                    onClick={() => setActivePlan(key)}
+                    whileHover={{ scale: 1.015, x: 4, transition: { duration: 0.2 } }}
+                    whileTap={{ scale: 0.985 }}
+                    className={`w-full text-left p-6 rounded-3xl relative flex items-center justify-between cursor-pointer border ${
+                      isActive 
+                        ? 'border-rose-500/0 dark:border-rose-500/0 text-[#E11D48] dark:text-[#F43F5E] shadow-md' 
+                        : 'border-slate-100 dark:border-slate-800/60 bg-white/70 dark:bg-slate-900/60 hover:bg-white dark:hover:bg-slate-900 shadow-sm'
+                    }`}
+                  >
+                    {/* Morphing Background Pill Slider */}
+                    {isActive && (
+                      <motion.div
+                        layoutId="activePricingTab"
+                        className="absolute inset-0 border border-[#E11D48] bg-rose-50/40 dark:bg-rose-950/15 rounded-3xl -z-10 shadow-lg shadow-rose-500/[0.03]"
+                        transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+                      />
+                    )}
 
-            {/* Professional Plan (Highlighted) */}
-            <motion.div
-              variants={fadeUp}
-              className="border-2 border-[#E11D48] rounded-[24px] p-8 flex flex-col justify-between hover:shadow-xl transition-all bg-white"
-            >
-              <div>
-                <p className="text-[14px] font-black text-[#E11D48] mb-4">Professional Plan</p>
-                <div className="flex items-baseline gap-1 mb-6">
-                  <span className="text-4xl font-black text-slate-900">₹2,999</span>
-                  <span className="text-slate-400 font-bold text-[13px]">/month</span>
-                </div>
-                <ul className="space-y-3.5 mb-8">
-                  {[
-                    'Everything in Free Trial',
-                    'Unlimited AI Matching',
-                    'Verified Partner Badge',
-                    'Advanced Analytics',
-                    'Hospital Collaboration',
-                    'Monthly Reports & API Access'
-                  ].map((feat) => (
-                    <li key={feat} className="flex items-start gap-2.5 text-[13px] text-slate-700 font-semibold">
-                      <span className="w-4.5 h-4.5 rounded-full bg-rose-50 border border-rose-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <FiCheck className="w-3 h-3 text-[#E11D48] stroke-[3]" />
+                    <div className="flex flex-col gap-1.5 relative z-10">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl">{plan.icon}</span>
+                        <span className={`text-[15px] font-black ${isActive ? 'text-[#E11D48] dark:text-[#F43F5E]' : 'text-slate-800 dark:text-slate-200'}`}>{plan.name}</span>
+                      </div>
+                      <span className="text-[12px] text-slate-400 dark:text-slate-500 font-medium">
+                        {key === 'free_trial' && 'Ideal for testing platform limits'}
+                        {key === 'professional' && 'Best for clinics & single hospitals'}
+                        {key === 'enterprise' && 'For multi-facility systems'}
                       </span>
-                      {feat}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <Link
-                to="/signup"
-                className="w-full py-3.5 rounded-2xl bg-[#E11D48] hover:bg-rose-600 text-white font-bold text-[14px] text-center transition-all shadow-md shadow-rose-500/20 block"
-              >
-                Upgrade to Professional
-              </Link>
-            </motion.div>
+                    </div>
+                    <div className="text-right relative z-10">
+                      <p className={`text-[18px] font-extrabold ${isActive ? 'text-[#E11D48] dark:text-[#F43F5E]' : 'text-slate-900 dark:text-white'}`}>{plan.price}</p>
+                      <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold">{plan.period}</p>
+                    </div>
+                  </motion.button>
+                );
+              })}
+            </div>
 
-            {/* Enterprise Plan */}
-            <motion.div
-              variants={fadeUp}
-              className="border border-slate-200/80 rounded-[24px] p-8 flex flex-col justify-between hover:shadow-lg hover:border-slate-300/80 transition-all bg-white relative"
-            >
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-indigo-500 text-white text-[9.5px] font-black uppercase tracking-wider shadow-sm">
-                Best Value
+            {/* Right Column: Focused Details Card */}
+            <div className="lg:col-span-7">
+              <div className="border border-slate-100 dark:border-slate-800/60 rounded-[32px] p-8 md:p-10 bg-white/80 dark:bg-slate-900/65 backdrop-blur-md shadow-xl shadow-black/[0.02] h-full relative overflow-hidden flex flex-col justify-between">
+                {/* Soft inner glow decoration */}
+                <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#E11D48]/05 rounded-full blur-2xl pointer-events-none" />
+
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activePlan}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.25, ease: 'easeOut' }}
+                    className="flex flex-col justify-between h-full"
+                  >
+                    <div>
+                      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+                        <div className="flex items-center gap-2.5">
+                          <span className="text-3xl">{plansData[activePlan].icon}</span>
+                          <h3 className="text-2xl font-black text-slate-950 dark:text-white font-poppins">{plansData[activePlan].name}</h3>
+                        </div>
+                        <span className={`px-3 py-1 rounded-full text-[9.5px] font-black uppercase tracking-wider shadow-sm ${plansData[activePlan].badgeColor}`}>
+                          {plansData[activePlan].badge}
+                        </span>
+                      </div>
+
+                      <p className="text-[14.5px] text-slate-500 dark:text-slate-400 mb-8 leading-relaxed font-medium font-poppins">
+                        {plansData[activePlan].desc}
+                      </p>
+
+                      <div className="flex items-baseline gap-1.5 mb-8 pb-6 border-b border-slate-100 dark:border-white/05">
+                        <span className="text-5xl font-black text-slate-900 dark:text-white tracking-tight">{plansData[activePlan].price}</span>
+                        <span className="text-slate-400 dark:text-slate-500 font-semibold text-[14px]">{plansData[activePlan].period}</span>
+                      </div>
+
+                      <div className="mb-8">
+                        <p className="text-[11px] font-black text-[#E11D48] uppercase tracking-widest mb-4 font-poppins">Features Included:</p>
+                        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          {plansData[activePlan].features.map((feat) => (
+                            <motion.li 
+                              key={feat} 
+                              whileHover={{ x: 2 }}
+                              className="flex items-start gap-3 text-[13.5px] text-slate-650 dark:text-slate-350 font-medium leading-tight group"
+                            >
+                              <motion.span 
+                                whileHover={{ scale: 1.2, rotate: 10 }}
+                                className="w-5 h-5 rounded-full bg-rose-50 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/30 flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm transition-colors group-hover:bg-rose-100/60 dark:group-hover:bg-rose-900/40"
+                              >
+                                <FiCheck className="w-3.5 h-3.5 text-[#E11D48] stroke-[2.5]" />
+                              </motion.span>
+                              <span>{feat}</span>
+                            </motion.li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
+                    <motion.div
+                      whileHover={{ scale: 1.015, y: -2 }}
+                      whileTap={{ scale: 0.985 }}
+                    >
+                      {activePlan === 'enterprise' ? (
+                        <button
+                          onClick={() => setDemoModal(true)}
+                          className="w-full py-4.5 rounded-2xl text-white font-bold text-[14px] text-center transition-all bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-gray-100 dark:text-slate-900 shadow-lg font-poppins"
+                        >
+                          {plansData[activePlan].buttonText}
+                        </button>
+                      ) : (
+                        <Link
+                          to={plansData[activePlan].to}
+                          className="block w-full py-4.5 rounded-2xl text-white font-bold text-[14px] text-center transition-all bg-[#E11D48] hover:bg-rose-600 shadow-lg shadow-rose-500/20 hover:shadow-rose-500/30 font-poppins"
+                        >
+                          {plansData[activePlan].buttonText}
+                        </Link>
+                      )}
+                    </motion.div>
+                  </motion.div>
+                </AnimatePresence>
               </div>
-              <div>
-                <p className="text-[14px] font-black text-slate-800 mb-4">Enterprise Plan</p>
-                <div className="flex items-baseline gap-1 mb-6">
-                  <span className="text-4xl font-black text-slate-900">₹7,999</span>
-                  <span className="text-slate-400 font-bold text-[13px] ml-1">/month</span>
-                </div>
-                <ul className="space-y-3.5 mb-8">
-                  {[
-                    'Everything in Professional',
-                    'AI Priority Matching',
-                    'Predictive Analytics',
-                    'Disaster Response Mode',
-                    'Unlimited Staff',
-                    'Custom API Integration'
-                  ].map((feat) => (
-                    <li key={feat} className="flex items-start gap-2.5 text-[13px] text-slate-600 font-medium">
-                      <span className="w-4.5 h-4.5 rounded-full border border-slate-200 flex items-center justify-center flex-shrink-0 mt-0.5 bg-slate-50">
-                        <FiCheck className="w-3 h-3 text-slate-500" />
-                      </span>
-                      {feat}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <button
-                onClick={() => setDemoModal(true)}
-                className="w-full py-3.5 rounded-2xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-[14px] transition-all"
-              >
-                Contact Sales
-              </button>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
       </section>
 
