@@ -24,7 +24,7 @@ const HeroSection = ({
 
   return (
     <motion.section
-      className="relative overflow-hidden rounded-3xl border border-[#F3F4F6] dark:border-slate-800 bg-white dark:bg-slate-900/90 shadow-sm"
+      className="relative overflow-hidden rounded-2xl border border-[#F3F4F6] dark:border-slate-800 bg-white dark:bg-slate-900/90 shadow-sm"
       initial={{ opacity: 0, y: -16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}

@@ -38,6 +38,7 @@ const Dashboard = () => {
   const [showHospitalSelector, setShowHospitalSelector] = useState(false);
   const [activeCall, setActiveCall] = useState(null);
 
+
   const [tasks, setTasks] = useState(() => {
     const saved = localStorage.getItem('bloodbridge_tasks');
     return saved ? JSON.parse(saved) : upcomingTasks;
@@ -87,6 +88,9 @@ const Dashboard = () => {
     createRequest(form);
   };
 
+  const isExpired = user?.role === 'hospital' && subscription ? isTrialExpired() : false;
+  const isLocked = isExpired && activeTab !== 'billing';
+
   return (
     <div className="min-h-screen bg-[#FCFBFA] dark:bg-[#070B13] custom-bg-grid transition-colors duration-300 flex flex-col">
       <div className="flex-1 flex flex-col min-h-screen">
@@ -103,10 +107,10 @@ const Dashboard = () => {
           onLogout={logout}
         />
 
-        <main className="flex-1 p-4 md:p-6 overflow-auto dashboard-main pb-24 lg:pb-6">
+        <main className="flex-1 p-6 md:p-10 pt-24 md:pt-28 overflow-auto dashboard-main pb-24 lg:pb-10 relative">
           {/* ── Hospital Trial Countdown Banner ── */}
           {user?.role === 'hospital' && subscription && (() => {
-            const expired = isTrialExpired();
+            const expired = isExpired;
             const days = daysRemaining();
             const trialPct = subscription.plan === 'free_trial' ? Math.max(0, Math.round((days / 7) * 100)) : 100;
             if (subscription.plan !== 'free_trial') return null;
@@ -182,15 +186,41 @@ const Dashboard = () => {
             );
           })()}
 
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="h-full max-w-[1440px] mx-auto"
-            >
+          <div className="relative">
+             {/* Lock Screen Overlay */}
+             {isLocked && (
+               <div className="absolute inset-0 z-50 flex items-center justify-center min-h-[500px]">
+                  <div className="absolute inset-0 bg-white/40 dark:bg-[#070B13]/40 backdrop-blur-md rounded-3xl" />
+                  <div className="relative text-center max-w-md p-8 bg-white dark:bg-[#0F1420] shadow-2xl rounded-3xl border border-gray-100 dark:border-white/10 mx-4 z-10">
+                     <div className="w-16 h-16 rounded-full bg-rose-50 dark:bg-rose-950/30 flex items-center justify-center mx-auto mb-5 text-[#E11D48]">
+                        <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                     </div>
+                     <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-3 tracking-tight">Trial Expired</h3>
+                     <p className="text-[14px] font-medium text-slate-500 dark:text-slate-400 mb-8 leading-relaxed">
+                       Your 7-day free trial has ended. Upgrade your hospital partnership to continue using AI-powered emergency blood matching.
+                     </p>
+                     <button onClick={() => setActiveTab('billing')} className="px-6 py-4 bg-[#E11D48] hover:bg-rose-600 text-white font-bold rounded-2xl transition-all w-full shadow-lg shadow-rose-500/20 flex items-center justify-center gap-2">
+                       <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                       </svg>
+                       Upgrade Now
+                     </button>
+                  </div>
+               </div>
+             )}
+
+             <div className={`${isLocked ? 'filter blur-md pointer-events-none opacity-40 select-none transition-all duration-500' : ''}`}>
+               <AnimatePresence mode="wait">
+                 <motion.div
+                   key={activeTab}
+                   initial={{ opacity: 0, y: 12 }}
+                   animate={{ opacity: 1, y: 0 }}
+                   exit={{ opacity: 0, y: -6 }}
+                   transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                   className="h-full max-w-[1440px] mx-auto"
+                 >
               {/* Overview Bento tab */}
               {activeTab === 'overview' && (
                 <OverviewTab
@@ -413,13 +443,13 @@ const Dashboard = () => {
                         return (
                           <motion.div
                             key={req.id}
-                            className="bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 rounded-3xl p-5 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative shadow-sm hover:shadow-md hover:border-slate-200 dark:hover:border-slate-700 transition-all text-left"
+                            className="bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 rounded-2xl p-6 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative shadow-sm hover:shadow-md hover:border-slate-200 dark:hover:border-slate-700 transition-all text-left"
                             initial={{ opacity: 0, y: 15 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: i * 0.05 }}
                           >
                             {/* Accent left border */}
-                            <div className={`absolute left-0 top-0 bottom-0 w-1.5 rounded-l-3xl ${sideBorder}`} />
+                            <div className={`absolute left-0 top-0 bottom-0 w-1.5 rounded-l-2xl ${sideBorder}`} />
 
                             <div className="flex items-center gap-4 flex-1 w-full">
                               {/* Blood Group Circle */}
@@ -576,12 +606,14 @@ const Dashboard = () => {
               )}
               {activeTab === 'donors' && <NearbyDonors />}
               {activeTab === 'map' && (
-                <div className="h-[calc(100vh-160px)] rounded-3xl overflow-hidden border border-black/05 dark:border-white/05 shadow-md">
+                <div className="h-[calc(100vh-200px)] rounded-2xl overflow-hidden border border-black/05 dark:border-white/05 shadow-md">
                   <EmergencyMap />
                 </div>
               )}
-            </motion.div>
-          </AnimatePresence>
+              </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
         </main>
       </div>
 

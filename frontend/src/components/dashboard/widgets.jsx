@@ -86,7 +86,7 @@ export const StatWidgets = ({ requests, donors, inventory }) => {
         const isDown = s.trend === 'down';
         
         return (
-          <div key={s.label} className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 shadow-sm flex flex-col justify-between overflow-hidden relative group transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+          <div key={s.label} className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 shadow-sm flex flex-col justify-between overflow-hidden relative group transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
             {/* Soft decorative glow behind the icon */}
             <div className="absolute top-0 right-0 w-24 h-24 rounded-full filter blur-[30px] opacity-10 pointer-events-none group-hover:opacity-20 transition-opacity" style={{ background: s.color }} />
             
@@ -144,7 +144,7 @@ export const AIInsightsCard = ({ onNavigate }) => {
   };
 
   return (
-    <div className="p-6 h-full flex flex-col justify-between rounded-3xl bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 shadow-sm relative overflow-hidden transition-all duration-300 hover:shadow-md">
+    <div className="p-6 h-full flex flex-col justify-between rounded-2xl bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 shadow-sm relative overflow-hidden transition-all duration-300 hover:shadow-md">
       <div className="absolute top-0 right-0 w-32 h-32 rounded-full filter blur-[50px] opacity-10 bg-indigo-500 pointer-events-none" />
       
       <div>
@@ -211,7 +211,7 @@ export const PerformanceScore = ({ score = 94 }) => {
   const offset = circ - (score / 100) * circ;
 
   return (
-    <div className="p-6 flex flex-col items-center justify-between text-center h-full rounded-3xl bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 shadow-sm transition-all duration-300 hover:shadow-md" delay={0.15}>
+    <div className="p-6 flex flex-col items-center justify-between text-center h-full rounded-2xl bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 shadow-sm transition-all duration-300 hover:shadow-md" delay={0.15}>
       <div className="flex items-center gap-2.5 mb-5 self-start text-left">
         <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 flex items-center justify-center text-emerald-500">
           <FiTarget className="w-4.5 h-4.5" />
@@ -271,7 +271,7 @@ export const PerformanceScore = ({ score = 94 }) => {
 
 // ─── Live Activity Feed (Requests Stream) ──────────────────────────────────────
 export const LiveActivityFeed = ({ requests, onNavigate }) => (
-  <div className="p-6 h-full rounded-3xl bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 shadow-sm transition-all duration-300 hover:shadow-md">
+  <div className="p-6 h-full rounded-2xl bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 shadow-sm transition-all duration-300 hover:shadow-md">
     <div className="flex items-center justify-between mb-6 text-left">
       <div className="flex items-center gap-2">
         <h3 className="font-extrabold text-gray-900 dark:text-white text-[15px] leading-tight">Live Requests Stream</h3>
@@ -334,7 +334,7 @@ export const InventoryWidget = ({ inventory, onNavigate }) => {
   const donutData = inventory.map((b) => ({ name: b.group, value: b.units }));
 
   return (
-    <div className="p-6 h-full flex flex-col justify-between rounded-3xl bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 shadow-sm relative overflow-hidden transition-all duration-300 hover:shadow-md">
+    <div className="p-6 h-full flex flex-col justify-between rounded-2xl bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 shadow-sm relative overflow-hidden transition-all duration-300 hover:shadow-md">
       <div>
         <div className="flex items-center justify-between mb-5 text-left">
           <div>
@@ -427,7 +427,7 @@ export const WeeklyChart = () => {
   const [hoveredData, setHoveredData] = useState(null);
 
   return (
-    <div className="p-6 h-full flex flex-col justify-between rounded-3xl bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 shadow-sm relative overflow-hidden transition-all duration-300 hover:shadow-md">
+    <div className="p-6 h-full flex flex-col justify-between rounded-2xl bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 shadow-sm relative overflow-hidden transition-all duration-300 hover:shadow-md">
       <div>
         <div className="flex items-center justify-between mb-5 text-left">
           <div>
@@ -690,7 +690,7 @@ export const AIDispatchRadar = () => {
 // ─── Upcoming Tasks (Operations Tasks) ──────────────────────────────────────────
 export const UpcomingTasks = ({ tasks = [], onToggleTask, onNavigate }) => {
   return (
-    <div className="p-6 h-full rounded-3xl bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 shadow-sm flex flex-col justify-between transition-all duration-300 hover:shadow-md">
+    <div className="p-6 h-full rounded-2xl bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 shadow-sm flex flex-col justify-between transition-all duration-300 hover:shadow-md">
       <div>
         <div className="flex items-center gap-3 mb-5 text-left">
           <div className="w-9 h-9 rounded-xl bg-indigo-50 dark:bg-indigo-950/20 text-indigo-500 flex items-center justify-center flex-shrink-0">
@@ -776,7 +776,7 @@ export const QuickAccessPanel = ({ onNavigate, onNewRequest, onOpenAI }) => {
   ];
 
   return (
-    <div className="p-6 h-full flex flex-col justify-between rounded-3xl bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 shadow-sm relative overflow-hidden transition-all duration-300 hover:shadow-md">
+    <div className="p-6 h-full flex flex-col justify-between rounded-2xl bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 shadow-sm relative overflow-hidden transition-all duration-300 hover:shadow-md">
       <div>
         <div className="flex items-center gap-3 mb-5 text-left">
           <div className="w-9 h-9 rounded-xl bg-indigo-50 dark:bg-indigo-950/20 text-indigo-500 flex items-center justify-center flex-shrink-0">
@@ -832,7 +832,7 @@ export const TeamActivity = ({ donors, onNavigate }) => {
   ];
 
   return (
-    <div className="p-6 h-full flex flex-col justify-between rounded-3xl bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 shadow-sm relative overflow-hidden transition-all duration-300 hover:shadow-md">
+    <div className="p-6 h-full flex flex-col justify-between rounded-2xl bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 shadow-sm relative overflow-hidden transition-all duration-300 hover:shadow-md">
       <div>
         <div className="flex items-center justify-between mb-5 text-left">
           <div className="flex items-center gap-3">
@@ -911,7 +911,7 @@ export const DonorNetworkTable = ({ userLocation, onNavigate, onNewRequest, onCa
   ];
 
   return (
-    <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 shadow-sm transition-all duration-300 hover:shadow-md">
+    <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 shadow-sm transition-all duration-300 hover:shadow-md">
       <div className="flex items-center justify-between mb-6 text-left">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-rose-50 dark:bg-rose-950/20 text-[#E11D48] flex items-center justify-center flex-shrink-0">

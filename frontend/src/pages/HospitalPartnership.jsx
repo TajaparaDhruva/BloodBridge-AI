@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '../components/Navbar';
@@ -11,8 +11,8 @@ import {
 } from 'react-icons/fi';
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
 };
 
 const stagger = {
@@ -48,6 +48,10 @@ const HospitalPartnership = () => {
   const navigate = useNavigate();
   const [activeFaq, setActiveFaq] = useState(null);
   const [demoModal, setDemoModal] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <div className="bg-[#FAF9F6] dark:bg-[#070B13] text-slate-900 dark:text-white min-h-screen transition-colors duration-300">
@@ -102,8 +106,8 @@ const HospitalPartnership = () => {
 
           {/* Dashboard Preview Card */}
           <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="mt-20 relative max-w-5xl mx-auto"
           >
@@ -250,25 +254,29 @@ const HospitalPartnership = () => {
             viewport={{ once: true, margin: '-80px' }}
             variants={stagger}
           >
-            {/* Starter Plan */}
+            {/* Free Trial Plan */}
             <motion.div
               variants={fadeUp}
-              className="border border-slate-200/80 rounded-[24px] p-8 flex flex-col justify-between hover:shadow-lg hover:border-slate-300/80 transition-all bg-white"
+              className="border border-slate-200/80 rounded-[24px] p-8 flex flex-col justify-between hover:shadow-lg hover:border-slate-300/80 transition-all bg-white relative"
             >
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-emerald-500 text-white text-[9.5px] font-black uppercase tracking-wider shadow-sm">
+                Recommended
+              </div>
               <div>
-                <p className="text-[14px] font-black text-slate-800 mb-4">Starter</p>
+                <p className="text-[14px] font-black text-slate-800 mb-4">7-Day Free Trial</p>
                 <div className="flex items-baseline gap-1 mb-6">
-                  <span className="text-4xl font-black text-slate-900">₹9,999</span>
-                  <span className="text-slate-400 font-bold text-[13px]">/month</span>
+                  <span className="text-4xl font-black text-slate-900">FREE</span>
+                  <span className="text-slate-400 font-bold text-[13px] ml-1">/ 7 Days</span>
                 </div>
                 <ul className="space-y-3.5 mb-8">
                   {[
-                    'AI Donor Matching Engine',
-                    'Basic supply analytics',
-                    'Up to 50 active dispatches',
-                    '1 Hospital location node',
-                    'Up to 10 staff accounts',
-                    'Standard email support'
+                    'Full access to all premium features',
+                    'AI Donor Matching',
+                    'Unlimited Blood Requests',
+                    'Hospital Dashboard',
+                    'Real-Time Notifications',
+                    'Blood Inventory Dashboard',
+                    'Analytics & Staff Accounts'
                   ].map((feat) => (
                     <li key={feat} className="flex items-start gap-2.5 text-[13px] text-slate-600 font-medium">
                       <span className="w-4.5 h-4.5 rounded-full border border-slate-200 flex items-center justify-center flex-shrink-0 mt-0.5 bg-slate-50">
@@ -281,34 +289,31 @@ const HospitalPartnership = () => {
               </div>
               <Link
                 to="/signup"
-                className="w-full py-3.5 rounded-2xl border border-[#E11D48]/80 hover:bg-rose-50/50 text-[#E11D48] font-bold text-[14px] text-center transition-all"
+                className="w-full py-3.5 rounded-2xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-[14px] text-center transition-all block"
               >
-                Get Industry Access
+                Start Free Trial
               </Link>
             </motion.div>
 
             {/* Professional Plan (Highlighted) */}
             <motion.div
               variants={fadeUp}
-              className="border-2 border-[#E11D48] rounded-[24px] p-8 flex flex-col justify-between hover:shadow-xl transition-all bg-white relative"
+              className="border-2 border-[#E11D48] rounded-[24px] p-8 flex flex-col justify-between hover:shadow-xl transition-all bg-white"
             >
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-[#E11D48] text-white text-[9.5px] font-black uppercase tracking-wider shadow-sm">
-                Most Popular
-              </div>
               <div>
-                <p className="text-[14px] font-black text-[#E11D48] mb-4">Professional</p>
+                <p className="text-[14px] font-black text-[#E11D48] mb-4">Professional Plan</p>
                 <div className="flex items-baseline gap-1 mb-6">
-                  <span className="text-4xl font-black text-slate-900">₹24,999</span>
+                  <span className="text-4xl font-black text-slate-900">₹2,999</span>
                   <span className="text-slate-400 font-bold text-[13px]">/month</span>
                 </div>
                 <ul className="space-y-3.5 mb-8">
                   {[
-                    'Everything in Starter',
-                    'Advanced predictive analytics',
-                    'Unlimited emergency requests',
-                    'Auto dispatch dispatchers',
-                    'Up to 250 staff accounts',
-                    'Priority 24/7 hotline support'
+                    'Everything in Free Trial',
+                    'Unlimited AI Matching',
+                    'Verified Partner Badge',
+                    'Advanced Analytics',
+                    'Hospital Collaboration',
+                    'Monthly Reports & API Access'
                   ].map((feat) => (
                     <li key={feat} className="flex items-start gap-2.5 text-[13px] text-slate-700 font-semibold">
                       <span className="w-4.5 h-4.5 rounded-full bg-rose-50 border border-rose-100 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -321,31 +326,34 @@ const HospitalPartnership = () => {
               </div>
               <Link
                 to="/signup"
-                className="w-full py-3.5 rounded-2xl bg-[#E11D48] hover:bg-rose-600 text-white font-bold text-[14px] text-center transition-all shadow-md shadow-rose-500/20"
+                className="w-full py-3.5 rounded-2xl bg-[#E11D48] hover:bg-rose-600 text-white font-bold text-[14px] text-center transition-all shadow-md shadow-rose-500/20 block"
               >
-                Get Industry Access
+                Upgrade to Professional
               </Link>
             </motion.div>
 
             {/* Enterprise Plan */}
             <motion.div
               variants={fadeUp}
-              className="border border-slate-200/80 rounded-[24px] p-8 flex flex-col justify-between hover:shadow-lg hover:border-slate-300/80 transition-all bg-white"
+              className="border border-slate-200/80 rounded-[24px] p-8 flex flex-col justify-between hover:shadow-lg hover:border-slate-300/80 transition-all bg-white relative"
             >
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-indigo-500 text-white text-[9.5px] font-black uppercase tracking-wider shadow-sm">
+                Best Value
+              </div>
               <div>
-                <p className="text-[14px] font-black text-slate-800 mb-4">Enterprise</p>
+                <p className="text-[14px] font-black text-slate-800 mb-4">Enterprise Plan</p>
                 <div className="flex items-baseline gap-1 mb-6">
-                  <span className="text-4xl font-black text-slate-900">Custom</span>
-                  <span className="text-slate-400 font-bold text-[13px] ml-1">Pricing</span>
+                  <span className="text-4xl font-black text-slate-900">₹7,999</span>
+                  <span className="text-slate-400 font-bold text-[13px] ml-1">/month</span>
                 </div>
                 <ul className="space-y-3.5 mb-8">
                   {[
                     'Everything in Professional',
-                    'Multi-facility network intelligence',
-                    'Government portal integrations',
-                    'AI forecasting dashboard',
-                    'Unlimited staff & structures',
-                    'Dedicated account executive'
+                    'AI Priority Matching',
+                    'Predictive Analytics',
+                    'Disaster Response Mode',
+                    'Unlimited Staff',
+                    'Custom API Integration'
                   ].map((feat) => (
                     <li key={feat} className="flex items-start gap-2.5 text-[13px] text-slate-600 font-medium">
                       <span className="w-4.5 h-4.5 rounded-full border border-slate-200 flex items-center justify-center flex-shrink-0 mt-0.5 bg-slate-50">
@@ -472,9 +480,9 @@ const HospitalPartnership = () => {
             onClick={() => setDemoModal(false)}
           >
             <motion.div
-              initial={{ scale: 0.9, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
               className="bg-white dark:bg-[#0F1420] border border-gray-100 dark:border-white/10 rounded-3xl p-8 max-w-md w-full shadow-2xl"
               onClick={(e) => e.stopPropagation()}

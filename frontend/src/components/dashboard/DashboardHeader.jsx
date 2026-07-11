@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
@@ -55,105 +55,108 @@ const DashboardHeader = ({
 }) => {
   const displayName = user?.name || user?.role || 'Operator';
   const navItems = getNavItems(user);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-30 px-4 md:px-6 pt-4 pb-2">
-      <div className="max-w-[1440px] mx-auto bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-[#F3F4F6] dark:border-slate-800/80 rounded-[28px] shadow-sm px-6 py-2.5 flex items-center justify-between gap-4">
+    <motion.nav
+      initial={{ y: -20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled ? 'glass-nav py-3 px-6 md:px-10' : 'py-5 px-6 md:px-10 bg-transparent'
+      }`}
+    >
+      <div className="w-full max-w-[1800px] mx-auto flex items-center justify-between gap-4">
         
         {/* Left Side: Brand Logo & Context */}
-        <div className="flex-shrink-0 flex items-center gap-4">
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="relative">
-              {/* Drop logo with heart inside */}
-              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-rose-500 to-[#E11D48] flex items-center justify-center shadow-sm">
-                <svg className="w-5.5 h-5.5 text-white" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 3C12 3 6 10 6 15C6 18.3 8.7 21 12 21C15.3 21 18 18.3 18 15C18 10 12 3 12 3Z" />
-                  <path d="M12 17.5C10.6 17.5 9.5 16.4 9.5 15C9.5 13.9 10.3 13.1 11.2 12.6C11.7 12.3 12.3 12.3 12.8 12.6C13.7 13.1 14.5 13.9 14.5 15C14.5 16.4 13.4 17.5 12 17.5Z" fill="white" opacity="0.3" />
-                  <path d="M12 17C11 17 10.2 16.2 10.2 15.2C10.2 14.7 10.4 14.2 10.8 13.9C11.1 13.7 11.4 13.5 11.8 13.4C12 13.3 12.2 13.3 12.4 13.4C12.8 13.5 13.1 13.7 13.4 13.9C13.8 14.2 14 14.7 14 15.2C14 16.2 13.2 17 12 17Z" fill="#E11D48" />
-                </svg>
-              </div>
+        <Link to="/" className="flex items-center gap-2.5 group font-poppins">
+          <div className="relative">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-red-500 to-[#E11D48] flex items-center justify-center shadow-premium transition-all duration-300 group-hover:scale-105 group-hover:shadow-premium-hover text-white">
+              <svg className="w-5.5 h-5.5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2.5C12 2.5 5.5 9.5 5.5 14.5C5.5 18.0899 8.41015 21 12 21C15.5899 21 18.5 18.0899 18.5 14.5C18.5 9.5 12 2.5 12 2.5Z" />
+              </svg>
             </div>
-            <div className="text-left">
-              <span className="font-extrabold text-[#0F172A] dark:text-white text-[15px] tracking-tight leading-none block">
-                BloodBridge AI
-              </span>
-              <span className="text-[7.5px] font-black tracking-widest text-[#64748B] uppercase mt-1 block">AI Command Center</span>
-            </div>
-          </Link>
-          <div className="h-8 w-[1px] bg-slate-200 dark:bg-slate-800" />
-        </div>
+            <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white dark:border-darkbg animate-pulse" />
+          </div>
+          <div>
+            <span className="font-extrabold text-slate-900 dark:text-white text-[16px] tracking-tight leading-none block">
+              BloodBridge <span className="text-[#E11D48] ml-0.5">AI</span>
+            </span>
+            <span className="text-[9px] font-bold tracking-wider text-slate-400 uppercase mt-0.5 block">AI Platform</span>
+          </div>
+        </Link>
 
-        {/* Center: Desktop Navigation Tabs (Stacked Layout with Vertical Dividers) */}
-        <div className="hidden lg:flex items-center gap-0 self-stretch">
-          {navItems.map((item, idx) => {
+        {/* Center: Desktop Navigation Tabs */}
+        <div className="hidden lg:flex items-center gap-1">
+          {navItems.map((item) => {
             const active = activeTab === item.id;
             return (
-              <React.Fragment key={item.id}>
-                {idx > 0 && <div className="h-6 w-[1px] bg-slate-100 dark:bg-slate-800/60 self-center mx-1" />}
-                <button
-                  onClick={() => setActiveTab(item.id)}
-                  className={`relative py-1.5 px-3.5 transition-all duration-200 cursor-pointer flex flex-col items-center justify-center gap-1 select-none ${
-                    active 
-                      ? 'text-[#E11D48] dark:text-rose-400' 
-                      : 'text-[#475569] dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'
-                  }`}
-                >
-                  <item.icon className="w-5.5 h-5.5" />
-                  <span className={`text-[10px] tracking-tight font-extrabold ${active ? 'font-black' : ''}`}>
-                    {tabLabels[item.id]}
-                  </span>
-                  {active && (
-                    <motion.div
-                      layoutId="active-dashboard-tab-indicator"
-                      className="absolute bottom-[-10px] left-2 right-2 h-[2.5px] bg-[#E11D48] dark:bg-rose-500 rounded-full"
-                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                    />
-                  )}
-                </button>
-              </React.Fragment>
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                className={`relative px-3.5 py-2 rounded-xl text-[13px] font-semibold transition-colors duration-200 cursor-pointer flex items-center gap-1.5 select-none ${
+                  active 
+                    ? 'text-white' 
+                    : 'text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
+                }`}
+              >
+                {active && (
+                  <motion.div
+                    layoutId="active-dashboard-tab"
+                    className="absolute inset-0 bg-[#E11D48] rounded-xl z-0"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  />
+                )}
+                <item.icon className="w-4 h-4 relative z-10" />
+                <span className="relative z-10">{tabLabels[item.id]}</span>
+              </button>
             );
           })}
         </div>
 
         {/* Right Side: Global control items */}
-        <div className="flex items-center gap-2.5 flex-shrink-0 ml-auto md:ml-0">
-          <div className="h-8 w-[1px] bg-slate-200 dark:bg-slate-800 hidden sm:block" />
-          
+        <div className="flex items-center gap-3 flex-shrink-0 ml-auto md:ml-0">
           {/* Search Trigger Button */}
           <button
             onClick={onOpenSearch}
-            className="w-9 h-9 rounded-xl bg-white dark:bg-slate-800/40 hover:bg-slate-50 border border-slate-200 dark:border-slate-700/50 flex items-center justify-center transition-all cursor-pointer shadow-sm"
+            className="w-9 h-9 rounded-xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 flex items-center justify-center hover:bg-black/10 transition-all cursor-pointer"
             title="Search network (Ctrl+K)"
           >
-            <FiSearch className="w-4.5 h-4.5 text-slate-500 dark:text-slate-400" />
+            <FiSearch className="w-4 h-4 text-slate-500 dark:text-slate-400" />
           </button>
 
           {/* Premium AI Assistant Shortcut */}
           <button
             onClick={onOpenAI}
-            className="hidden sm:flex w-9 h-9 rounded-xl bg-white dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/50 text-[#6366F1] hover:bg-slate-50 transition-all items-center justify-center cursor-pointer shadow-sm"
+            className="hidden sm:flex w-9 h-9 rounded-xl bg-indigo-50 dark:bg-indigo-900/20 text-indigo-500 hover:bg-indigo-100 transition-all items-center justify-center cursor-pointer shadow-sm"
             title="Toggle AI Assistant (Ctrl+J)"
           >
-            <FiZap className="w-4.5 h-4.5 text-indigo-500" />
+            <FiZap className="w-4 h-4" />
           </button>
 
           {/* Quick Dispatch request trigger */}
           <button 
             onClick={onNewRequest} 
-            className="bg-[#E11D48] hover:bg-rose-600 text-white py-2 px-4 rounded-xl text-[13px] font-black shadow-sm transition-all cursor-pointer flex items-center gap-1"
+            className="btn-primary py-2 px-4 text-[13px] font-bold shadow-sm transition-all cursor-pointer flex items-center gap-1"
           >
-            <FiPlus className="w-4 h-4 stroke-[3]" />
+            <FiPlus className="w-4 h-4" />
             <span>Request</span>
           </button>
 
           {/* Notifications Center with heartbeat */}
           <button
             onClick={onOpenNotifications}
-            className="relative w-9 h-9 rounded-xl bg-white dark:bg-slate-800/40 hover:bg-slate-50 border border-slate-200 dark:border-slate-700/50 flex items-center justify-center transition-all cursor-pointer shadow-sm"
+            className="relative w-9 h-9 rounded-xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 flex items-center justify-center hover:bg-black/10 transition-all cursor-pointer"
           >
-            <FiBell className="w-4.5 h-4.5 text-slate-500 dark:text-slate-400" />
+            <FiBell className="w-4 h-4 text-slate-500 dark:text-slate-400" />
             {unread > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 w-4.5 h-4.5 rounded-full bg-[#E11D48] text-white text-[9px] font-black flex items-center justify-center border-2 border-white dark:border-slate-900 shadow-sm">
+              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#E11D48] text-white text-[9px] font-black flex items-center justify-center border border-white dark:border-slate-900 shadow-sm animate-pulse">
                 {unread}
               </span>
             )}
@@ -174,7 +177,7 @@ const DashboardHeader = ({
           </button>
         </div>
       </div>
-    </header>
+    </motion.nav>
   );
 };
 
