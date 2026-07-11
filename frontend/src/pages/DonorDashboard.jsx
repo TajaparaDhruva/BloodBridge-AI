@@ -583,7 +583,12 @@ const DonorDashboard = () => {
         {/* Global Components */}
         <CommandPalette isOpen={showCommandPalette} onClose={() => setShowCommandPalette(false)} />
         <AIAssistant isOpen={showAIAssistant} onClose={() => setShowAIAssistant(false)} />
-        <NotificationCenter isOpen={showNotifications} onClose={() => setShowNotifications(false)} />
+        <NotificationCenter 
+          isOpen={showNotifications} 
+          onClose={() => setShowNotifications(false)} 
+          notifications={notifications}
+          setNotifications={setNotifications}
+        />
 
       </div>
     </div>

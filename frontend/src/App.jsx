@@ -57,6 +57,23 @@ const DashboardRouter = () => {
   return <Navigate to="/hospital/dashboard" replace />;
 };
 
+// Protected routes by role
+const DonorRoute = ({ children }) => {
+  const { user } = useAuth();
+  if (!user) return <Navigate to="/login" replace />;
+  if (user.role !== 'donor') return <Navigate to="/dashboard" replace />;
+  return children;
+};
+
+const HospitalRoute = ({ children }) => {
+  const { user } = useAuth();
+  if (!user) return <Navigate to="/login" replace />;
+  if (user.role !== 'hospital' && user.role !== 'admin') {
+    return <Navigate to="/dashboard" replace />;
+  }
+  return children;
+};
+
 const RootApp = () => {
   return (
     <AutoTranslate>
@@ -78,8 +95,22 @@ const RootApp = () => {
 
         {/* Dashboard Routes */}
         <Route path="/dashboard" element={<DashboardRouter />} />
-        <Route path="/hospital/dashboard" element={<Dashboard />} />
-        <Route path="/donor/dashboard" element={<DonorDashboard />} />
+        <Route 
+          path="/hospital/dashboard" 
+          element={
+            <HospitalRoute>
+              <Dashboard />
+            </HospitalRoute>
+          } 
+        />
+        <Route 
+          path="/donor/dashboard" 
+          element={
+            <DonorRoute>
+              <DonorDashboard />
+            </DonorRoute>
+          } 
+        />
 
         {/* 404 Fallback */}
         <Route path="*" element={<NotFound />} />
