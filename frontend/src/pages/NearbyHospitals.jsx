@@ -134,7 +134,14 @@ const NearbyHospitals = ({ onCall }) => {
   }, [selectedHospital]);
 
   const handleDirections = (h) => {
-    alert(`Generating dynamic AI routing instructions to ${h.name}...\nAddress: ${h.address}\nETA: ${h.eta}`);
+    if (userLocation?.lat && userLocation?.lng) {
+      // Open Google Maps in a new tab with routing from user's location to the hospital
+      const origin = `${userLocation.lat},${userLocation.lng}`;
+      const destination = `${h.coordinates.lat},${h.coordinates.lng}`;
+      window.open(`https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`, '_blank');
+    } else {
+      alert(`Distance to ${h.name}: ${h.distance} km.\nETA: ${h.eta}\nAddress: ${h.address}`);
+    }
   };
 
   return (

@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
-import { LanguageProvider } from './context/LanguageContext';
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { AuthProvider } from './context/AuthContext';
 import { LocationProvider } from './context/LocationContext';
 
@@ -41,6 +41,34 @@ const NotFound = () => (
   </div>
 );
 
+const RootApp = () => {
+  return (
+    <AutoTranslate>
+      <Routes>
+        {/* Home — redirects to splash if no language chosen */}
+        <Route path="/" element={<HomeRouteWrapper />} />
+
+        {/* Initial onboarding flow */}
+        <Route path="/splash" element={<SplashScreen />} />
+        <Route path="/language-select" element={<LanguageSelect />} />
+
+        {/* Auth */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+
+        {/* Public pages */}
+        <Route path="/hospital-partnership" element={<HospitalPartnership />} />
+
+        {/* Dashboard */}
+        <Route path="/dashboard" element={<Dashboard />} />
+
+        {/* 404 Fallback */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </AutoTranslate>
+  );
+};
+
 const App = () => {
   return (
     <ThemeProvider>
@@ -48,28 +76,7 @@ const App = () => {
         <LocationProvider>
           <AuthProvider>
             <BrowserRouter>
-              
-              <Routes>
-                {/* Home — redirects to splash if no language chosen */}
-                <Route path="/" element={<AutoTranslate><HomeRouteWrapper /></AutoTranslate>} />
-
-                {/* Initial onboarding flow */}
-                <Route path="/splash" element={<AutoTranslate><SplashScreen /></AutoTranslate>} />
-                <Route path="/language-select" element={<AutoTranslate><LanguageSelect /></AutoTranslate>} />
-
-                {/* Auth */}
-                <Route path="/login" element={<AutoTranslate><Login /></AutoTranslate>} />
-                <Route path="/signup" element={<AutoTranslate><Signup /></AutoTranslate>} />
-
-                {/* Public pages */}
-                <Route path="/hospital-partnership" element={<AutoTranslate><HospitalPartnership /></AutoTranslate>} />
-
-                {/* Dashboard */}
-                <Route path="/dashboard" element={<AutoTranslate><Dashboard /></AutoTranslate>} />
-
-                {/* 404 Fallback */}
-                <Route path="*" element={<AutoTranslate><NotFound /></AutoTranslate>} />
-              </Routes>
+              <RootApp />
             </BrowserRouter>
           </AuthProvider>
         </LocationProvider>

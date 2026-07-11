@@ -470,6 +470,8 @@ const buildDictionary = () => {
 
 export const translateText = (text, currentLang) => {
   if (typeof text !== 'string') return text;
+  if (!currentLang || currentLang === 'en') return text;
+  
   const dict = buildDictionary();
   const trimmed = text.trim();
   if (!trimmed) return text;
@@ -493,18 +495,45 @@ export const translateText = (text, currentLang) => {
     return leadingSpace + translation + trailingSpace;
   }
 
-  return text;
+  // Fallback: Smart Substring Replacement (for mixed dynamic text like "5 units available")
+  let modifiedText = text;
+  let translatedAny = false;
+  
+  if (dict[currentLang]) {
+    const escapeRegExp = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    // Sort keys by length descending to match longest phrases first
+    const keys = Object.keys(dict[currentLang]).sort((a, b) => b.length - a.length);
+    
+    for (const key of keys) {
+      if (key.length >= 2 && modifiedText.toLowerCase().includes(key.toLowerCase())) {
+        try {
+          const regex = new RegExp(`\\b${escapeRegExp(key)}\\b`, 'gi');
+          if (regex.test(modifiedText)) {
+            // Reset lastIndex because test() advances it
+            regex.lastIndex = 0;
+            modifiedText = modifiedText.replace(regex, dict[currentLang][key]);
+            translatedAny = true;
+          }
+        } catch (e) {
+          // Ignore regex errors
+        }
+      }
+    }
+  }
+
+  return translatedAny ? modifiedText : text;
 };
+
+// Cache original English strings so we can translate directly from one foreign language to another
+const originalNodeValues = new WeakMap();
+const originalTextContents = new WeakMap();
+const originalAttributes = new WeakMap();
 
 export const AutoTranslate = ({ children }) => {
   const { currentLanguage } = useLanguage();
 
   useEffect(() => {
-    if (!currentLanguage || currentLanguage === 'en') {
-      return;
-    }
-
-    const currentLang = currentLanguage;
+    const currentLang = currentLanguage || 'en';
     const translate = (text) => translateText(text, currentLang);
 
     // Save original descriptors/methods
@@ -522,6 +551,8 @@ export const AutoTranslate = ({ children }) => {
         },
         set(val) {
           if (typeof val === 'string') {
+            // Always update cache with React's fresh English string to allow dynamic updates
+            originalNodeValues.set(this, val);
             val = translate(val);
           }
           nodeValueDescriptor.set.call(this, val);
@@ -538,6 +569,8 @@ export const AutoTranslate = ({ children }) => {
         },
         set(val) {
           if (typeof val === 'string') {
+            // Always update cache with React's fresh English string
+            originalTextContents.set(this, val);
             val = translate(val);
           }
           textContentDescriptor.set.call(this, val);
@@ -547,6 +580,13 @@ export const AutoTranslate = ({ children }) => {
 
     Element.prototype.setAttribute = function(name, val) {
       if (typeof val === 'string' && (name === 'placeholder' || name === 'title' || name === 'aria-label')) {
+        let attrMap = originalAttributes.get(this);
+        if (!attrMap) {
+          attrMap = new Map();
+          originalAttributes.set(this, attrMap);
+        }
+        // Always cache the incoming React attribute
+        attrMap.set(name, val);
         val = translate(val);
       }
       originalSetAttribute.call(this, name, val);
@@ -557,22 +597,37 @@ export const AutoTranslate = ({ children }) => {
       const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
       let node;
       while ((node = walker.nextNode())) {
-        const text = node.nodeValue;
+        if (!originalNodeValues.has(node)) {
+          originalNodeValues.set(node, node.nodeValue);
+        }
+        const text = originalNodeValues.get(node);
         if (text && text.trim()) {
           const translated = translate(text);
-          if (translated !== text) {
-            node.nodeValue = translated;
+          if (translated !== node.nodeValue) {
+            nodeValueDescriptor.set.call(node, translated);
           }
         }
       }
 
       root.querySelectorAll('[placeholder]').forEach(el => {
+        let attrMap = originalAttributes.get(el);
+        if (!attrMap) { attrMap = new Map(); originalAttributes.set(el, attrMap); }
+        
         const p = el.getAttribute('placeholder');
-        if (p) el.setAttribute('placeholder', p);
+        if (p) {
+          if (!attrMap.has('placeholder')) attrMap.set('placeholder', p);
+          originalSetAttribute.call(el, 'placeholder', translate(attrMap.get('placeholder')));
+        }
       });
       root.querySelectorAll('[title]').forEach(el => {
+        let attrMap = originalAttributes.get(el);
+        if (!attrMap) { attrMap = new Map(); originalAttributes.set(el, attrMap); }
+
         const t = el.getAttribute('title');
-        if (t) el.setAttribute('title', t);
+        if (t) {
+          if (!attrMap.has('title')) attrMap.set('title', t);
+          originalSetAttribute.call(el, 'title', translate(attrMap.get('title')));
+        }
       });
     };
 

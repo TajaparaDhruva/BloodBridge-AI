@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -12,6 +12,44 @@ import {
 } from 'react-icons/fi';
 
 // AnimatedCounter Component for statistics counters
+const ContactMap = () => {
+  const mapRef = useRef(null);
+  useEffect(() => {
+    if (!window.L || !mapRef.current) return;
+    const map = window.L.map(mapRef.current, {
+      center: [23.0225, 72.5714], // Ahmedabad (HQ)
+      zoom: 13,
+      zoomControl: false,
+      attributionControl: false
+    });
+    window.L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      maxZoom: 20
+    }).addTo(map);
+
+    const icon = window.L.divIcon({
+      className: 'bg-transparent border-none',
+      html: `<div class="flex flex-col items-center relative z-10 -mt-10 ml-[-40px]">
+               <div class="w-11 h-11 rounded-full bg-[#E11D48] text-white flex items-center justify-center shadow-lg border-2 border-white group-hover:scale-105 transition-transform duration-300">
+                 <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                   <circle cx="12" cy="10" r="3" />
+                 </svg>
+               </div>
+               <span class="text-[9px] font-black bg-[#E11D48] text-white py-0.5 px-2.5 rounded-full uppercase shadow-md mt-1 tracking-wider whitespace-nowrap">HQ Main Dispatcher</span>
+             </div>`,
+      iconSize: [40, 40],
+      iconAnchor: [20, 40]
+    });
+    window.L.marker([23.0225, 72.5714], { icon }).addTo(map);
+
+    return () => {
+      map.remove();
+    };
+  }, []);
+  return <div ref={mapRef} className="w-full h-full z-0 relative" />;
+};
+
 const AnimatedCounter = ({ value, duration = 1.5 }) => {
   const [count, setCount] = useState(0);
   useEffect(() => {
@@ -2326,39 +2364,9 @@ const LandingPage = () => {
                   </div>
                 </div>
 
-                {/* Maps visual mock */}
-                <div className="h-60 bg-gray-50 dark:bg-slate-900/60 rounded-2xl relative overflow-hidden border border-slate-100 dark:border-gray-800/80 shadow-inner flex items-center justify-center">
-                  {/* Mock Map Grid lines */}
-                  <div className="absolute inset-0 opacity-20 dark:opacity-10 pointer-events-none">
-                    <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                      <line x1="0" y1="50" x2="100%" y2="50" stroke="currentColor" strokeWidth="1.5" />
-                      <line x1="0" y1="120" x2="100%" y2="120" stroke="currentColor" strokeWidth="1.5" />
-                      <line x1="0" y1="190" x2="100%" y2="190" stroke="currentColor" strokeWidth="1.5" />
-                      <line x1="80" y1="0" x2="80" y2="100%" stroke="currentColor" strokeWidth="1.5" />
-                      <line x1="180" y1="0" x2="180" y2="100%" stroke="currentColor" strokeWidth="1.5" />
-                      <line x1="320" y1="0" x2="320" y2="100%" stroke="currentColor" strokeWidth="1.5" />
-                      {/* Diagonal routes */}
-                      <path d="M0,0 Q150,150 400,240" fill="none" stroke="currentColor" strokeWidth="2" />
-                      <path d="M300,0 C220,100 120,180 0,220" fill="none" stroke="currentColor" strokeWidth="2" />
-                      {/* River shape */}
-                      <path d="M0,20 Q120,40 240,110 T480,180" fill="none" stroke="#93C5FD" strokeWidth="7" opacity="0.6" />
-                    </svg>
-                  </div>
-                  
-                  {/* Pulsating concentric circles */}
-                  <div className="absolute w-36 h-36 rounded-full bg-rose-500/10 animate-ping opacity-60"></div>
-                  <div className="absolute w-24 h-24 rounded-full bg-rose-500/15 animate-pulse"></div>
-                  
-                  {/* Heart Center Node */}
-                  <div className="flex flex-col items-center relative z-10">
-                    <div className="w-11 h-11 rounded-full bg-[#E11D48] text-white flex items-center justify-center shadow-lg border-2 border-white dark:border-slate-900 group-hover:scale-105 transition-transform duration-300">
-                      <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                        <circle cx="12" cy="10" r="3" />
-                      </svg>
-                    </div>
-                    <span className="text-[9px] font-black bg-[#E11D48] text-white py-0.5 px-2.5 rounded-full uppercase shadow-md mt-2 tracking-wider">HQ Main Dispatcher</span>
-                  </div>
+                {/* Maps visual live integration */}
+                <div className="h-60 bg-gray-50 dark:bg-slate-900/60 rounded-2xl relative overflow-hidden border border-slate-100 dark:border-gray-800/80 shadow-inner flex items-center justify-center z-0">
+                  <ContactMap />
                 </div>
 
               </div>
