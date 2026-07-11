@@ -17,7 +17,10 @@ const errorHandler = (err, req, res, next) => {
   // Mongoose duplicate key error
   if (err.code === 11000) {
     const field = Object.keys(err.keyValue)[0];
-    return sendError(res, `Duplicate field value entered: ${field}. Please use another value.`, 400);
+    let friendlyField = field;
+    if (field === 'registrationNumber') friendlyField = 'Registration / License Number';
+    if (field === 'email') friendlyField = 'Email Address';
+    return sendError(res, `This ${friendlyField} is already registered. Please use another value.`, 400);
   }
 
   // Mongoose cast error (bad ObjectId)

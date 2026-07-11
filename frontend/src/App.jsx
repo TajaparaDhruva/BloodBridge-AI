@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { LocationProvider } from './context/LocationContext';
 
 // Pages & Components
@@ -14,6 +14,7 @@ import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import HospitalPartnership from './pages/HospitalPartnership';
 import ScheduleDemo from './pages/ScheduleDemo';
+import DonorDashboard from './pages/DonorDashboard';
 import { AutoTranslate } from './utils/translator';
 
 // Route helper: redirect to splash if no language selected yet
@@ -42,6 +43,20 @@ const NotFound = () => (
   </div>
 );
 
+// Dashboard Router for Role-Based redirection
+const DashboardRouter = () => {
+  const { user } = useAuth();
+  
+  if (!user) return <Navigate to="/login" replace />;
+  
+  if (user.role === 'donor') {
+    return <Navigate to="/donor/dashboard" replace />;
+  }
+  
+  // Default to hospital dashboard if role is hospital or admin, or fallback
+  return <Navigate to="/hospital/dashboard" replace />;
+};
+
 const RootApp = () => {
   return (
     <AutoTranslate>
@@ -61,8 +76,10 @@ const RootApp = () => {
         <Route path="/hospital-partnership" element={<HospitalPartnership />} />
         <Route path="/schedule-demo" element={<ScheduleDemo />} />
 
-        {/* Dashboard */}
-        <Route path="/dashboard" element={<Dashboard />} />
+        {/* Dashboard Routes */}
+        <Route path="/dashboard" element={<DashboardRouter />} />
+        <Route path="/hospital/dashboard" element={<Dashboard />} />
+        <Route path="/donor/dashboard" element={<DonorDashboard />} />
 
         {/* 404 Fallback */}
         <Route path="*" element={<NotFound />} />
