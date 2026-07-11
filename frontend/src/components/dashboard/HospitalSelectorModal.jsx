@@ -51,13 +51,7 @@ const HospitalSelectorModal = ({ onClose, onSelectCall }) => {
                 <p className="text-[10px] text-muted/65 font-bold mt-0.5 tracking-wider">{h.contact}</p>
               </div>
               
-              <button
-                onClick={() => onSelectCall(h)}
-                className="w-10 h-10 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white flex items-center justify-center shadow-md hover:shadow-lg transition-all cursor-pointer flex-shrink-0"
-                title={`Call ${h.name}`}
-              >
-                <FiPhone className="w-4.5 h-4.5" />
-              </button>
+
             </div>
           ))}
         </div>
