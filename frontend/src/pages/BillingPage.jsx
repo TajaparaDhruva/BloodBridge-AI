@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
+import { jsPDF } from 'jspdf';
 import {
   FiCreditCard, FiCheck, FiAlertTriangle, FiDownload, FiRefreshCw,
   FiZap, FiShield, FiX, FiTrendingUp, FiArrowRight, FiCalendar,
@@ -114,6 +115,70 @@ const BillingPage = () => {
   };
 
   const handleDownloadInvoice = (inv) => {
+    const doc = new jsPDF();
+    
+    // Header
+    doc.setFontSize(22);
+    doc.setTextColor('#E11D48');
+    doc.text('BloodBridge AI', 20, 20);
+    
+    doc.setFontSize(10);
+    doc.setTextColor('#64748b');
+    doc.text('Emergency Blood Supply Network', 20, 28);
+    
+    // Title
+    doc.setFontSize(16);
+    doc.setTextColor('#0f172a');
+    doc.text('INVOICE / RECEIPT', 130, 20);
+    
+    // Details
+    doc.setFontSize(11);
+    doc.text(`Invoice ID: ${inv.id}`, 130, 30);
+    doc.text(`Date: ${fmt(inv.date)}`, 130, 36);
+    doc.text(`Status: PAID`, 130, 42);
+    
+    // Line separator
+    doc.setDrawColor(226, 232, 240);
+    doc.line(20, 50, 190, 50);
+    
+    // Body
+    doc.setFontSize(12);
+    doc.setTextColor('#0f172a');
+    doc.text('Billed To:', 20, 65);
+    doc.setFontSize(10);
+    doc.setTextColor('#475569');
+    doc.text(`${user?.name || user?.hospitalName || 'Hospital Admin'}`, 20, 72);
+    doc.text(`Partner Hospital`, 20, 78);
+    
+    // Table Header
+    doc.setFillColor(248, 250, 252);
+    doc.rect(20, 90, 170, 12, 'F');
+    doc.setFontSize(10);
+    doc.setTextColor('#0f172a');
+    doc.text('Description', 25, 98);
+    doc.text('Amount', 160, 98);
+    
+    // Table Body
+    doc.setTextColor('#475569');
+    doc.text(`${PLAN_META[inv.plan]?.label || inv.plan} Plan Subscription`, 25, 112);
+    doc.text(`Rs ${inv.amount.toLocaleString('en-IN')}`, 160, 112);
+    
+    // Line separator
+    doc.setDrawColor(226, 232, 240);
+    doc.line(20, 120, 190, 120);
+    
+    // Total
+    doc.setFontSize(12);
+    doc.setTextColor('#0f172a');
+    doc.text('Total Paid:', 130, 130);
+    doc.text(`Rs ${inv.amount.toLocaleString('en-IN')}`, 160, 130);
+    
+    // Footer
+    doc.setFontSize(9);
+    doc.setTextColor('#94a3b8');
+    doc.text('Thank you for partnering with BloodBridge AI to save lives.', 20, 280);
+    
+    doc.save(`Invoice_${inv.id}.pdf`);
     showToast(`Invoice ${inv.id} downloaded`);
   };
 
