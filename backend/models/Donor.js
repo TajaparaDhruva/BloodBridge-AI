@@ -46,6 +46,8 @@ const donorSchema = new mongoose.Schema(
     donationCount: { type: Number, default: 0 },
     responseRate: { type: Number, default: 100 }, // percentage
     rating: { type: Number, default: 5, min: 1, max: 5 },
+    aiScore: { type: Number, default: 90 },
+    avatarChar: { type: String, default: 'A' },
   },
   { timestamps: true }
 );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Link, useLocation as useRouterLocation } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -15,6 +15,8 @@ import Dashboard from './pages/Dashboard';
 import HospitalPartnership from './pages/HospitalPartnership';
 import ScheduleDemo from './pages/ScheduleDemo';
 import DonorDashboard from './pages/DonorDashboard';
+import DonorProfile from './pages/DonorProfile';
+import RequestDonation from './pages/RequestDonation';
 import { AutoTranslate } from './utils/translator';
 
 // Route helper: redirect to splash if no language selected yet
@@ -46,15 +48,16 @@ const NotFound = () => (
 // Dashboard Router for Role-Based redirection
 const DashboardRouter = () => {
   const { user } = useAuth();
+  const location = useRouterLocation();
   
   if (!user) return <Navigate to="/login" replace />;
   
   if (user.role === 'donor') {
-    return <Navigate to="/donor/dashboard" replace />;
+    return <Navigate to="/donor/dashboard" replace state={location.state} />;
   }
   
   // Default to hospital dashboard if role is hospital or admin, or fallback
-  return <Navigate to="/hospital/dashboard" replace />;
+  return <Navigate to="/hospital/dashboard" replace state={location.state} />;
 };
 
 // Protected routes by role
@@ -71,6 +74,13 @@ const HospitalRoute = ({ children }) => {
   if (user.role !== 'hospital' && user.role !== 'admin') {
     return <Navigate to="/dashboard" replace />;
   }
+  return children;
+};
+
+// Protected route for either hospital or donor
+const ProtectedRoute = ({ children }) => {
+  const { user } = useAuth();
+  if (!user) return <Navigate to="/login" replace />;
   return children;
 };
 
@@ -92,6 +102,24 @@ const RootApp = () => {
         {/* Public pages */}
         <Route path="/hospital-partnership" element={<HospitalPartnership />} />
         <Route path="/schedule-demo" element={<ScheduleDemo />} />
+
+        {/* Profiles */}
+        <Route 
+          path="/donor/:id" 
+          element={
+            <ProtectedRoute>
+              <DonorProfile />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/donor/:id/request" 
+          element={
+            <ProtectedRoute>
+              <RequestDonation />
+            </ProtectedRoute>
+          } 
+        />
 
         {/* Dashboard Routes */}
         <Route path="/dashboard" element={<DashboardRouter />} />
