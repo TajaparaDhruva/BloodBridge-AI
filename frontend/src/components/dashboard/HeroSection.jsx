@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import {
-  FiAlertCircle, FiMapPin, FiPlus, FiZap, FiTrendingUp, FiClock,
+  FiAlertCircle, FiMapPin, FiPlus, FiZap, FiTrendingUp, FiClock, FiArrowLeft
 } from 'react-icons/fi';
 import { getGreeting } from './shared';
 
@@ -40,6 +41,9 @@ const HeroSection = ({
 
           {/* Left: Greeting + Description + Actions */}
           <div className="flex-1 min-w-0">
+            <Link to="/" className="inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors uppercase tracking-widest mb-4">
+              <FiArrowLeft className="w-3.5 h-3.5" /> Back to Home
+            </Link>
             {/* Status Tags */}
             <div className="flex flex-wrap items-center gap-2 mb-5">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50/80 dark:bg-rose-950/20 border border-rose-100/50 text-[#E11D48] text-[10px] font-black tracking-wider uppercase">
