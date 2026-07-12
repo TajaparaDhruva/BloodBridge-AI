@@ -225,7 +225,7 @@ const EmergencyMap = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col min-h-screen relative overflow-hidden bg-slate-950 text-white select-none">
+    <div className="flex-1 flex flex-col w-full h-full relative overflow-hidden bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-white select-none">
       
       {/* Leaflet Map Target DOM element */}
       <div ref={mapContainerRef} className="absolute inset-0 w-full h-full" style={{ zIndex: 1 }} />
@@ -234,19 +234,19 @@ const EmergencyMap = () => {
 
       {/* Top Floating Info Bar */}
       <div className="absolute top-6 left-6 right-6 flex justify-between items-start pointer-events-none z-30">
-        <div className="glass-card rounded-2xl p-4 pointer-events-auto border border-white/10 bg-slate-900/90 flex items-center gap-3 shadow-lg">
-          <div className="w-8 h-8 rounded-full bg-bloodred/20 flex items-center justify-center text-bloodred animate-pulse">
+        <div className="glass-card rounded-2xl p-4 pointer-events-auto border border-gray-200 dark:border-white/10 bg-white/90 dark:bg-slate-900/90 flex items-center gap-3 shadow-lg">
+          <div className="w-8 h-8 rounded-full bg-rose-100 dark:bg-bloodred/20 flex items-center justify-center text-rose-600 dark:text-bloodred animate-pulse">
             <FiCompass className="w-4.5 h-4.5" />
           </div>
           <div>
-            <h4 className="text-xs font-extrabold uppercase tracking-widest text-gray-400">Tactical Operations Hub</h4>
-            <p className="text-[10px] text-gray-500">Live coordinates active inside: <span className="font-bold text-white">{userLocation?.name || 'Mumbai'}</span></p>
+            <h4 className="text-xs font-extrabold uppercase tracking-widest text-gray-800 dark:text-gray-400">Tactical Operations Hub</h4>
+            <p className="text-[10px] text-gray-500">Live coordinates active inside: <span className="font-bold text-gray-900 dark:text-white">{userLocation?.name || 'Mumbai'}</span></p>
           </div>
         </div>
 
-        <div className="glass-card rounded-2xl p-3 pointer-events-auto border border-white/10 bg-slate-900/90 shadow-lg">
+        <div className="glass-card rounded-2xl p-3 pointer-events-auto border border-gray-200 dark:border-white/10 bg-white/90 dark:bg-slate-900/90 shadow-lg">
           <motion.div
-            className="w-8 h-8 flex items-center justify-center text-indigo-400 text-lg"
+            className="w-8 h-8 flex items-center justify-center text-indigo-500 dark:text-indigo-400 text-lg"
             animate={{ rotate: 360 }}
             transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
           >
@@ -259,23 +259,23 @@ const EmergencyMap = () => {
       <div className="absolute right-6 top-1/2 -translate-y-1/2 flex flex-col gap-2.5 z-30">
         <button
           onClick={() => handleZoom('in')}
-          className="w-10 h-10 rounded-xl bg-slate-900/95 border border-white/10 text-white flex items-center justify-center hover:bg-slate-800 hover:border-white/20 transition-all font-bold shadow-md cursor-pointer"
+          className="w-10 h-10 rounded-xl bg-white/90 dark:bg-slate-900/95 border border-gray-200 dark:border-white/10 text-gray-800 dark:text-white flex items-center justify-center hover:bg-gray-50 dark:hover:bg-slate-800 transition-all font-bold shadow-md cursor-pointer"
         >
           <FiPlus className="w-5 h-5" />
         </button>
         <button
           onClick={() => handleZoom('out')}
-          className="w-10 h-10 rounded-xl bg-slate-900/95 border border-white/10 text-white flex items-center justify-center hover:bg-slate-800 hover:border-white/20 transition-all font-bold shadow-md cursor-pointer"
+          className="w-10 h-10 rounded-xl bg-white/90 dark:bg-slate-900/95 border border-gray-200 dark:border-white/10 text-gray-800 dark:text-white flex items-center justify-center hover:bg-gray-50 dark:hover:bg-slate-800 transition-all font-bold shadow-md cursor-pointer"
         >
           <FiMinus className="w-5 h-5" />
         </button>
       </div>
 
       {/* Bottom Left Layers Dashboard */}
-      <div className="absolute bottom-20 lg:bottom-6 left-6 z-30 w-64">
-        <div className="glass-card rounded-3xl p-5 border border-white/10 bg-slate-900/90 space-y-4 shadow-lg">
-          <h5 className="text-xs font-extrabold uppercase tracking-widest text-gray-400 flex items-center gap-1.5">
-            <FiLayers className="w-4 h-4 text-indigo-400" /> Active Operations Layers
+      <div className="absolute bottom-6 left-6 z-30 w-64 max-h-[40vh] overflow-y-auto custom-scrollbar rounded-3xl">
+        <div className="glass-card rounded-3xl p-5 border border-gray-200 dark:border-white/10 bg-white/90 dark:bg-slate-900/90 space-y-4 shadow-lg">
+          <h5 className="text-xs font-extrabold uppercase tracking-widest text-gray-800 dark:text-gray-400 flex items-center gap-1.5">
+            <FiLayers className="w-4 h-4 text-indigo-500 dark:text-indigo-400" /> Active Operations Layers
           </h5>
 
           <div className="space-y-2">
@@ -287,27 +287,27 @@ const EmergencyMap = () => {
             ].map(layer => (
               <label
                 key={layer.id}
-                className={`flex items-center justify-between p-2 rounded-xl border bg-slate-950/60 cursor-pointer hover:bg-slate-950 transition-all ${layer.color}`}
+                className={`flex items-center justify-between p-2 rounded-xl border bg-gray-50/80 dark:bg-slate-950/60 cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-950 transition-all ${layer.color}`}
               >
-                <span className="text-[11px] font-bold text-gray-300">{layer.label}</span>
+                <span className="text-[11px] font-bold text-gray-700 dark:text-gray-300">{layer.label}</span>
                 <input
                   type="checkbox"
                   checked={layer.checked}
                   onChange={() => toggleLayer(layer.id)}
-                  className="rounded text-indigo-500 focus:ring-indigo-500 border-white/15 w-4 h-4 accent-indigo-500"
+                  className="rounded text-indigo-500 focus:ring-indigo-500 border-gray-300 dark:border-white/15 w-4 h-4 accent-indigo-500"
                 />
               </label>
             ))}
           </div>
 
-          <div className="border-t border-white/10 pt-3 space-y-1.5">
-            <h5 className="text-[10px] font-extrabold uppercase tracking-widest text-gray-400">
+          <div className="border-t border-gray-200 dark:border-white/10 pt-3 space-y-1.5">
+            <h5 className="text-[10px] font-extrabold uppercase tracking-widest text-gray-500 dark:text-gray-400">
               🗺️ Map Basemap Style
             </h5>
             <select
               value={mapStyle}
               onChange={(e) => setMapStyle(e.target.value)}
-              className="w-full text-[11px] font-bold bg-slate-950 border border-white/10 rounded-xl p-2.5 focus:ring-1 focus:ring-indigo-500 focus:outline-none text-gray-300"
+              className="w-full text-[11px] font-bold bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-white/10 rounded-xl p-2.5 focus:ring-1 focus:ring-indigo-500 focus:outline-none text-gray-700 dark:text-gray-300"
             >
               <option value="google-road">🗺️ Google Road Map</option>
               <option value="google-satellite">🛰️ Google Satellite</option>

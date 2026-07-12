@@ -74,7 +74,7 @@ export const AnimatedCounter = ({ value, duration = 1200, className = '' }) => {
 
 export const WidgetShell = ({ children, className = '', delay = 0, hover = true }) => (
   <motion.div
-    className={`dashboard-widget ${className}`}
+    className={`glass-card border border-white/20 dark:border-white/10 ${className}`}
     initial={{ opacity: 0, y: 24 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
