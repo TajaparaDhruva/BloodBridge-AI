@@ -5,6 +5,9 @@ const Donor = require('../models/Donor');
 const Hospital = require('../models/Hospital');
 const { JWT_SECRET, JWT_EXPIRES_IN } = require('../config/env');
 const { sendSuccess, sendError } = require('../utils/helpers');
+const { OAuth2Client } = require('google-auth-library');
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Helper to sign JWT
 const signToken = (id) => {
@@ -291,6 +294,110 @@ const changePassword = async (req, res, next) => {
   }
 };
 
+/**
+ * Log in / Sign up with Google
+ */
+const googleAuth = async (req, res, next) => {
+  try {
+    const { token, role = 'donor' } = req.body;
+    
+    if (!token) {
+      return sendError(res, 'Google token is required', 400);
+    }
+
+    client.setCredentials({ access_token: token });
+    const userInfoResponse = await client.request({
+      url: 'https://www.googleapis.com/oauth2/v3/userinfo',
+    });
+    const payload = userInfoResponse.data;
+    
+    const email = payload.email.toLowerCase().trim();
+    const name = payload.name;
+    const picture = payload.picture;
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      // Create User
+      user = await User.create({
+        name,
+        email,
+        password: Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8), // random secure password
+        role,
+      });
+
+      // Initialize Profile
+      await Profile.create({ user: user._id, avatar: picture });
+
+      // Create Donor/Hospital
+      if (role === 'donor') {
+        await Donor.create({
+          user: user._id,
+          name: name,
+          bloodGroup: 'O+',
+          age: 25,
+          weight: 65,
+          gender: 'unknown',
+          contact: '0000000000',
+          city: 'Unknown',
+          state: 'Unknown',
+          isEligible: true,
+          isAvailable: true,
+          isVerified: false,
+          location: {
+            type: 'Point',
+            coordinates: [72.8777, 19.0760] // Default
+          }
+        });
+      } else if (role === 'hospital') {
+         await Hospital.create({
+          user: user._id,
+          name: name,
+          registrationNumber: `HOSP-${Date.now()}`,
+          type: 'private',
+          contact: '0000000000',
+          email: email,
+          address: 'Unknown',
+          city: 'Unknown',
+          state: 'Unknown',
+          pincode: '000000',
+          location: {
+            type: 'Point',
+            coordinates: [72.8777, 19.0760] // Default
+          },
+          isVerified: false,
+          isActive: true,
+          emergencyContact: '0000000000',
+          bedsCapacity: 100,
+          hasBloodBank: true
+        });
+      }
+    } else {
+      if (!user.isActive) {
+        return sendError(res, 'Account is deactivated', 403);
+      }
+      user.lastLogin = new Date();
+      await user.save();
+    }
+
+    const jwtToken = signToken(user._id);
+
+    const isProdLogin = process.env.NODE_ENV === 'production';
+    res.cookie('token', jwtToken, {
+      httpOnly: true,
+      secure: isProdLogin,
+      sameSite: isProdLogin ? 'none' : 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    const userObj = user.toJSON();
+
+    return sendSuccess(res, { user: userObj, token: jwtToken }, 'Google Authentication successful');
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   signup,
   login,
@@ -298,4 +405,5 @@ module.exports = {
   getProfile,
   updateProfile,
   changePassword,
+  googleAuth,
 };

@@ -528,6 +528,26 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const googleLogin = async (token, role = 'donor') => {
+    try {
+      const res = await authService.googleLogin(token, role);
+      if (res.success && res.data) {
+        const userObj = res.data.user;
+        setUser(userObj);
+        localStorage.setItem('auth_user', JSON.stringify(userObj));
+        localStorage.setItem('user', JSON.stringify(userObj));
+        if (res.data.token) {
+          localStorage.setItem('token', res.data.token);
+        }
+        return true;
+      }
+      throw new Error(res.message || 'Google Login failed');
+    } catch (err) {
+      console.error('Google Login request failed:', err);
+      throw err;
+    }
+  };
+
   const signup = async (payload) => {
     try {
       const res = await authService.signup(payload);
@@ -689,6 +709,7 @@ export const AuthProvider = ({ children }) => {
       notifications,
       timeline,
       login,
+      googleLogin,
       signup,
       register: signup,
       logout,

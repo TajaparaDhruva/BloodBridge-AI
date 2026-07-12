@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { signup, login, logout, getProfile, updateProfile, changePassword } = require('../controllers/auth.controller');
+const { signup, login, logout, getProfile, updateProfile, changePassword, googleAuth } = require('../controllers/auth.controller');
 const { signupValidator, loginValidator } = require('../validators/auth.validator');
 const { body } = require('express-validator');
 const validateResults = require('../middleware/validation.middleware');
@@ -9,6 +9,7 @@ const { verifyToken } = require('../middleware/auth.middleware');
 // Public
 router.post('/signup', signupValidator, validateResults, signup);
 router.post('/login', loginValidator, validateResults, login);
+router.post('/google', googleAuth);
 router.post('/logout', logout);
 
 // Protected
