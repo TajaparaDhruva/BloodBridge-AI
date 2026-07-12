@@ -60,7 +60,65 @@ const initialRequests = [
     matchTime: '8 mins',
     donorsContacted: 18,
     donorName: 'Rahul Mehta'
-  }
+  },
+  {
+    id: 'REQ-105',
+    hospitalName: 'Lilavati Hospital',
+    patientName: 'Kareena Kapoor',
+    bloodGroup: 'B+',
+    units: 3,
+    urgency: 'urgent',
+    status: 'matching',
+    city: 'Mumbai',
+    time: '2 hours ago',
+    matchTime: '15 mins',
+    donorsContacted: 32,
+    donorName: null
+  },
+  {
+    id: 'REQ-106',
+    hospitalName: 'Nanavati Super Speciality',
+    patientName: 'Salman Khan',
+    bloodGroup: 'AB+',
+    units: 1,
+    urgency: 'emergency',
+    status: 'matching',
+    city: 'Mumbai',
+    time: '15 mins ago',
+    matchTime: '5 mins',
+    donorsContacted: 12,
+    donorName: null
+  },
+  { id: 'REQ-107', hospitalName: 'Fortis Hospital', patientName: 'Rahul Dravid', bloodGroup: 'O+', units: 4, urgency: 'emergency', status: 'matching', city: 'Bangalore', time: '5 mins ago', matchTime: '1 min', donorsContacted: 50, donorName: null },
+  { id: 'REQ-108', hospitalName: 'Max Super Speciality', patientName: 'Sania Mirza', bloodGroup: 'A-', units: 2, urgency: 'urgent', status: 'matching', city: 'Delhi', time: '1 hour ago', matchTime: '20 mins', donorsContacted: 15, donorName: null },
+  { id: 'REQ-109', hospitalName: 'Manipal Hospital', patientName: 'Sunil Chhetri', bloodGroup: 'B+', units: 3, urgency: 'normal', status: 'matching', city: 'Bangalore', time: '4 hours ago', matchTime: '45 mins', donorsContacted: 10, donorName: null },
+  { id: 'REQ-110', hospitalName: 'Medanta The Medicity', patientName: 'Mary Kom', bloodGroup: 'O-', units: 2, urgency: 'emergency', status: 'matching', city: 'Gurugram', time: '10 mins ago', matchTime: '3 mins', donorsContacted: 60, donorName: null },
+  { id: 'REQ-111', hospitalName: 'Christian Medical College', patientName: 'P. V. Sindhu', bloodGroup: 'AB+', units: 1, urgency: 'urgent', status: 'matching', city: 'Vellore', time: '2 hours ago', matchTime: '15 mins', donorsContacted: 22, donorName: null },
+  { id: 'REQ-112', hospitalName: 'Tata Memorial Hospital', patientName: 'Neeraj Chopra', bloodGroup: 'A+', units: 5, urgency: 'emergency', status: 'matching', city: 'Mumbai', time: '2 mins ago', matchTime: '30 secs', donorsContacted: 100, donorName: null },
+  { id: 'REQ-113', hospitalName: 'Narayana Health', patientName: 'Saina Nehwal', bloodGroup: 'B-', units: 2, urgency: 'normal', status: 'matching', city: 'Bangalore', time: '6 hours ago', matchTime: '1 hour', donorsContacted: 5, donorName: null },
+  { id: 'REQ-114', hospitalName: 'Artemis Hospital', patientName: 'Virender Sehwag', bloodGroup: 'O+', units: 3, urgency: 'urgent', status: 'matching', city: 'Gurugram', time: '45 mins ago', matchTime: '10 mins', donorsContacted: 35, donorName: null },
+  { id: 'REQ-115', hospitalName: 'Care Hospitals', patientName: 'Mithali Raj', bloodGroup: 'AB-', units: 1, urgency: 'emergency', status: 'matching', city: 'Hyderabad', time: '20 mins ago', matchTime: '5 mins', donorsContacted: 18, donorName: null },
+  { id: 'REQ-116', hospitalName: 'KIMS Hospitals', patientName: 'Kapil Dev', bloodGroup: 'A-', units: 4, urgency: 'urgent', status: 'matching', city: 'Secunderabad', time: '1.5 hours ago', matchTime: '12 mins', donorsContacted: 28, donorName: null },
+  { id: 'REQ-117', hospitalName: 'Ruby Hall Clinic', patientName: 'Ravi Shastri', bloodGroup: 'B+', units: 2, urgency: 'normal', status: 'matching', city: 'Pune', time: '8 hours ago', matchTime: '2 hours', donorsContacted: 8, donorName: null },
+  { id: 'REQ-118', hospitalName: 'Sir H. N. Reliance', patientName: 'Anushka Sharma', bloodGroup: 'O-', units: 3, urgency: 'emergency', status: 'matching', city: 'Mumbai', time: '12 mins ago', matchTime: '4 mins', donorsContacted: 55, donorName: null },
+  { id: 'REQ-119', hospitalName: 'PD Hinduja Hospital', patientName: 'Aamir Khan', bloodGroup: 'AB+', units: 2, urgency: 'urgent', status: 'matching', city: 'Mumbai', time: '2.5 hours ago', matchTime: '18 mins', donorsContacted: 20, donorName: null },
+  { id: 'REQ-120', hospitalName: 'Breach Candy Hospital', patientName: 'Shah Rukh Khan', bloodGroup: 'A+', units: 4, urgency: 'emergency', status: 'matching', city: 'Mumbai', time: '1 min ago', matchTime: '10 secs', donorsContacted: 120, donorName: null },
+  { id: 'REQ-121', hospitalName: 'Bombay Hospital', patientName: 'Amitabh Bachchan', bloodGroup: 'B-', units: 1, urgency: 'normal', status: 'matching', city: 'Mumbai', time: '10 hours ago', matchTime: '3 hours', donorsContacted: 12, donorName: null },
+  { id: 'REQ-122', hospitalName: 'AIIMS', patientName: 'Sushmita Sen', bloodGroup: 'O+', units: 2, urgency: 'emergency', status: 'matching', city: 'Delhi', time: '5 mins ago', matchTime: '2 mins', donorsContacted: 45, donorName: null },
+  { id: 'REQ-123', hospitalName: 'KEM Hospital', patientName: 'John Abraham', bloodGroup: 'A-', units: 3, urgency: 'urgent', status: 'matching', city: 'Mumbai', time: '20 mins ago', matchTime: '5 mins', donorsContacted: 22, donorName: null },
+  { id: 'REQ-124', hospitalName: 'Sion Hospital', patientName: 'Hrithik Roshan', bloodGroup: 'B+', units: 1, urgency: 'normal', status: 'matching', city: 'Mumbai', time: '4 hours ago', matchTime: '1 hour', donorsContacted: 8, donorName: null },
+  { id: 'REQ-125', hospitalName: 'Cooper Hospital', patientName: 'Shraddha Kapoor', bloodGroup: 'AB-', units: 4, urgency: 'emergency', status: 'matching', city: 'Mumbai', time: '10 mins ago', matchTime: '3 mins', donorsContacted: 55, donorName: null },
+  { id: 'REQ-126', hospitalName: 'Sanjeevani Hospital', patientName: 'Ayushmann Khurrana', bloodGroup: 'O-', units: 2, urgency: 'urgent', status: 'matching', city: 'Pune', time: '1.5 hours ago', matchTime: '12 mins', donorsContacted: 30, donorName: null },
+  { id: 'REQ-127', hospitalName: 'City Care Hospital', patientName: 'Rajkummar Rao', bloodGroup: 'A+', units: 5, urgency: 'emergency', status: 'matching', city: 'Ahmedabad', time: '1 min ago', matchTime: '10 secs', donorsContacted: 150, donorName: null },
+  { id: 'REQ-128', hospitalName: 'Apex Hospital', patientName: 'Vicky Kaushal', bloodGroup: 'B-', units: 1, urgency: 'normal', status: 'matching', city: 'Jaipur', time: '6 hours ago', matchTime: '45 mins', donorsContacted: 15, donorName: null },
+  { id: 'REQ-129', hospitalName: 'Sahyadri Hospital', patientName: 'Madhuri Dixit', bloodGroup: 'AB+', units: 3, urgency: 'urgent', status: 'matching', city: 'Pune', time: '3 hours ago', matchTime: '20 mins', donorsContacted: 40, donorName: null },
+  { id: 'REQ-130', hospitalName: 'Aster CMI', patientName: 'Yami Gautam', bloodGroup: 'O+', units: 2, urgency: 'emergency', status: 'matching', city: 'Bangalore', time: '8 mins ago', matchTime: '2 mins', donorsContacted: 38, donorName: null },
+  { id: 'REQ-131', hospitalName: 'Columbia Asia', patientName: 'Kiara Advani', bloodGroup: 'A-', units: 4, urgency: 'normal', status: 'matching', city: 'Kolkata', time: '12 hours ago', matchTime: '2 hours', donorsContacted: 10, donorName: null },
+  { id: 'REQ-132', hospitalName: 'Deenanath Mangeshkar', patientName: 'Tiger Shroff', bloodGroup: 'B+', units: 2, urgency: 'urgent', status: 'matching', city: 'Pune', time: '50 mins ago', matchTime: '15 mins', donorsContacted: 25, donorName: null },
+  { id: 'REQ-133', hospitalName: 'Bhatia Hospital', patientName: 'Vidya Balan', bloodGroup: 'O-', units: 1, urgency: 'emergency', status: 'matching', city: 'Mumbai', time: '3 mins ago', matchTime: '1 min', donorsContacted: 70, donorName: null },
+  { id: 'REQ-134', hospitalName: 'Wockhardt Hospital', patientName: 'Ajay Devgn', bloodGroup: 'AB-', units: 3, urgency: 'urgent', status: 'matching', city: 'Mumbai', time: '40 mins ago', matchTime: '8 mins', donorsContacted: 33, donorName: null },
+  { id: 'REQ-135', hospitalName: 'Jaslok Hospital', patientName: 'Kajol', bloodGroup: 'A+', units: 2, urgency: 'emergency', status: 'matching', city: 'Mumbai', time: '7 mins ago', matchTime: '2 mins', donorsContacted: 48, donorName: null },
+  { id: 'REQ-136', hospitalName: 'Cumballa Hill', patientName: 'Sonu Sood', bloodGroup: 'B-', units: 5, urgency: 'normal', status: 'matching', city: 'Mumbai', time: '1 day ago', matchTime: '5 hours', donorsContacted: 5, donorName: null }
 ];
 
 const initialDonors = [
@@ -205,10 +263,7 @@ export const AuthProvider = ({ children }) => {
     setSubscription(prev => ({ ...prev, paymentMethod: method }));
   };
 
-  const [requests, setRequests] = useState(() => {
-    const saved = localStorage.getItem('requests');
-    return saved ? JSON.parse(saved) : initialRequests;
-  });
+  const [requests, setRequests] = useState(initialRequests);
 
   const [donors, setDonors] = useState(() => {
     const saved = localStorage.getItem('donors');
