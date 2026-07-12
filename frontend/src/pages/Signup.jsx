@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import {
   FiUser, FiMail, FiLock, FiPhone, FiMapPin, FiCalendar,
   FiCheck, FiArrowRight, FiArrowLeft, FiEye, FiEyeOff,
-  FiHeart, FiShield, FiActivity, FiAlertCircle
+  FiHeart, FiShield, FiActivity, FiAlertCircle, FiPackage
 } from 'react-icons/fi';
 
 const STEPS = ['Role', 'Profile', 'Details', 'Confirm'];
@@ -22,9 +22,23 @@ const STEP_ICONS = [
 ];
 
 const StepIndicator = ({ current }) => (
-  <div className="flex items-center justify-between gap-1 mb-8 font-poppins relative">
-    {/* Dashed line background */}
-    <div className="absolute top-4.5 left-8 right-8 h-[1px] border-t border-dashed border-gray-200 dark:border-white/10 z-0" />
+  <div className="flex items-center justify-between gap-1 mb-8 font-poppins relative select-none">
+    {/* Dynamic connecting lines */}
+    <div className="absolute top-4.5 left-8 right-8 flex items-center justify-between z-0 pointer-events-none">
+      {STEPS.slice(0, -1).map((_, i) => {
+        const isRed = i < current;
+        return (
+          <div
+            key={i}
+            className={`flex-1 h-[2px] mx-2 transition-all duration-350 ${
+              isRed
+                ? 'bg-red-500'
+                : 'border-t border-dashed border-slate-200 dark:border-white/10'
+            }`}
+          />
+        );
+      })}
+    </div>
 
     {STEPS.map((step, i) => {
       const done = i < current;
@@ -32,14 +46,34 @@ const StepIndicator = ({ current }) => (
       const Icon = STEP_ICONS[i];
       return (
         <React.Fragment key={step}>
-          <div className="flex flex-col items-center relative z-10 bg-white dark:bg-[#0F1420] px-3.5">
-            <div
-              className={`w-9 h-9 rounded-full flex items-center justify-center border transition-all duration-300 ${done || active
-                  ? 'bg-red-600 border-red-600 text-white'
-                  : 'bg-white dark:bg-[#0F1420] border-gray-200 dark:border-white/10 text-gray-400'
-                }`}
-            >
-              <Icon className="w-4.5 h-4.5 stroke-[2.5]" />
+          <div className="flex flex-col items-center relative z-10 bg-[#FAF9F6] dark:bg-[#070B13] px-3.5">
+            <div className="relative">
+              {/* Top-right notification badge check mark for Step 1 (Role) once completed */}
+              {i === 0 && current > 0 && (
+                <div className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-[#E11D48] border border-[#E11D48] text-white flex items-center justify-center text-[10px] font-black z-20 shadow-sm">
+                  ✓
+                </div>
+              )}
+              {/* Top-right notification badge numbers for other steps */}
+              {i > 0 && (
+                <div
+                  className={`absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-black border z-20 transition-all ${
+                    i <= current
+                      ? 'bg-[#E11D48] border-[#E11D48] text-white shadow-sm'
+                      : 'bg-white dark:bg-[#0F1420] border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-500'
+                  }`}
+                >
+                  {i + 1}
+                </div>
+              )}
+              <div
+                className={`w-9 h-9 rounded-full flex items-center justify-center border transition-all duration-300 ${done || active
+                    ? 'bg-red-600 border-red-600 text-white shadow-md shadow-rose-500/10'
+                    : 'bg-white dark:bg-[#0F1420] border-gray-200 dark:border-white/10 text-gray-400'
+                  }`}
+              >
+                <Icon className="w-4.5 h-4.5 stroke-[2.5]" />
+              </div>
             </div>
             <p className={`text-[11.5px] font-bold mt-2 ${active || done ? 'text-red-600 dark:text-red-500 font-extrabold' : 'text-gray-400 font-medium'}`}>{step}</p>
           </div>
@@ -197,12 +231,16 @@ const Signup = () => {
     );
   };
 
-  // ── Step 1: Basic Credentials ─────────────────────────────────────────────
   const CredentialsStep = () => (
     <div className="space-y-4 font-poppins">
       <div className="space-y-1.5 mb-6">
-        <h2 className="text-[24px] font-extrabold text-slate-900 dark:text-white tracking-tight">Create Your Account</h2>
-        <p className="text-muted dark:text-slate-400 text-[14px]">Set up your secure login credentials.</p>
+        <h2 className="text-[24px] font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+          <span>Create Your Account</span>
+          <div className="w-6.5 h-6.5 rounded-lg bg-rose-50 dark:bg-rose-950/20 text-[#E11D48] border border-rose-100/10 flex items-center justify-center shadow-sm flex-shrink-0">
+            <FiShield className="w-4 h-4 stroke-[2.5]" />
+          </div>
+        </h2>
+        <p className="text-slate-500 dark:text-slate-400 text-[14px]">Set up your secure login credentials.</p>
       </div>
 
       <div className="grid grid-cols-1 gap-4">
@@ -210,25 +248,40 @@ const Signup = () => {
         <FloatInput icon={FiMail} label="Email Address" type="email" value={form.email} onChange={v => set('email', v)} />
         <FloatInput icon={FiPhone} label="Mobile Number" type="tel" value={form.phone} onChange={v => set('phone', v)} />
         <div className="relative">
-          <FiLock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted z-10" />
+          <div className="w-8 h-8 rounded-xl bg-rose-50 dark:bg-rose-950/20 text-[#E11D48] flex items-center justify-center absolute left-2.5 top-1/2 -translate-y-1/2 z-10 border border-rose-100/10">
+            <FiLock className="w-4 h-4 stroke-[2.5]" />
+          </div>
           <input
             type={showPw ? 'text' : 'password'}
             value={form.password}
             onChange={e => set('password', e.target.value)}
             placeholder="Password (min. 6 characters)"
-            className="w-full pl-11 pr-12 py-2.5 bg-white dark:bg-[#0F1420] border border-black/08 dark:border-white/08 rounded-2xl text-[14px] font-semibold text-slate-800 dark:text-white placeholder-muted focus:outline-none focus:border-[#E11D48] focus:ring-4 focus:ring-[#E11D48]/10 transition-all"
+            className="w-full pl-13.5 pr-12 py-3 bg-white dark:bg-[#0F1420] border border-slate-100 dark:border-slate-850 rounded-2xl text-[14px] font-semibold text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#E11D48] focus:ring-4 focus:ring-[#E11D48]/10 transition-all"
           />
-          <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted cursor-pointer">
-            {showPw ? <FiEyeOff className="w-4 h-4" /> : <FiEye className="w-4 h-4" />}
+          <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-655 cursor-pointer">
+            {showPw ? <FiEyeOff className="w-4.5 h-4.5" /> : <FiEye className="w-4.5 h-4.5" />}
           </button>
         </div>
 
         <div>
-          <label className="text-[12px] font-black text-muted uppercase tracking-wider mb-2 block">City</label>
-          <select value={form.city} onChange={e => set('city', e.target.value)}
-            className="w-full py-2.5 px-4 bg-white dark:bg-[#0F1420] border border-black/08 dark:border-white/08 rounded-2xl text-[14px] font-semibold text-slate-800 dark:text-white focus:outline-none focus:border-[#E11D48] focus:ring-4 focus:ring-[#E11D48]/10 transition-all">
-            {CITIES.map(c => <option key={c}>{c}</option>)}
-          </select>
+          <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 block">City</label>
+          <div className="relative">
+            <div className="w-8 h-8 rounded-xl bg-rose-50 dark:bg-rose-950/20 text-[#E11D48] flex items-center justify-center absolute left-2.5 top-1/2 -translate-y-1/2 z-10 border border-rose-100/10">
+              <FiMapPin className="w-4 h-4 stroke-[2.5]" />
+            </div>
+            <select
+              value={form.city}
+              onChange={e => set('city', e.target.value)}
+              className="w-full pl-13.5 pr-10 py-3 bg-white dark:bg-[#0F1420] border border-slate-100 dark:border-slate-850 rounded-2xl text-[14px] font-semibold text-slate-800 dark:text-white focus:outline-none focus:border-[#E11D48] focus:ring-4 focus:ring-[#E11D48]/10 transition-all appearance-none cursor-pointer"
+            >
+              {CITIES.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+              <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
         </div>
 
         {/* Divider */}
@@ -271,41 +324,92 @@ const Signup = () => {
       </p>
 
       {role === 'donor' && (
-        <div className="space-y-4">
+        <div className="space-y-5 font-poppins">
           <div>
-            <label className="text-[12px] font-bold text-muted uppercase tracking-wide mb-2 block">Blood Group</label>
-            <div className="grid grid-cols-4 gap-2">
-              {BLOOD_GROUPS.map(bg => (
-                <button key={bg} type="button"
-                  onClick={() => set('bloodGroup', bg)}
-                  className={`py-2.5 rounded-xl text-[13px] font-black border-2 transition-all ${form.bloodGroup === bg
-                    ? 'bg-bloodred border-bloodred text-white'
-                    : 'bg-white dark:bg-darksurf border-black/08 dark:border-white/08 text-slate dark:text-white hover:border-bloodred/30'
-                    }`}
-                >
-                  {bg}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-[12px] font-bold text-muted uppercase tracking-wide mb-1.5 block">Gender</label>
-              <div className="flex gap-2">
-                {['Male', 'Female', 'Other'].map(g => (
-                  <button key={g} type="button" onClick={() => set('gender', g)}
-                    className={`flex-1 py-2.5 rounded-xl text-[12px] font-bold border transition-all ${form.gender === g ? 'bg-bloodred border-bloodred text-white' : 'bg-white dark:bg-darksurf border-black/08 dark:border-white/08 text-slate dark:text-white'
-                      }`}
-                  >{g}</button>
-                ))}
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-7 h-7 rounded-lg bg-rose-50 dark:bg-rose-950/20 text-[#E11D48] flex items-center justify-center border border-rose-100/10">
+                <span className="text-[14px]">🩸</span>
               </div>
+              <span className="text-[12px] font-black text-slate-800 dark:text-white uppercase tracking-wider">
+                Blood Group
+              </span>
+            </div>
+            <div className="grid grid-cols-4 gap-3">
+              {BLOOD_GROUPS.map(bg => {
+                const isSelected = form.bloodGroup === bg;
+                return (
+                  <button
+                    key={bg}
+                    type="button"
+                    onClick={() => set('bloodGroup', bg)}
+                    className={`py-3.5 rounded-2xl text-[14px] font-black border transition-all relative cursor-pointer ${
+                      isSelected
+                        ? 'bg-[#E11D48] border-[#E11D48] text-white shadow-md shadow-rose-500/10'
+                        : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:border-[#E11D48]/30'
+                    }`}
+                  >
+                    {isSelected && (
+                      <div className="w-5.5 h-5.5 rounded-full bg-white text-[#E11D48] border-2 border-[#E11D48] flex items-center justify-center text-[10px] font-black absolute -top-1.5 -right-1.5 shadow-sm z-10">
+                        ✓
+                      </div>
+                    )}
+                    {bg}
+                  </button>
+                );
+              })}
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-3">
-            <FloatInput label="Age (years)" type="number" value={form.age} onChange={v => set('age', v)} min={18} />
-            <FloatInput label="Weight (kg)" type="number" value={form.weight} onChange={v => set('weight', v)} min={50} />
+
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-7 h-7 rounded-lg bg-rose-50 dark:bg-rose-950/20 text-[#E11D48] flex items-center justify-center border border-rose-100/10">
+                <FiUser className="w-4 h-4 stroke-[2.5]" />
+              </div>
+              <span className="text-[12px] font-black text-slate-800 dark:text-white uppercase tracking-wider">
+                Gender
+              </span>
+            </div>
+            <div className="flex gap-3">
+              {['Male', 'Female', 'Other'].map(g => {
+                const isSelected = form.gender === g;
+                return (
+                  <button
+                    key={g}
+                    type="button"
+                    onClick={() => set('gender', g)}
+                    className={`px-6 py-3 rounded-2xl text-[13px] font-bold border transition-all cursor-pointer ${
+                      isSelected
+                        ? 'bg-[#E11D48] border-[#E11D48] text-white shadow-md shadow-rose-500/10'
+                        : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:border-[#E11D48]/30'
+                    }`}
+                  >{g}</button>
+                );
+              })}
+            </div>
           </div>
-          <FloatInput icon={FiCalendar} label="Last Donation Date (optional)" type="date" value={form.lastDonation} onChange={v => set('lastDonation', v)} />
+
+          <div className="grid grid-cols-2 gap-4">
+            <FloatInput icon={FiCalendar} label="Age (years)" placeholder="Enter your age" type="number" value={form.age} onChange={v => set('age', v)} min={18} />
+            <FloatInput icon={FiPackage} label="Weight (kg)" placeholder="Enter your weight" type="number" value={form.weight} onChange={v => set('weight', v)} min={50} />
+          </div>
+
+          <div className="relative">
+            <div className="w-8 h-8 rounded-xl bg-rose-50 dark:bg-rose-950/20 text-[#E11D48] flex items-center justify-center absolute left-2.5 top-1/2 -translate-y-1/2 z-10 border border-rose-100/10">
+              <FiCalendar className="w-4 h-4 stroke-[2.5]" />
+            </div>
+            <div className="absolute top-1.5 left-13.5 text-[9px] font-bold text-slate-400 uppercase tracking-wider leading-none select-none">
+              Date of Birth
+            </div>
+            <input
+              type="date"
+              value={form.lastDonation}
+              onChange={e => set('lastDonation', e.target.value)}
+              className="w-full pl-13.5 pr-10 pt-5.5 pb-1.5 bg-white dark:bg-[#0F1420] border border-slate-100 dark:border-slate-850 rounded-2xl text-[14px] font-semibold text-slate-800 dark:text-white focus:outline-none focus:border-[#E11D48] focus:ring-4 focus:ring-[#E11D48]/10 transition-all cursor-pointer"
+            />
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+              <FiCalendar className="w-4.5 h-4.5" />
+            </div>
+          </div>
         </div>
       )}
 
@@ -675,14 +779,18 @@ const Signup = () => {
 // ── Reusable float input ──────────────────────────────────────────────────────
 const FloatInput = ({ icon: Icon, label, type = 'text', value, onChange, ...rest }) => (
   <div className="relative font-poppins">
-    {Icon && <Icon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted z-10" />}
+    {Icon && (
+      <div className="w-8 h-8 rounded-xl bg-rose-50 dark:bg-rose-950/20 text-[#E11D48] flex items-center justify-center absolute left-2.5 top-1/2 -translate-y-1/2 z-10 border border-rose-100/10">
+        <Icon className="w-4 h-4 stroke-[2.5]" />
+      </div>
+    )}
     <input
       type={type}
       value={value}
       onChange={e => onChange(e.target.value)}
       placeholder={label}
       {...rest}
-      className={`w-full ${Icon ? 'pl-11' : 'pl-4'} pr-4 py-2.5 bg-white dark:bg-[#0F1420] border border-black/08 dark:border-white/08 rounded-2xl text-[14px] font-semibold text-slate-800 dark:text-white placeholder-muted focus:outline-none focus:border-[#E11D48] focus:ring-4 focus:ring-[#E11D48]/10 transition-all`}
+      className={`w-full ${Icon ? 'pl-13.5' : 'pl-4'} pr-4 py-3 bg-white dark:bg-[#0F1420] border border-slate-100 dark:border-slate-850 rounded-2xl text-[14px] font-semibold text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#E11D48] focus:ring-4 focus:ring-[#E11D48]/10 transition-all`}
     />
   </div>
 );
