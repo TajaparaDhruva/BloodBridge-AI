@@ -13,13 +13,14 @@ import EmergencyMap from './EmergencyMap';
 import DashboardHeader from '../components/dashboard/DashboardHeader';
 import OverviewTab from '../components/dashboard/OverviewTab';
 import RequestModal from '../components/dashboard/RequestModal';
+import RequestDetailsModal from '../components/dashboard/RequestDetailsModal';
 import HospitalSelectorModal from '../components/dashboard/HospitalSelectorModal';
 import VoiceCallModal from '../components/dashboard/VoiceCallModal';
 import BillingPage from './BillingPage';
 import AdminPanel from './AdminPanel';
 import { DashboardSkeleton } from '../components/SkeletonLoader';
 import { StatusBadge, ProgressRing, WidgetShell, upcomingTasks } from '../components/dashboard/shared';
-import { FiPlus, FiAlertTriangle, FiTrendingUp, FiCheck, FiZap, FiUsers, FiCalendar, FiActivity, FiBell, FiInfo, FiArrowRight, FiChevronRight, FiMapPin, FiDroplet, FiClipboard, FiClock, FiLock, FiCreditCard, FiArrowLeft } from 'react-icons/fi';
+import { FiPlus, FiAlertTriangle, FiTrendingUp, FiCheck, FiZap, FiUsers, FiCalendar, FiActivity, FiBell, FiInfo, FiArrowRight, FiChevronRight, FiMapPin, FiDroplet, FiClipboard, FiClock, FiLock, FiCreditCard, FiArrowLeft, FiGrid } from 'react-icons/fi';
 import TasksPage from './TasksPage';
 import NotificationsPage from './NotificationsPage';
 
@@ -40,6 +41,9 @@ const Dashboard = () => {
       setActiveTab(routerLocation.state.activeTab);
     }
   }, [routerLocation.state?.activeTab]);
+
+  const [requestFilter, setRequestFilter] = useState('all');
+  const [requestSort, setRequestSort] = useState('latest');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -47,6 +51,7 @@ const Dashboard = () => {
   const [showAIAssistant, setShowAIAssistant] = useState(false);
   const [showHospitalSelector, setShowHospitalSelector] = useState(false);
   const [activeCall, setActiveCall] = useState(null);
+  const [selectedRequestDetails, setSelectedRequestDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
 
@@ -385,6 +390,7 @@ const Dashboard = () => {
 
                     {/* Requests registry tab */}
                     {activeTab === 'requests' && (() => {
+                      const baseTime = Date.now();
                       const staticMockRequests = [
                         {
                           id: 'REQ-409',
@@ -395,16 +401,12 @@ const Dashboard = () => {
                           urgency: 'urgent',
                           status: 'matching',
                           city: 'Mumbai',
-                          time: 'Just now',
+                          time: 'JUST NOW',
                           matchTime: 'Calculating...',
                           donorsContacted: 10,
                           badgeText: 'NEW',
-                          badgeStyle: 'bg-rose-50 text-[#E11D48] border border-rose-100/20',
-                          sideBorderColor: 'bg-[#E11D48]',
-                          circleStyle: 'bg-rose-50 text-[#E11D48] border border-rose-100/20',
-                          reqBadgeStyle: 'bg-rose-50 text-[#E11D48] border border-rose-150/30',
-                          arrowStyle: 'text-[#E11D48] border-rose-100 hover:bg-rose-50/50',
-                          unitColor: 'text-[#E11D48]'
+                          type: 'urgent',
+                          timestamp: baseTime
                         },
                         {
                           id: 'REQ-231',
@@ -415,16 +417,12 @@ const Dashboard = () => {
                           urgency: 'normal',
                           status: 'matching',
                           city: 'Mumbai',
-                          time: '2 mins ago',
+                          time: '2 MINS AGO',
                           matchTime: 'Calculating...',
                           donorsContacted: 18,
                           badgeText: 'IN PROGRESS',
-                          badgeStyle: 'bg-emerald-50 text-emerald-600 border border-emerald-100/20',
-                          sideBorderColor: 'bg-[#10B981]',
-                          circleStyle: 'bg-emerald-50 text-emerald-600 border border-emerald-100/20',
-                          reqBadgeStyle: 'bg-emerald-50 text-emerald-600 border border-emerald-150/30',
-                          arrowStyle: 'text-emerald-500 border-emerald-100 hover:bg-emerald-50/50',
-                          unitColor: 'text-emerald-500'
+                          type: 'normal',
+                          timestamp: baseTime - 2 * 60 * 1000
                         },
                         {
                           id: 'REQ-361',
@@ -435,16 +433,12 @@ const Dashboard = () => {
                           urgency: 'emergency',
                           status: 'matching',
                           city: 'Mumbai',
-                          time: '3 mins ago',
+                          time: '3 MINS AGO',
                           matchTime: 'Calculating...',
                           donorsContacted: 17,
                           badgeText: 'CRITICAL',
-                          badgeStyle: 'bg-rose-50 text-[#E11D48] border border-rose-100/20',
-                          sideBorderColor: 'bg-[#E11D48]',
-                          circleStyle: 'bg-rose-50 text-[#E11D48] border border-rose-100/20',
-                          reqBadgeStyle: 'bg-rose-50 text-[#E11D48] border border-rose-150/30',
-                          arrowStyle: 'text-[#E11D48] border-rose-100 hover:bg-rose-50/50',
-                          unitColor: 'text-[#E11D48]'
+                          type: 'emergency',
+                          timestamp: baseTime - 3 * 60 * 1000
                         },
                         {
                           id: 'REQ-579',
@@ -455,16 +449,12 @@ const Dashboard = () => {
                           urgency: 'urgent',
                           status: 'matching',
                           city: 'Mumbai',
-                          time: '3 mins ago',
+                          time: '3 MINS AGO',
                           matchTime: 'Calculating...',
                           donorsContacted: 17,
                           badgeText: 'ATTENTION',
-                          badgeStyle: 'bg-amber-50 text-amber-600 border border-amber-100/20',
-                          sideBorderColor: 'bg-[#F59E0B]',
-                          circleStyle: 'bg-amber-50 text-amber-600 border border-amber-100/20',
-                          reqBadgeStyle: 'bg-amber-50 text-amber-600 border border-amber-150/30',
-                          arrowStyle: 'text-amber-500 border-amber-100 hover:bg-amber-50/50',
-                          unitColor: 'text-[#E11D48]'
+                          type: 'attention',
+                          timestamp: baseTime - 3.5 * 60 * 1000
                         },
                         {
                           id: 'REQ-507',
@@ -475,33 +465,100 @@ const Dashboard = () => {
                           urgency: 'normal',
                           status: 'matching',
                           city: 'Mumbai',
-                          time: '4 mins ago',
+                          time: '4 MINS AGO',
                           matchTime: 'Calculating...',
                           donorsContacted: 17,
                           badgeText: 'IN PROGRESS',
-                          badgeStyle: 'bg-emerald-50 text-emerald-600 border border-emerald-100/20',
-                          sideBorderColor: 'bg-[#10B981]',
-                          circleStyle: 'bg-emerald-50 text-emerald-600 border border-emerald-100/20',
-                          reqBadgeStyle: 'bg-emerald-50 text-emerald-600 border border-emerald-150/30',
-                          arrowStyle: 'text-emerald-500 border-emerald-100 hover:bg-emerald-50/50',
-                          unitColor: 'text-emerald-500'
+                          type: 'normal',
+                          timestamp: baseTime - 4 * 60 * 1000
+                        },
+                        {
+                          id: 'REQ-104',
+                          hospitalName: 'KEM Hospital',
+                          patientName: 'Siddharth Malhotra',
+                          bloodGroup: 'O+',
+                          units: 1,
+                          urgency: 'info',
+                          status: 'matching',
+                          city: 'Mumbai',
+                          time: '5 MINS AGO',
+                          matchTime: 'Calculating...',
+                          donorsContacted: 5,
+                          badgeText: 'INFORMATION',
+                          type: 'info',
+                          timestamp: baseTime - 5 * 60 * 1000
                         }
                       ];
 
-                      const userAddedRequests = requests.filter(r => r.isManual);
-                      const displayedRequests = [...userAddedRequests, ...staticMockRequests];
+                      // Custom droplet SVG components
+                      const FilledDropletIcon = ({ colorClass }) => (
+                        <svg className={`w-3.5 h-3.5 mt-1.5 ${colorClass}`} fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+                        </svg>
+                      );
 
-                      const totalCount = 16 + userAddedRequests.length;
-                      const urgentCount = 7 + userAddedRequests.filter(r => r.urgency === 'urgent' || r.urgency === 'emergency').length;
-                      const normalCount = 8 + userAddedRequests.filter(r => r.urgency === 'normal').length;
-                      const infoCount = 1;
+                      const OutlineDropletIcon = ({ colorClass }) => (
+                        <svg className={`w-3.5 h-3.5 ${colorClass}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+                        </svg>
+                      );
+
+                      // Merge requests from context (simulated + manual) and static mock requests
+                      const mergedMap = new Map();
+                      staticMockRequests.forEach(r => mergedMap.set(r.id, r));
+
+                      requests.forEach(r => {
+                        mergedMap.set(r.id, {
+                          ...r,
+                          type: r.type || (r.urgency === 'normal' ? 'normal' : (r.urgency === 'info' || r.urgency === 'information' ? 'info' : 'urgent')),
+                          badgeText: r.badgeText || (r.status === 'matching' ? 'NEW' : r.status === 'dispatched' ? 'IN PROGRESS' : 'COMPLETED')
+                        });
+                      });
+
+                      const allRequestsList = Array.from(mergedMap.values());
+
+                      // Dynamic counts based on all requests
+                      const totalCount = allRequestsList.length;
+                      const urgentCount = allRequestsList.filter(r => r.urgency === 'urgent' || r.urgency === 'emergency').length;
+                      const normalCount = allRequestsList.filter(r => r.urgency === 'normal').length;
+                      const infoCount = allRequestsList.filter(r => r.urgency === 'info' || r.urgency === 'information').length;
+
+                      // Filter requests
+                      const filteredRequests = allRequestsList.filter(req => {
+                        if (requestFilter === 'all') return true;
+                        if (requestFilter === 'urgent') return req.urgency === 'urgent' || req.urgency === 'emergency';
+                        if (requestFilter === 'normal') return req.urgency === 'normal';
+                        if (requestFilter === 'info') return req.urgency === 'info' || req.urgency === 'information';
+                        return true;
+                      });
+
+                      // Sort requests: Latest first (highest timestamp to lowest)
+                      const sortedRequests = [...filteredRequests].sort((a, b) => {
+                        if (requestSort === 'latest') {
+                          return b.timestamp - a.timestamp;
+                        } else if (requestSort === 'units') {
+                          return b.units - a.units;
+                        } else if (requestSort === 'urgency') {
+                          const priority = { emergency: 3, urgent: 2, normal: 1, info: 0, information: 0 };
+                          const prioA = priority[a.urgency] || 0;
+                          const prioB = priority[b.urgency] || 0;
+                          return prioB - prioA;
+                        }
+                        return 0;
+                      });
 
                       return (
                         <div className="space-y-6">
-                          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 flex-wrap">
-                            <div className="text-left">
-                              <h2 className="font-black text-gray-900 dark:text-white text-[20px] tracking-tight">Active Request Registry</h2>
-                              <p className="text-gray-400 dark:text-gray-500 text-[13px] font-semibold uppercase mt-0.5">{totalCount} operations dispatch records</p>
+                          {/* Title and Top Stats Row */}
+                          <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6 flex-wrap">
+                            <div className="flex items-center gap-3.5 text-left">
+                              <div className="w-14 h-14 rounded-full bg-[#FFF1F2] dark:bg-rose-950/20 flex items-center justify-center text-[24px] flex-shrink-0 shadow-sm">
+                                🩸
+                              </div>
+                              <div>
+                                <h2 className="font-black text-gray-900 dark:text-white text-[22px] tracking-tight leading-tight">Active Request Registry</h2>
+                                <p className="text-gray-400 dark:text-gray-500 text-[13px] font-semibold mt-0.5">{totalCount} operations dispatch records</p>
+                              </div>
                             </div>
 
                             {/* Header indicators row */}
@@ -513,7 +570,7 @@ const Dashboard = () => {
                                 </div>
                                 <div>
                                   <span className="text-[17px] font-black text-gray-900 dark:text-white leading-none block">{totalCount}</span>
-                                  <span className="text-[9px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider mt-0.5 block leading-none">Total Requests</span>
+                                  <span className="text-[10px] text-slate-450 dark:text-slate-500 font-medium mt-1 block leading-none">Total Requests</span>
                                 </div>
                               </div>
 
@@ -524,7 +581,7 @@ const Dashboard = () => {
                                 </div>
                                 <div>
                                   <span className="text-[17px] font-black text-gray-900 dark:text-white leading-none block">{urgentCount}</span>
-                                  <span className="text-[9px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider mt-0.5 block leading-none">Urgent</span>
+                                  <span className="text-[10px] text-slate-455 dark:text-slate-500 font-medium mt-1 block leading-none">Urgent</span>
                                 </div>
                               </div>
 
@@ -535,7 +592,7 @@ const Dashboard = () => {
                                 </div>
                                 <div>
                                   <span className="text-[17px] font-black text-gray-900 dark:text-white leading-none block">{normalCount}</span>
-                                  <span className="text-[9px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider mt-0.5 block leading-none">Normal</span>
+                                  <span className="text-[10px] text-slate-455 dark:text-slate-500 font-medium mt-1 block leading-none">Normal</span>
                                 </div>
                               </div>
 
@@ -546,106 +603,256 @@ const Dashboard = () => {
                                 </div>
                                 <div>
                                   <span className="text-[17px] font-black text-gray-900 dark:text-white leading-none block">{infoCount}</span>
-                                  <span className="text-[9px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider mt-0.5 block leading-none">Information</span>
+                                  <span className="text-[10px] text-slate-455 dark:text-slate-500 font-medium mt-1 block leading-none">Information</span>
                                 </div>
                               </div>
-                            </div>
 
-                            <button
-                              onClick={() => setShowRequestModal(true)}
-                              className="bg-[#E11D48] hover:bg-rose-600 text-white text-[13px] py-3.5 px-6 font-bold rounded-2xl shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center gap-1.5"
-                            >
-                              <FiPlus className="w-4.5 h-4.5 stroke-[3]" />
-                              <span>Create Emergency Request</span>
-                            </button>
+                              {/* Create Emergency Request Button */}
+                              <button
+                                onClick={() => setShowRequestModal(true)}
+                                className="bg-gradient-to-r from-[#D72638] to-[#E11D48] hover:from-[#C1121F] hover:to-[#D72638] text-white text-[13px] py-2 px-5 font-bold rounded-2xl shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center gap-2 text-left leading-tight shrink-0 min-w-[170px]"
+                              >
+                                <FiPlus className="w-5 h-5 stroke-[3] shrink-0" />
+                                <div>
+                                  <span className="block font-bold">Create</span>
+                                  <span className="block text-[11px] opacity-90">Emergency Request</span>
+                                </div>
+                              </button>
+                            </div>
                           </div>
 
-                          <div className="space-y-4">
-                            {displayedRequests.map((req, i) => {
-                              const sideBorder = req.sideBorderColor || (req.urgency === 'normal' ? 'bg-[#10B981]' : req.urgency === 'urgent' ? 'bg-[#F59E0B]' : 'bg-[#E11D48]');
-                              const typeColor = req.circleStyle || 'bg-rose-50 text-[#E11D48] border border-rose-100/20 dark:bg-rose-950/20 dark:text-rose-400';
-                              const reqBadge = req.reqBadgeStyle || 'bg-rose-50 text-[#E11D48] border border-rose-150/30';
-                              const arrowColor = req.arrowStyle || 'text-[#E11D48] border-rose-100 hover:bg-rose-50/50';
-                              const unitColor = req.unitColor || (req.urgency === 'normal' ? 'text-emerald-500' : 'text-[#E11D48]');
-                              const clockColor = req.urgency === 'normal' ? 'text-emerald-500' : req.urgency === 'urgent' ? 'text-amber-500' : 'text-[#E11D48]';
+                          {/* Filter and Sort Row */}
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-2 border-t border-b border-slate-100 dark:border-slate-800">
+                            {/* Filter Buttons */}
+                            <div className="flex flex-wrap items-center gap-3">
+                              <button
+                                onClick={() => setRequestFilter('all')}
+                                className={`px-5 py-2.5 rounded-full text-[13px] font-bold transition-all cursor-pointer select-none flex items-center gap-2 ${
+                                  requestFilter === 'all'
+                                    ? 'bg-[#E11D48] text-white shadow-md shadow-rose-500/10'
+                                    : 'border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-350 hover:bg-slate-50 dark:hover:bg-slate-800/40'
+                                }`}
+                              >
+                                <FiGrid className="w-4 h-4" />
+                                <span>All Requests</span>
+                              </button>
+
+                              <button
+                                onClick={() => setRequestFilter('urgent')}
+                                className={`px-5 py-2.5 rounded-full text-[13px] font-bold transition-all cursor-pointer select-none flex items-center gap-2 ${
+                                  requestFilter === 'urgent'
+                                    ? 'bg-[#E11D48]/10 border border-[#E11D48]/30 text-[#E11D48]'
+                                    : 'border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-750 dark:text-slate-350 hover:bg-slate-50 dark:hover:bg-slate-800/40'
+                                }`}
+                              >
+                                <span className="w-2.5 h-2.5 rounded-full bg-[#E11D48]" />
+                                Urgent
+                              </button>
+
+                              <button
+                                onClick={() => setRequestFilter('normal')}
+                                className={`px-5 py-2.5 rounded-full text-[13px] font-bold transition-all cursor-pointer select-none flex items-center gap-2 ${
+                                  requestFilter === 'normal'
+                                    ? 'bg-[#10B981]/10 border border-[#10B981]/30 text-[#10B981]'
+                                    : 'border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-750 dark:text-slate-350 hover:bg-slate-50 dark:hover:bg-slate-800/40'
+                                }`}
+                              >
+                                <span className="w-2.5 h-2.5 rounded-full bg-[#10B981]" />
+                                Normal
+                              </button>
+
+                              <button
+                                onClick={() => setRequestFilter('info')}
+                                className={`px-5 py-2.5 rounded-full text-[13px] font-bold transition-all cursor-pointer select-none flex items-center gap-2 ${
+                                  requestFilter === 'info'
+                                    ? 'bg-[#3B82F6]/10 border border-[#3B82F6]/30 text-[#3B82F6]'
+                                    : 'border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-750 dark:text-slate-350 hover:bg-slate-50 dark:hover:bg-slate-800/40'
+                                }`}
+                              >
+                                <span className="w-2.5 h-2.5 rounded-full bg-[#3B82F6]" />
+                                Information
+                              </button>
+                            </div>
+
+                            {/* Sort Dropdown */}
+                            <div className="relative flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-full px-4 py-2.5 shadow-sm text-[13px] text-slate-700 dark:text-slate-305 font-bold cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors self-start sm:self-auto select-none">
+                              <span className="text-slate-400 font-bold">⇅</span>
+                              <span className="text-slate-500 font-semibold">Sort by:</span>
+                              <span className="text-slate-900 dark:text-white font-extrabold pr-4 text-[12px] tracking-wide uppercase">
+                                {requestSort === 'latest' ? 'Latest' : requestSort === 'urgency' ? 'Urgency' : 'Units'}
+                              </span>
+                              <span className="absolute right-4 text-[9px] text-slate-400">▼</span>
+                              <select
+                                value={requestSort}
+                                onChange={(e) => setRequestSort(e.target.value)}
+                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                              >
+                                <option value="latest">Latest</option>
+                                <option value="urgency">Urgency</option>
+                                <option value="units">Units Needed</option>
+                              </select>
+                            </div>
+                          </div>
+
+                          {/* Card Grid */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-2 max-w-6xl mx-auto w-full">
+                            {sortedRequests.map((req, i) => {
+                              // Dynamic theme variables
+                              let topBarColor = 'bg-[#8B5CF6]';
+                              let circleBg = 'bg-[#F5F3FF] text-[#6D28D9]';
+                              let dropletColorClass = 'text-[#6D28D9]';
+                              let badgeColor = 'bg-purple-55 text-purple-650 border border-purple-100/50 dark:bg-purple-950/20 dark:text-purple-400';
+                              let statusBadgeColor = 'bg-[#F5F3FF] text-[#6D28D9] border border-[#EDE9FE]';
+                              let unitColorText = 'text-[#6D28D9]';
+                              let matchBoxBg = 'bg-[#F5F3FF]/60 dark:bg-purple-950/10';
+                              let arrowBtnClass = 'text-[#8B5CF6] border-[#EDE9FE] hover:bg-[#F5F3FF]';
+                              let waveColor = '#8B5CF6';
+                              let clockColor = 'text-[#8B5CF6]';
+
+                              if (req.urgency === 'normal') {
+                                topBarColor = 'bg-[#10B981]';
+                                circleBg = 'bg-[#F0FDF4] text-[#15803D]';
+                                dropletColorClass = 'text-[#15803D]';
+                                badgeColor = 'bg-emerald-50 text-emerald-650 border border-emerald-100/50 dark:bg-emerald-950/20 dark:text-emerald-400';
+                                statusBadgeColor = 'bg-[#F0FDF4] text-emerald-650 border border-[#DCFCE7]';
+                                unitColorText = 'text-[#15803D]';
+                                matchBoxBg = 'bg-[#F0FDF4]/60 dark:bg-emerald-950/10';
+                                arrowBtnClass = 'text-[#15803D] border-[#DCFCE7] hover:bg-[#F0FDF4]';
+                                waveColor = '#10B981';
+                                clockColor = 'text-[#10B981]';
+                              } else if (req.urgency === 'urgent' || req.urgency === 'emergency') {
+                                topBarColor = 'bg-[#E11D48]';
+                                circleBg = 'bg-[#FFF1F2] text-[#E11D48]';
+                                dropletColorClass = 'text-[#E11D48]';
+                                badgeColor = 'bg-rose-50 text-[#E11D48] border border-rose-100/50 dark:bg-rose-950/20 dark:text-rose-450';
+                                statusBadgeColor = 'bg-[#FFF1F2] text-[#E11D48] border border-[#FFE4E6]';
+                                unitColorText = 'text-[#E11D48]';
+                                matchBoxBg = 'bg-[#FFF1F2]/60 dark:bg-rose-950/10';
+                                arrowBtnClass = 'text-[#E11D48] border-[#FFE4E6] hover:bg-[#FFF1F2]';
+                                waveColor = '#E11D48';
+                                clockColor = 'text-[#E11D48]';
+                              } else if (req.urgency === 'info' || req.urgency === 'information') {
+                                topBarColor = 'bg-[#3B82F6]';
+                                circleBg = 'bg-[#EFF6FF] text-[#1D4ED8]';
+                                dropletColorClass = 'text-[#1D4ED8]';
+                                badgeColor = 'bg-blue-50 text-blue-655 border border-blue-100/50 dark:bg-blue-950/20 dark:text-blue-400';
+                                statusBadgeColor = 'bg-[#EFF6FF] text-blue-655 border border-[#DBEAFE]';
+                                unitColorText = 'text-blue-600';
+                                matchBoxBg = 'bg-[#EFF6FF]/60 dark:bg-blue-950/10';
+                                arrowBtnClass = 'text-blue-550 border-[#DBEAFE] hover:bg-[#EFF6FF]';
+                                waveColor = '#3B82F6';
+                                clockColor = 'text-[#3B82F6]';
+                              }
 
                               return (
                                 <motion.div
                                   key={req.id}
-                                  className="bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 rounded-2xl p-6 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative shadow-sm hover:shadow-md hover:border-slate-200 dark:hover:border-slate-700 transition-all text-left"
-                                  initial={{ opacity: 0, y: 15 }}
+                                  className="bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 rounded-[24px] p-6 pb-16 flex flex-col justify-between relative shadow-sm hover:shadow-md hover:border-slate-200 dark:hover:border-slate-700 transition-all text-left group overflow-hidden max-w-[380px] w-full mx-auto"
+                                  initial={{ opacity: 0, y: 20 }}
                                   animate={{ opacity: 1, y: 0 }}
                                   transition={{ delay: i * 0.05 }}
                                 >
-                                  {/* Accent left border */}
-                                  <div className={`absolute left-0 top-0 bottom-0 w-1.5 rounded-l-2xl ${sideBorder}`} />
+                                  {/* Curved Top Theme Bar */}
+                                  <div className={`absolute top-0 left-0 right-0 h-[6px] ${topBarColor} rounded-t-[24px]`} />
 
-                                  <div className="flex items-center gap-4 flex-1 w-full">
-                                    {/* Blood Group Circle */}
-                                    <div className={`w-14 h-14 rounded-full flex-shrink-0 flex flex-col items-center justify-center text-[15px] font-black shadow-sm ${typeColor}`}>
-                                      {req.bloodGroup}
-                                      <span className="text-[10px] text-[#E11D48] mt-0.5 leading-none">🩸</span>
-                                    </div>
-
-                                    {/* Center content details */}
-                                    <div className="flex-1 min-w-0 text-left">
-                                      <div className="flex items-center gap-2 flex-wrap">
-                                        <span className="font-extrabold text-gray-900 dark:text-white text-[15px] leading-snug">{req.patientName}</span>
-                                        <span className={`px-2 py-0.5 rounded-md text-[8.5px] font-black uppercase tracking-wider ${reqBadge}`}>
-                                          {req.urgency}
-                                        </span>
-                                        <span className="bg-indigo-50/60 dark:bg-indigo-950/20 text-[#4F46E5] dark:text-indigo-400 px-2 py-0.5 rounded-md text-[8.5px] font-black border border-indigo-100/25 uppercase tracking-wider">
-                                          Matching
-                                        </span>
+                                  <div>
+                                    {/* Card Header section: Avatar & Details */}
+                                    <div className="flex items-start justify-between w-full gap-3 pt-1.5">
+                                      {/* Blood Group Circle */}
+                                      <div className={`w-16 h-16 rounded-full flex-shrink-0 flex flex-col items-center justify-center font-extrabold text-[18px] shadow-sm relative z-10 ${circleBg}`}>
+                                        <span className="leading-none">{req.bloodGroup}</span>
+                                        <FilledDropletIcon colorClass={dropletColorClass} />
                                       </div>
 
-                                      <p className="text-gray-400 dark:text-gray-500 text-[11.5px] font-bold mt-2 flex items-center gap-1.5 flex-wrap">
-                                        <FiMapPin className="w-3.5 h-3.5 text-gray-400" />
-                                        <span>{req.hospitalName}, {req.city}</span>
-                                        <span className="text-gray-300">•</span>
-                                        <span className={`${unitColor} font-black`}>{req.units} unit{req.units > 1 ? 's' : ''} required</span>
-                                      </p>
+                                      {/* Top Right Information Stack */}
+                                      <div className="text-right flex flex-col items-end relative z-10">
+                                        <span className="text-[10px] text-slate-400 dark:text-slate-500 font-extrabold uppercase tracking-widest flex items-center gap-1.5">
+                                          <FiClock className={`w-3.5 h-3.5 ${clockColor}`} />
+                                          <span>{req.time}</span>
+                                        </span>
+                                        <span className="text-[15px] font-black text-gray-900 dark:text-white mt-1.5 leading-none block">{req.id}</span>
+                                        <span className={`px-2.5 py-0.5 rounded-md text-[9px] font-black mt-2 inline-block uppercase tracking-wider ${statusBadgeColor}`}>
+                                          {req.badgeText || 'NEW'}
+                                        </span>
+                                      </div>
+                                    </div>
 
-                                      {/* Two action status boxes */}
-                                      <div className="flex flex-wrap items-center gap-3 mt-3">
-                                        <div className="bg-rose-50/20 dark:bg-rose-950/05 border border-rose-100/20 rounded-xl px-3 py-1.5 flex items-center gap-2 text-[11px] font-semibold text-gray-500 dark:text-gray-400">
-                                          <FiZap className="w-3.5 h-3.5 text-[#E11D48] animate-pulse" />
-                                          <div>
-                                            <span className="text-[9px] text-gray-400 block font-bold leading-none mb-0.5">AI Match time</span>
-                                            <span className="font-extrabold text-gray-800 dark:text-gray-250">Calculating...</span>
-                                          </div>
-                                        </div>
-                                        <div className="bg-gray-50/30 dark:bg-slate-800/40 border border-gray-200 dark:border-slate-850 rounded-xl px-3 py-1.5 flex items-center gap-2 text-[11px] font-semibold text-gray-500 dark:text-gray-400">
-                                          <FiUsers className="w-3.5 h-3.5 text-gray-400" />
-                                          <div>
-                                            <span className="text-[9px] text-gray-400 block font-bold leading-none mb-0.5">Contacted</span>
-                                            <span className="font-extrabold text-gray-800 dark:text-gray-250">{req.donorsContacted || 10} eligible donors</span>
-                                          </div>
-                                        </div>
+                                    {/* Patient Name */}
+                                    <h3 className="font-extrabold text-gray-900 dark:text-white text-[19px] mt-4.5 mb-1 relative z-10 leading-snug">
+                                      {req.patientName}
+                                    </h3>
+
+                                    {/* Badges Row */}
+                                    <div className="flex items-center gap-1.5 flex-wrap mt-2 relative z-10">
+                                      <span className={`px-2.5 py-0.5 rounded-md text-[9px] font-black uppercase tracking-widest ${badgeColor}`}>
+                                        {req.urgency}
+                                      </span>
+                                      <span className="bg-indigo-50/70 dark:bg-indigo-950/20 text-[#6366F1] dark:text-indigo-400 px-2.5 py-0.5 rounded-md text-[9px] font-black border border-indigo-100/25 uppercase tracking-widest">
+                                        Matching
+                                      </span>
+                                    </div>
+
+                                    {/* Hospital and Location Marker */}
+                                    <p className="text-slate-455 dark:text-slate-500 text-[12px] font-semibold mt-3.5 flex items-center gap-1.5 relative z-10 leading-snug">
+                                      <FiMapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                                      <span>{req.hospitalName}, {req.city}</span>
+                                    </p>
+
+                                    {/* Units Required */}
+                                    <p className={`text-[12.5px] ${unitColorText} font-bold mt-2.5 flex items-center gap-1.5 relative z-10`}>
+                                      <OutlineDropletIcon colorClass={unitColorText} />
+                                      <span>{req.units} unit{req.units > 1 ? 's' : ''} required</span>
+                                    </p>
+                                  </div>
+
+                                  {/* Bottom Status Blocks Grid */}
+                                  <div className="grid grid-cols-2 gap-2 mt-5.5 relative z-10">
+                                    {/* Match Time Box */}
+                                    <div className={`${matchBoxBg} border border-black/[0.03] dark:border-white/[0.03] rounded-xl p-2.5 px-3 flex items-center gap-2`}>
+                                      <FiZap className={`w-4 h-4 shrink-0 ${unitColorText} animate-pulse`} />
+                                      <div>
+                                        <span className="text-[9px] text-slate-400 dark:text-slate-500 font-semibold block leading-none mb-1">AI Match Time</span>
+                                        <span className="text-[12px] font-bold text-gray-800 dark:text-slate-200 block leading-none">{req.matchTime || 'Calculating...'}</span>
+                                      </div>
+                                    </div>
+
+                                    {/* Contacted Box */}
+                                    <div className="bg-slate-50/65 dark:bg-slate-800/40 border border-black/[0.03] dark:border-white/[0.03] rounded-xl p-2.5 px-3 flex items-center gap-2">
+                                      <FiUsers className="w-4 h-4 shrink-0 text-slate-400" />
+                                      <div>
+                                        <span className="text-[9px] text-slate-400 dark:text-slate-500 font-semibold block leading-none mb-1">Contacted</span>
+                                        <span className="text-[12px] font-bold text-gray-800 dark:text-slate-200 block leading-none">{req.donorsContacted || 10} eligible donors</span>
                                       </div>
                                     </div>
                                   </div>
 
-                                  {/* Rightmost info capsule & Action arrow */}
-                                  <div className="flex items-center gap-4.5 w-full lg:w-auto justify-between lg:justify-end border-t border-gray-100 dark:border-slate-800 lg:border-t-0 pt-4 lg:pt-0">
-                                    <div className="bg-rose-50/35 dark:bg-rose-950/10 border border-[#FFE4E6]/25 rounded-2xl p-4.5 py-3 flex flex-col justify-center items-start text-left min-w-[130px] shadow-sm">
-                                      <span className="text-[10px] text-gray-400 dark:text-gray-500 font-extrabold uppercase tracking-wide flex items-center gap-1.5">
-                                        <FiClock className={`w-3.5 h-3.5 ${clockColor}`} />
-                                        <span>{req.time}</span>
-                                      </span>
-                                      <span className="text-[12px] font-bold text-gray-900 dark:text-white mt-1">{req.id}</span>
-                                      <span className={`px-2 py-0.5 rounded-md text-[8.5px] font-black mt-1.5 ${req.badgeStyle || 'bg-rose-50 text-[#E11D48] border border-rose-100/20'}`}>
-                                        {req.badgeText || 'NEW'}
-                                      </span>
-                                    </div>
+                                  {/* Wave Graphic at bottom */}
+                                  <svg className="absolute bottom-0 left-0 right-0 w-full h-14 pointer-events-none rounded-b-[24px] select-none" viewBox="0 0 1440 320" preserveAspectRatio="none">
+                                    <path
+                                      fill={waveColor}
+                                      fillOpacity="0.12"
+                                      d="M0,192L60,202.7C120,213,240,235,360,229.3C480,224,600,192,720,176C840,160,960,160,1080,181.3C1200,203,1320,245,1380,266.7L1440,288L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
+                                    />
+                                  </svg>
 
-                                    <button className={`w-9 h-9 rounded-full border flex items-center justify-center cursor-pointer transition-all hover:scale-105 active:scale-95 shadow-sm ${arrowColor}`}>
-                                      <FiArrowRight className="w-4 h-4 stroke-[2.5]" />
-                                    </button>
-                                  </div>
+                                  {/* Floating Action Button */}
+                                  <button
+                                    onClick={() => setSelectedRequestDetails(req)}
+                                    className={`absolute bottom-4 right-4 w-11 h-11 rounded-full border bg-white flex items-center justify-center cursor-pointer transition-all hover:scale-110 active:scale-95 shadow-md z-20 ${arrowBtnClass}`}
+                                  >
+                                    <FiArrowRight className="w-5 h-5 stroke-[2.5]" />
+                                  </button>
                                 </motion.div>
                               );
                             })}
+                          </div>
+
+                          {/* Monitor Info banner */}
+                           <div className="flex items-center justify-center gap-2 py-4 text-slate-550 dark:text-slate-500 text-[13px] font-semibold border-t border-slate-100 dark:border-slate-800/60 mt-4">
+                            <span className="w-6 h-6 rounded-full bg-rose-50 dark:bg-rose-950/20 text-[#E11D48] flex items-center justify-center text-[12px] shadow-sm">
+                              🛡️
+                            </span>
+                            <span>All requests are monitored 24/7. We'll notify you when donors are matched.</span>
                           </div>
                         </div>
                       );
@@ -781,6 +988,20 @@ const Dashboard = () => {
               setShowHospitalSelector(false);
               setActiveCall({ hospitalName: h.name, number: h.contact });
             }}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {selectedRequestDetails && (
+          <RequestDetailsModal
+            request={selectedRequestDetails}
+            onClose={() => setSelectedRequestDetails(null)}
+            onCallDispatch={(hName, phoneNum) => {
+              setSelectedRequestDetails(null);
+              setActiveCall({ hospitalName: hName, number: phoneNum });
+            }}
+            donors={donors}
           />
         )}
       </AnimatePresence>
