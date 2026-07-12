@@ -25,7 +25,7 @@ const StepIndicator = ({ current }) => (
   <div className="flex items-center justify-between gap-1 mb-8 font-poppins relative">
     {/* Dashed line background */}
     <div className="absolute top-4.5 left-8 right-8 h-[1px] border-t border-dashed border-gray-200 dark:border-white/10 z-0" />
-    
+
     {STEPS.map((step, i) => {
       const done = i < current;
       const active = i === current;
@@ -34,11 +34,10 @@ const StepIndicator = ({ current }) => (
         <React.Fragment key={step}>
           <div className="flex flex-col items-center relative z-10 bg-white dark:bg-[#0F1420] px-3.5">
             <div
-              className={`w-9 h-9 rounded-full flex items-center justify-center border transition-all duration-300 ${
-                done || active
+              className={`w-9 h-9 rounded-full flex items-center justify-center border transition-all duration-300 ${done || active
                   ? 'bg-red-600 border-red-600 text-white'
                   : 'bg-white dark:bg-[#0F1420] border-gray-200 dark:border-white/10 text-gray-400'
-              }`}
+                }`}
             >
               <Icon className="w-4.5 h-4.5 stroke-[2.5]" />
             </div>
@@ -177,20 +176,18 @@ const Signup = () => {
             <button
               key={r.id}
               onClick={() => setRole(r.id)}
-              className={`w-full flex items-center gap-4 p-5 rounded-2xl border transition-all text-left ${
-                isSelected
+              className={`w-full flex items-center gap-4 p-5 rounded-2xl border transition-all text-left ${isSelected
                   ? 'border-red-500 bg-rose-50/10 dark:bg-rose-950/05 shadow-[0_4px_20px_rgba(225,29,72,0.02)]'
                   : 'border-gray-100 dark:border-white/05 bg-white dark:bg-[#0F1420] hover:border-gray-200 dark:hover:border-white/10'
-              }`}
+                }`}
             >
               {r.icon}
               <div className="flex-1">
                 <p className="font-bold text-slate-900 dark:text-white text-[15px]">{r.title}</p>
                 <p className="text-muted dark:text-slate-400 text-[13px] mt-0.5 leading-snug">{r.desc}</p>
               </div>
-              <div className={`w-5.5 h-5.5 rounded-full border flex items-center justify-center transition-all ${
-                isSelected ? 'bg-red-600 border-transparent text-white' : 'border-gray-300 dark:border-white/10'
-              }`}>
+              <div className={`w-5.5 h-5.5 rounded-full border flex items-center justify-center transition-all ${isSelected ? 'bg-red-600 border-transparent text-white' : 'border-gray-300 dark:border-white/10'
+                }`}>
                 {isSelected && <FiCheck className="w-3.5 h-3.5 text-white stroke-[3px]" />}
               </div>
             </button>
@@ -282,8 +279,8 @@ const Signup = () => {
                 <button key={bg} type="button"
                   onClick={() => set('bloodGroup', bg)}
                   className={`py-2.5 rounded-xl text-[13px] font-black border-2 transition-all ${form.bloodGroup === bg
-                      ? 'bg-bloodred border-bloodred text-white'
-                      : 'bg-white dark:bg-darksurf border-black/08 dark:border-white/08 text-slate dark:text-white hover:border-bloodred/30'
+                    ? 'bg-bloodred border-bloodred text-white'
+                    : 'bg-white dark:bg-darksurf border-black/08 dark:border-white/08 text-slate dark:text-white hover:border-bloodred/30'
                     }`}
                 >
                   {bg}
@@ -439,10 +436,10 @@ const Signup = () => {
 
   return (
     <div className="h-screen lg:overflow-hidden grid lg:grid-cols-2 bg-[#FAF9F6] dark:bg-[#070B13] relative font-sans">
-      
+
       {/* Back to Home Button */}
-      <Link 
-        to="/" 
+      <Link
+        to="/"
         className="absolute top-4 left-4 z-50 flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/95 dark:bg-[#0F1420]/95 border border-gray-200 dark:border-white/10 shadow-sm text-[12px] font-bold text-slate-700 dark:text-slate-300 hover:text-red-600 dark:hover:text-red-500 hover:border-red-600/30 transition-all duration-200 cursor-pointer"
       >
         <svg className="w-3.5 h-3.5 stroke-[2.5]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
@@ -450,17 +447,17 @@ const Signup = () => {
         </svg>
         Back to Home
       </Link>
-      
+
       {/* Left Brand Panel (Studio Background with Flowers and Blood Drop) */}
-      <div 
-        style={{ 
-          backgroundImage: "url('/bloodbridge_bg_studio.jpg')", 
-          backgroundSize: "cover", 
-          backgroundPosition: "center right" 
+      <div
+        style={{
+          backgroundImage: "url('/bloodbridge_bg_studio.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center right"
         }}
         className="hidden lg:flex flex-col justify-between p-8 relative border-r border-gray-100 dark:border-white/05 h-full overflow-hidden"
       >
-        
+
         {/* Soft dark-gradient overlay on the text area to improve readability */}
         <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/50 to-transparent pointer-events-none" />
 
@@ -480,7 +477,7 @@ const Signup = () => {
 
         {/* Main Content */}
         <div className="relative z-10 space-y-6 my-auto font-poppins max-w-md">
-          
+
           {/* Header Typography */}
           <div className="space-y-3">
             <h1 className="font-black text-slate-900 text-[34px] leading-[1.1] tracking-tight">
@@ -570,10 +567,10 @@ const Signup = () => {
       {/* Right Side Panel */}
       <div className="flex flex-col justify-center px-6 py-6 lg:px-12 xl:px-14 h-full overflow-y-auto relative z-10">
         <div className="w-full max-w-lg mx-auto">
-          
+
           {/* Registration Card Box */}
           <div className="bg-white dark:bg-[#0F1420] border border-gray-100 dark:border-white/05 rounded-3xl p-6 sm:p-7 shadow-[0_15px_50px_-15px_rgba(0,0,0,0.03)]">
-            
+
             {/* Mobile Header Logo */}
             <Link to="/" className="flex lg:hidden items-center gap-2.5 mb-8 font-poppins">
               <div className="w-9 h-9 rounded-lg bg-red-600 flex items-center justify-center shadow-md">
@@ -638,17 +635,17 @@ const Signup = () => {
                   </button>
                 )}
                 {step < 3 ? (
-                  <button 
-                    onClick={handleNext} 
+                  <button
+                    onClick={handleNext}
                     className="flex-1 bg-[#E11D48] hover:bg-red-600 text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg shadow-red-500/10 hover:shadow-red-500/20 transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer text-[14px]"
                   >
                     <span>Continue</span>
                     <FiArrowRight className="w-4 h-4" />
                   </button>
                 ) : (
-                  <button 
-                    onClick={handleSubmit} 
-                    disabled={loading} 
+                  <button
+                    onClick={handleSubmit}
+                    disabled={loading}
                     className="flex-1 bg-[#E11D48] hover:bg-red-600 text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg shadow-red-500/10 hover:shadow-red-500/20 transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer text-[14px]"
                   >
                     {loading ? (
@@ -658,7 +655,7 @@ const Signup = () => {
                       </span>
                     ) : (
                       <>
-                        <FiHeart className="w-4 h-4" /> 
+                        <FiHeart className="w-4 h-4" />
                         <span>Join BloodBridge AI</span>
                       </>
                     )}

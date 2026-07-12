@@ -111,10 +111,10 @@ const Login = () => {
 
   return (
     <div className="h-screen lg:overflow-hidden grid lg:grid-cols-2 bg-[#FAF9F6] dark:bg-[#070B13] relative font-sans">
-      
+
       {/* Back to Home Button */}
-      <Link 
-        to="/" 
+      <Link
+        to="/"
         className="absolute top-4 left-4 z-50 flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/95 dark:bg-[#0F1420]/95 border border-gray-200 dark:border-white/10 shadow-sm text-[12px] font-bold text-slate-700 dark:text-slate-300 hover:text-red-600 dark:hover:text-red-500 hover:border-red-600/30 transition-all duration-200 cursor-pointer"
       >
         <svg className="w-3.5 h-3.5 stroke-[2.5]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
@@ -122,17 +122,17 @@ const Login = () => {
         </svg>
         Back to Home
       </Link>
-      
+
       {/* Left Brand Panel (Donation Room Background Scene) */}
-      <div 
-        style={{ 
-          backgroundImage: "url('/bloodbridge_bg_donation.jpg')", 
-          backgroundSize: "cover", 
-          backgroundPosition: "center right" 
+      <div
+        style={{
+          backgroundImage: "url('/bloodbridge_bg_donation.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center right"
         }}
         className="hidden lg:flex flex-col justify-between p-8 relative border-r border-gray-100 dark:border-white/05 h-full overflow-hidden"
       >
-        
+
         {/* Soft light-gradient overlay on the text/features area for perfect text readability */}
         <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/50 to-transparent pointer-events-none" />
 
@@ -152,7 +152,7 @@ const Login = () => {
 
         {/* Main Content */}
         <div className="relative z-10 space-y-6 my-auto font-poppins max-w-md">
-          
+
           {/* Header Typography */}
           <div className="space-y-3">
             <h1 className="font-black text-slate-900 text-[34px] leading-[1.1] tracking-tight">
@@ -203,10 +203,10 @@ const Login = () => {
       {/* Right Side Panel */}
       <div className="flex flex-col justify-center px-6 py-6 lg:px-12 xl:px-14 h-full overflow-y-auto relative z-10">
         <div className="w-full max-w-lg mx-auto">
-          
+
           {/* Card Container */}
           <div className="bg-white dark:bg-[#0F1420] border border-gray-100 dark:border-white/05 rounded-3xl p-6 sm:p-8 shadow-[0_15px_50px_-15px_rgba(0,0,0,0.03)]">
-            
+
             {/* Header info bar */}
             <div className="flex justify-between items-start mb-6">
               <div>
@@ -238,11 +238,10 @@ const Login = () => {
                     key={r.id}
                     type="button"
                     onClick={() => setRole(r.id)}
-                    className={`flex-1 relative flex items-center justify-center gap-2 py-2 rounded-xl text-[12px] font-bold transition-all ${
-                      isSelected
+                    className={`flex-1 relative flex items-center justify-center gap-2 py-2 rounded-xl text-[12px] font-bold transition-all ${isSelected
                         ? 'bg-rose-50/70 dark:bg-[#E11D48]/10 text-red-600 dark:text-red-400 shadow-sm border border-rose-100/30'
                         : 'text-slate-500 hover:text-slate-800 dark:hover:text-white border border-transparent'
-                    }`}
+                      }`}
                   >
                     <span className="text-base">{r.icon}</span>
                     <span>{r.label}</span>
@@ -268,7 +267,7 @@ const Login = () => {
 
             {/* Form Fields */}
             <form onSubmit={handleSubmit} className="space-y-4">
-              
+
               {/* User Identifier */}
               <div className="space-y-1">
                 <label className="text-[9px] font-black text-slate-500 dark:text-slate-400 tracking-widest uppercase block mb-1">

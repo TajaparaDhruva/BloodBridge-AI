@@ -94,15 +94,14 @@ const DashboardHeader = ({
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'glass-nav py-3 px-6 md:px-10' : 'py-5 px-6 md:px-10 bg-transparent'
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'glass-nav py-2.5 px-3 sm:px-6 md:px-10' : 'py-3.5 px-3 sm:px-6 md:px-10 bg-transparent'
+        }`}
     >
       <div className="w-full max-w-[1800px] mx-auto flex items-center justify-between gap-4">
-        
+
         {/* Left Side: Brand Logo & Context */}
-        <Link to="/" className="flex items-center gap-2.5 group font-poppins">
-          <div className="relative">
+        <Link to="/" className="flex items-center gap-2 group font-poppins shrink-0">
+          <div className="relative shrink-0">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-red-500 to-[#E11D48] flex items-center justify-center shadow-premium transition-all duration-300 group-hover:scale-105 group-hover:shadow-premium-hover text-white">
               <svg className="w-5.5 h-5.5" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 2.5C12 2.5 5.5 9.5 5.5 14.5C5.5 18.0899 8.41015 21 12 21C15.5899 21 18.5 18.0899 18.5 14.5C18.5 9.5 12 2.5 12 2.5Z" />
@@ -110,7 +109,7 @@ const DashboardHeader = ({
             </div>
             <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white dark:border-darkbg animate-pulse" />
           </div>
-          <div>
+          <div className="hidden sm:block">
             <span className="font-extrabold text-slate-900 dark:text-white text-[16px] tracking-tight leading-none block">
               BloodBridge <span className="text-[#E11D48] ml-0.5">AI</span>
             </span>
@@ -126,11 +125,10 @@ const DashboardHeader = ({
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`relative px-3.5 py-2 rounded-xl text-[13px] font-semibold transition-colors duration-200 cursor-pointer flex items-center gap-1.5 select-none ${
-                  active 
-                    ? 'text-white' 
+                className={`relative px-3.5 py-2 rounded-xl text-[13px] font-semibold transition-colors duration-200 cursor-pointer flex items-center gap-1.5 select-none ${active
+                    ? 'text-white'
                     : 'text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
-                }`}
+                  }`}
               >
                 {active && (
                   <motion.div
@@ -147,7 +145,7 @@ const DashboardHeader = ({
         </div>
 
         {/* Right Side: Global control items */}
-        <div className="flex items-center gap-3 flex-shrink-0 ml-auto md:ml-0">
+        <div className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0 ml-auto md:ml-0">
           {/* Search Trigger Button */}
           <button
             onClick={onOpenSearch}
@@ -168,12 +166,12 @@ const DashboardHeader = ({
 
           {/* Quick Dispatch request trigger */}
           {!isDonor && (
-            <button 
-              onClick={onNewRequest} 
-              className="btn-primary py-2 px-4 text-[13px] font-bold shadow-sm transition-all cursor-pointer flex items-center gap-1"
+            <button
+              onClick={onNewRequest}
+              className="btn-primary py-1.5 sm:py-2 px-2.5 sm:px-4 text-[13px] font-bold shadow-sm transition-all cursor-pointer flex items-center gap-1 shrink-0"
             >
               <FiPlus className="w-4 h-4" />
-              <span>Request</span>
+              <span className="hidden sm:inline">Request</span>
             </button>
           )}
 
@@ -197,7 +195,7 @@ const DashboardHeader = ({
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setShowProfileMenu(!showProfileMenu)}
-              className="w-10 h-10 rounded-full bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/50 flex items-center justify-center transition-all duration-200 cursor-pointer shadow-sm border border-rose-100/50 dark:border-rose-900/50"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/50 flex items-center justify-center transition-all duration-200 cursor-pointer shadow-sm border border-rose-100/50 dark:border-rose-900/50"
               title={`Profile Menu`}
             >
               <FiUser className="w-4.5 h-4.5 text-[#E11D48]" />

@@ -50,11 +50,11 @@ const LanguageSwitcher = () => {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2.5 rounded-xl border border-gray-200/60 dark:border-gray-800 bg-white/40 dark:bg-[#1E293B]/40 text-gray-700 dark:text-gray-200 text-sm font-medium hover:bg-white dark:hover:bg-[#1E293B] hover:border-gray-300 dark:hover:border-gray-700 transition-all duration-300 shadow-premium hover:shadow-premium-hover focus:outline-none hover:scale-102"
+        className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2.5 rounded-xl border border-gray-200/60 dark:border-gray-800 bg-white/40 dark:bg-[#1E293B]/40 text-gray-700 dark:text-gray-200 text-sm font-medium hover:bg-white dark:hover:bg-[#1E293B] hover:border-gray-300 dark:hover:border-gray-700 transition-all duration-300 shadow-premium hover:shadow-premium-hover focus:outline-none hover:scale-102"
       >
         <span className="text-base">{activeLang.flag}</span>
         <span className="hidden sm:inline">{activeLang.label}</span>
-        <FiChevronDown className={`w-4 h-4 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+        <FiChevronDown className={`w-4 h-4 transition-transform duration-300 hidden sm:block ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {isOpen && (
