@@ -163,31 +163,39 @@ const DonorDashboard = () => {
                     {/* Left Column: Real-time Status, AI Match, Availability Toggle, Badges */}
                     <div className="lg:col-span-8 space-y-6">
                       
-                      {/* Availability & AI Matching Status Panel */}
-                      <div className="glass-card rounded-3xl p-6 border border-black/05 dark:border-white/05 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                      {/* Availability & Status Panel */}
+                      <div className="glass-card rounded-3xl p-6 border border-slate-100/40 dark:border-slate-850 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-sm">
                         <div className="flex items-center gap-4 text-left">
-                          <div className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all ${isAvailable ? 'bg-emerald-500/10 text-emerald-500' : 'bg-gray-500/10 text-gray-500'}`}>
-                            <FiActivity className="w-7 h-7" />
+                          <div className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 border transition-all ${
+                            isAvailable 
+                              ? 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-100/10 text-emerald-500' 
+                              : 'bg-slate-50 dark:bg-slate-900 border-slate-200 text-slate-400'
+                          }`}>
+                            <FiActivity className="w-7 h-7 stroke-[2.5]" />
                           </div>
                           <div>
                             <h3 className="font-extrabold text-[17px] text-gray-900 dark:text-white leading-tight">Availability & Status</h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                            <p className="text-sm text-gray-400 mt-1">
                               {isAvailable ? 'Available for emergency match alerts.' : 'Temporarily unavailable.'}
                             </p>
                           </div>
                         </div>
                         
                         <div className="flex items-center gap-4 w-full md:w-auto">
-                          {/* Toggle Button */}
+                          {/* Toggle Status Dropdown Button */}
                           <button
                             onClick={handleUpdateAvailability}
-                            className={`flex-1 md:flex-none py-3 px-6 rounded-2xl font-bold text-xs uppercase tracking-wider transition-all duration-300 shadow-md ${
-                              isAvailable 
-                                ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-500/10' 
-                                : 'bg-gray-600 hover:bg-gray-500 text-white'
+                            className={`flex-1 md:flex-none flex items-center justify-between md:justify-center gap-2.5 px-4.5 py-2.5 rounded-full border font-extrabold text-[12px] uppercase tracking-wider cursor-pointer transition-all shadow-sm ${
+                              isAvailable
+                                ? 'border-emerald-500/30 bg-emerald-50/15 text-emerald-600 dark:text-emerald-400 shadow-emerald-500/05'
+                                : 'border-gray-300 dark:border-gray-800 bg-gray-50/10 text-gray-600 dark:text-gray-400'
                             }`}
                           >
-                            {isAvailable ? 'Set Unavailable' : 'Set Available'}
+                            <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${isAvailable ? 'bg-emerald-500 animate-pulse' : 'bg-gray-400'}`} />
+                            <span>You Are {isAvailable ? 'Available' : 'Unavailable'}</span>
+                            <svg className="w-4 h-4 text-slate-450 rotate-90" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                            </svg>
                           </button>
                         </div>
                       </div>
@@ -203,98 +211,131 @@ const DonorDashboard = () => {
                         <p className="text-sm text-gray-400 mt-1.5 mb-6">Scanning hospitals within 15km of Ahmedabad for O- critical demand.</p>
                         
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                          <div className="bg-white dark:bg-slate-800/50 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-black/05 dark:border-white/05 rounded-2xl p-4 flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-900/20 text-blue-500 flex items-center justify-center flex-shrink-0">
-                              <FiUsers className="w-6 h-6" />
+                          <div className="bg-white dark:bg-[#0F1420] shadow-[0_2px_8px_rgba(0,0,0,0.01)] border border-slate-100/50 dark:border-slate-850 rounded-2xl p-4.5 flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-full bg-rose-50 dark:bg-rose-950/20 text-[#E11D48] flex items-center justify-center border border-rose-100/10 shrink-0">
+                              <FiUsers className="w-5.5 h-5.5 stroke-[2.5]" />
                             </div>
                             <div>
-                              <span className="text-[11px] text-gray-400 font-bold block mb-0.5">Matching Pool</span>
-                              <span className="text-xl font-black text-gray-900 dark:text-white leading-none">128 Donors</span>
+                              <span className="text-[11px] text-slate-400 font-bold block mb-0.5 uppercase tracking-wider">Matching Pool</span>
+                              <span className="text-lg font-black text-slate-900 dark:text-white leading-none">128 Donors</span>
                             </div>
                           </div>
-                          <div className="bg-white dark:bg-slate-800/50 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-black/05 dark:border-white/05 rounded-2xl p-4 flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 text-emerald-500 flex items-center justify-center flex-shrink-0">
-                              <FiTarget className="w-6 h-6" />
+                          <div className="bg-white dark:bg-[#0F1420] shadow-[0_2px_8px_rgba(0,0,0,0.01)] border border-slate-100/50 dark:border-slate-850 rounded-2xl p-4.5 flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-950/20 text-emerald-500 flex items-center justify-center border border-emerald-100/10 shrink-0">
+                              <FiTarget className="w-5.5 h-5.5 stroke-[2.5]" />
                             </div>
                             <div>
-                              <span className="text-[11px] text-gray-400 font-bold block mb-0.5">Your Eligibility</span>
-                              <span className="text-xl font-black text-emerald-500 leading-none">Perfect Match</span>
+                              <span className="text-[11px] text-slate-400 font-bold block mb-0.5 uppercase tracking-wider">Your Eligibility</span>
+                              <span className="text-lg font-black text-emerald-500 leading-none">Perfect Match</span>
                             </div>
                           </div>
-                          <div className="bg-white dark:bg-slate-800/50 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-black/05 dark:border-white/05 rounded-2xl p-4 flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-900/20 text-amber-500 flex items-center justify-center flex-shrink-0">
-                              <FiZap className="w-6 h-6" />
+                          <div className="bg-white dark:bg-[#0F1420] shadow-[0_2px_8px_rgba(0,0,0,0.01)] border border-slate-100/50 dark:border-slate-850 rounded-2xl p-4.5 flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-full bg-amber-50 dark:bg-amber-950/20 text-amber-500 flex items-center justify-center border border-amber-100/10 shrink-0">
+                              <FiZap className="w-5.5 h-5.5 stroke-[2.5]" />
                             </div>
                             <div>
-                              <span className="text-[11px] text-gray-400 font-bold block mb-0.5">Avg Response</span>
-                              <span className="text-xl font-black text-gray-900 dark:text-white leading-none">&lt; 45s</span>
+                              <span className="text-[11px] text-slate-400 font-bold block mb-0.5 uppercase tracking-wider">Avg Response</span>
+                              <span className="text-lg font-black text-slate-900 dark:text-white leading-none">&lt; 45s</span>
                             </div>
                           </div>
                         </div>
                       </div>
 
                       {/* Emergency Requests / Nearby Requests registry */}
-                      <div className="space-y-4">
+                      <div className="space-y-4 font-poppins">
                         <div className="flex items-center justify-between text-left">
                           <div>
                             <h3 className="font-extrabold text-[18px] text-gray-900 dark:text-white leading-tight">Nearby Emergency Alerts</h3>
-                            <p className="text-xs text-gray-400">Match notifications based on your blood type ({profileForm.bloodGroup})</p>
+                            <p className="text-xs text-gray-400 mt-0.5">Match notifications based on your blood type ({profileForm.bloodGroup})</p>
                           </div>
-                          <span className="px-3 py-1 rounded-full bg-red-500/10 text-red-500 font-extrabold text-[11px]">
+                          <span className="px-3.5 py-1.5 rounded-full bg-rose-50 dark:bg-rose-950/20 text-[#E11D48] font-black text-[11px] tracking-wider border border-rose-100/10">
                             {eligibleRequests.length} ALERTS
                           </span>
                         </div>
 
                         {eligibleRequests.length === 0 ? (
-                          <div className="glass-card rounded-3xl p-10 border border-black/05 dark:border-white/05 flex flex-col items-center justify-center text-center">
+                          <div className="glass-card rounded-3xl p-10 border border-slate-100/40 dark:border-slate-850 flex flex-col items-center justify-center text-center">
                             <span className="text-4xl mb-3">🎉</span>
                             <h4 className="font-bold text-gray-900 dark:text-white">No active match requests</h4>
                             <p className="text-xs text-gray-400 mt-1 max-w-xs">All emergency cases in your area have been fulfilled.</p>
                           </div>
                         ) : (
                           <div className="space-y-4">
-                            {eligibleRequests.slice(0, 4).map((req) => (
-                              <motion.div
-                                layout
-                                key={req.id}
-                                className="bg-white dark:bg-slate-800/50 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-black/05 dark:border-white/05 rounded-3xl p-5 text-left flex flex-col md:flex-row md:items-center justify-between gap-4"
-                              >
-                                <div className="space-y-2">
-                                  <div className="flex items-center gap-2 mb-1">
-                                    <span className="px-2.5 py-0.5 rounded-full bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-[10px] font-black uppercase">
-                                      {req.urgency}
-                                    </span>
-                                    <span className="text-[11px] text-gray-400 font-bold">{req.time}</span>
+                            {eligibleRequests.slice(0, 4).map((req, idx) => {
+                              const urgencyUpper = req.urgency?.toUpperCase();
+                              // Custom Icon Badge for hospital based on urgency
+                              const badgeBgColor = urgencyUpper === 'URGENT' 
+                                ? 'bg-rose-50 dark:bg-rose-950/20 text-[#E11D48] border-rose-100/10' 
+                                : urgencyUpper === 'EMERGENCY'
+                                ? 'bg-amber-50 dark:bg-amber-950/20 text-amber-500 border-amber-100/10'
+                                : 'bg-blue-50 dark:bg-blue-950/20 text-blue-500 border-blue-100/10';
+
+                              const badgeIcon = urgencyUpper === 'URGENT'
+                                ? (req.hospitalName.includes('Heart') || req.hospitalName.includes('Jude') ? <FiHeart className="w-6.5 h-6.5 fill-current" /> : <FiDroplet className="w-6.5 h-6.5 fill-current" />)
+                                : urgencyUpper === 'EMERGENCY'
+                                ? (
+                                  <svg className="w-6.5 h-6.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                    <rect x="4" y="9" width="16" height="11" rx="2" ry="2" />
+                                    <path d="M9 22V9M15 22V9M9 5h6M12 2v3M12 13h2M12 16h2" />
+                                  </svg>
+                                )
+                                : (
+                                  <svg className="w-6.5 h-6.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                    <path d="M3 21h18M3 7V3a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v4M4 7h16M4 21V7M20 21V7M9 11h2M9 15h2M13 11h2M13 15h2" />
+                                  </svg>
+                                );
+
+                              return (
+                                <motion.div
+                                  layout
+                                  key={req.id}
+                                  className="bg-white dark:bg-[#0F1420] shadow-[0_4px_20px_rgba(0,0,0,0.02)] border border-slate-100/35 dark:border-slate-850 rounded-3xl p-5 text-left flex flex-col md:flex-row md:items-center justify-between gap-5 relative overflow-hidden"
+                                >
+                                  <div className="flex items-start gap-4">
+                                    {/* Left Custom Badge */}
+                                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border shrink-0 shadow-sm ${badgeBgColor}`}>
+                                      {badgeIcon}
+                                    </div>
+                                    <div className="space-y-1.5">
+                                      <div className="flex items-center gap-2">
+                                        <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider text-white ${
+                                          urgencyUpper === 'URGENT' ? 'bg-[#E11D48]' : urgencyUpper === 'EMERGENCY' ? 'bg-amber-500' : 'bg-blue-500'
+                                        }`}>
+                                          {req.urgency}
+                                        </span>
+                                        <span className="text-[11px] text-slate-400 font-bold">{req.time}</span>
+                                      </div>
+                                      <h4 className="font-extrabold text-slate-800 dark:text-white text-[15px] leading-tight">{req.hospitalName}</h4>
+                                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[11px] text-slate-450">
+                                        <span className="flex items-center gap-1"><FiUser className="w-3.5 h-3.5"/> Patient: {req.patientName}</span>
+                                        <span className="flex items-center gap-1"><FiMapPin className="w-3.5 h-3.5"/> {req.city}</span>
+                                        <span className="flex items-center gap-0.5 font-bold text-[#E11D48]">🩸 Required: {req.bloodGroup}</span>
+                                        <span className="flex items-center gap-1 font-bold text-slate-700 dark:text-slate-350"><FiActivity className="w-3.5 h-3.5"/> Units: {req.units}</span>
+                                      </div>
+                                    </div>
                                   </div>
-                                  <h4 className="font-extrabold text-gray-900 dark:text-white text-[15px] leading-tight">{req.hospitalName}</h4>
-                                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[11px] text-gray-400">
-                                    <span className="flex items-center gap-1"><FiUser className="w-3.5 h-3.5"/> Patient: {req.patientName}</span>
-                                    <span className="flex items-center gap-1"><FiMapPin className="w-3.5 h-3.5"/> {req.city}</span>
-                                    <span className="flex items-center gap-1 font-bold text-red-600"><FiDroplet className="w-3.5 h-3.5"/> Required: {req.bloodGroup}</span>
-                                    <span className="flex items-center gap-1 font-bold text-gray-800 dark:text-gray-200"><FiActivity className="w-3.5 h-3.5"/> Units: {req.units}</span>
+                                  <div className="flex items-center gap-2.5 mt-2 md:mt-0 ml-auto md:ml-0">
+                                    <button
+                                      onClick={() => handleDeclineRequest(req.id)}
+                                      className="py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-600 dark:text-slate-355 bg-white dark:bg-slate-950 font-bold text-[11px] uppercase tracking-wider transition-colors cursor-pointer shadow-sm"
+                                    >
+                                      Decline
+                                    </button>
+                                    <button
+                                      onClick={() => handleAcceptRequest(req.id, req)}
+                                      className="py-2 px-5 rounded-xl bg-[#E11D48] hover:bg-[#BE123C] text-white font-bold text-[11px] uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm shadow-rose-500/10"
+                                    >
+                                      <FiCheck className="w-3.5 h-3.5 stroke-[3px]"/> Accept
+                                    </button>
                                   </div>
-                                </div>
-                                <div className="flex items-center gap-2.5 mt-2 md:mt-0">
-                                  <button
-                                    onClick={() => handleDeclineRequest(req.id)}
-                                    className="py-2 px-4 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-600 dark:text-gray-300 font-bold text-[11px] uppercase tracking-wider transition-colors cursor-pointer"
-                                  >
-                                    Decline
-                                  </button>
-                                  <button
-                                    onClick={() => handleAcceptRequest(req.id, req)}
-                                    className="py-2 px-5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-[11px] uppercase tracking-wider transition-colors cursor-pointer flex items-center justify-center gap-1.5 shadow-sm shadow-red-500/20"
-                                  >
-                                    <FiCheck className="w-3.5 h-3.5"/> Accept
-                                  </button>
-                                </div>
-                              </motion.div>
-                            ))}
+                                </motion.div>
+                              );
+                            })}
                             {eligibleRequests.length > 4 && (
                               <div className="flex justify-center mt-4">
                                 <button 
                                   onClick={() => setActiveTab('alerts')}
-                                  className="py-2.5 px-6 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-600 dark:text-gray-300 font-extrabold text-[11px] tracking-wider transition-colors cursor-pointer flex items-center justify-center gap-2"
+                                  className="py-3 px-6 rounded-2xl border border-rose-100 text-[#E11D48] hover:bg-rose-50/50 bg-white dark:bg-[#0F1420] dark:border-rose-950/20 text-[12px] font-extrabold uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
                                 >
                                   VIEW ALL ALERTS <FiArrowRight className="w-3.5 h-3.5" />
                                 </button>
@@ -332,14 +373,14 @@ const DonorDashboard = () => {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-3.5 pt-2">
-                          <div className="bg-white dark:bg-slate-800/50 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-black/05 dark:border-white/05 p-3 rounded-2xl">
+                        <div className="grid grid-cols-2 gap-3.5 pt-2 font-poppins">
+                          <div className="bg-white dark:bg-[#0F1420] shadow-[0_2px_8px_rgba(0,0,0,0.01)] border border-slate-100/50 dark:border-slate-850 p-3.5 rounded-2xl">
                             <span className="text-[10px] text-gray-400 font-bold block mb-1 uppercase tracking-wider">Blood Group</span>
-                            <span className="text-xl font-black text-red-600">{profileForm.bloodGroup}</span>
+                            <span className="text-[22px] font-black text-[#E11D48] leading-none block mt-1">{profileForm.bloodGroup}</span>
                           </div>
-                          <div className="bg-white dark:bg-slate-800/50 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-black/05 dark:border-white/05 p-3 rounded-2xl">
+                          <div className="bg-white dark:bg-[#0F1420] shadow-[0_2px_8px_rgba(0,0,0,0.01)] border border-slate-100/50 dark:border-slate-850 p-3.5 rounded-2xl">
                             <span className="text-[10px] text-gray-400 font-bold block mb-1 uppercase tracking-wider">Age</span>
-                            <span className="text-xl font-black text-gray-900 dark:text-white">{profileForm.age} yrs</span>
+                            <span className="text-[22px] font-black text-slate-855 dark:text-slate-100 leading-none block mt-1">{profileForm.age} yrs</span>
                           </div>
                         </div>
                       </div>
@@ -374,43 +415,43 @@ const DonorDashboard = () => {
                       <div className="glass-card rounded-3xl p-6 border border-black/05 dark:border-white/05 space-y-4">
                         <h4 className="font-extrabold text-[16px] text-gray-900 dark:text-white">Quick Overview</h4>
                         <div className="grid grid-cols-2 gap-3.5">
-                          <div className="bg-white dark:bg-slate-800/50 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-black/05 dark:border-white/05 p-3.5 rounded-2xl flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-500 flex items-center justify-center flex-shrink-0">
-                              <FiCalendar className="w-5 h-5" />
+                          <div className="bg-white dark:bg-[#0F1420] shadow-[0_2px_8px_rgba(0,0,0,0.01)] border border-slate-100/50 dark:border-slate-850 p-3.5 rounded-2xl flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-rose-50 dark:bg-rose-950/20 text-[#E11D48] flex items-center justify-center border border-rose-100/10 shrink-0">
+                              <FiCalendar className="w-5 h-5 stroke-[2.5]" />
                             </div>
                             <div>
-                              <span className="text-lg font-black text-gray-900 dark:text-white leading-none block">16</span>
-                              <span className="text-[10px] text-gray-400 font-medium">Total Requests</span>
+                              <span className="text-lg font-black text-slate-800 dark:text-white leading-none block">16</span>
+                              <span className="text-[10px] text-slate-400 font-bold block mt-0.5">Total Requests</span>
                             </div>
                           </div>
                           
-                          <div className="bg-white dark:bg-slate-800/50 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-black/05 dark:border-white/05 p-3.5 rounded-2xl flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-900/20 text-amber-500 flex items-center justify-center flex-shrink-0">
-                              <FiBell className="w-5 h-5" />
+                          <div className="bg-white dark:bg-[#0F1420] shadow-[0_2px_8px_rgba(0,0,0,0.01)] border border-slate-100/50 dark:border-slate-850 p-3.5 rounded-2xl flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/20 text-amber-500 flex items-center justify-center border border-amber-100/10 shrink-0">
+                              <FiBell className="w-5 h-5 stroke-[2.5]" />
                             </div>
                             <div>
-                              <span className="text-lg font-black text-gray-900 dark:text-white leading-none block">7</span>
-                              <span className="text-[10px] text-gray-400 font-medium">Urgent</span>
+                              <span className="text-lg font-black text-slate-800 dark:text-white leading-none block">7</span>
+                              <span className="text-[10px] text-slate-400 font-bold block mt-0.5">Urgent</span>
                             </div>
                           </div>
 
-                          <div className="bg-white dark:bg-slate-800/50 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-black/05 dark:border-white/05 p-3.5 rounded-2xl flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-900/20 text-indigo-500 flex items-center justify-center flex-shrink-0">
-                              <FiActivity className="w-5 h-5" />
+                          <div className="bg-white dark:bg-[#0F1420] shadow-[0_2px_8px_rgba(0,0,0,0.01)] border border-slate-100/50 dark:border-slate-850 p-3.5 rounded-2xl flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/20 text-blue-500 flex items-center justify-center border border-blue-100/10 shrink-0">
+                              <FiActivity className="w-5 h-5 stroke-[2.5]" />
                             </div>
                             <div>
-                              <span className="text-lg font-black text-gray-900 dark:text-white leading-none block">8</span>
-                              <span className="text-[10px] text-gray-400 font-medium">Normal</span>
+                              <span className="text-lg font-black text-slate-800 dark:text-white leading-none block">8</span>
+                              <span className="text-[10px] text-slate-400 font-bold block mt-0.5">Normal</span>
                             </div>
                           </div>
 
-                          <div className="bg-white dark:bg-slate-800/50 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-black/05 dark:border-white/05 p-3.5 rounded-2xl flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-500 flex items-center justify-center flex-shrink-0">
-                              <FiInfo className="w-5 h-5" />
+                          <div className="bg-white dark:bg-[#0F1420] shadow-[0_2px_8px_rgba(0,0,0,0.01)] border border-slate-100/50 dark:border-slate-850 p-3.5 rounded-2xl flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/20 text-blue-500 flex items-center justify-center border border-blue-100/10 shrink-0">
+                              <FiInfo className="w-5 h-5 stroke-[2.5]" />
                             </div>
                             <div>
-                              <span className="text-lg font-black text-gray-900 dark:text-white leading-none block">1</span>
-                              <span className="text-[10px] text-gray-400 font-medium">Information</span>
+                              <span className="text-lg font-black text-slate-800 dark:text-white leading-none block">1</span>
+                              <span className="text-[10px] text-slate-400 font-bold block mt-0.5">Information</span>
                             </div>
                           </div>
                         </div>
@@ -459,43 +500,75 @@ const DonorDashboard = () => {
                             <h4 className="font-bold text-gray-900 dark:text-white">No active match requests</h4>
                             <p className="text-xs text-gray-400 mt-1 max-w-xs">All emergency cases in your area have been fulfilled.</p>
                           </div>
-                      ) : eligibleRequests.map((req) => (
-                        <motion.div
-                          layout
-                          key={req.id}
-                          className="bg-white dark:bg-slate-800/50 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-black/05 dark:border-white/05 rounded-3xl p-5 text-left flex flex-col md:flex-row md:items-center justify-between gap-4"
-                        >
-                          <div className="space-y-2">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="px-2.5 py-0.5 rounded-full bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-[10px] font-black uppercase">
-                                {req.urgency}
-                              </span>
-                              <span className="text-[11px] text-gray-400 font-bold">{req.time}</span>
+                      ) : eligibleRequests.map((req) => {
+                        const urgencyUpper = req.urgency?.toUpperCase();
+                        const badgeBgColor = urgencyUpper === 'URGENT' 
+                          ? 'bg-rose-50 dark:bg-rose-950/20 text-[#E11D48] border-rose-100/10' 
+                          : urgencyUpper === 'EMERGENCY'
+                          ? 'bg-amber-50 dark:bg-amber-950/20 text-amber-500 border-amber-100/10'
+                          : 'bg-blue-50 dark:bg-blue-950/20 text-blue-500 border-blue-100/10';
+
+                        const badgeIcon = urgencyUpper === 'URGENT'
+                          ? (req.hospitalName.includes('Heart') || req.hospitalName.includes('Jude') ? <FiHeart className="w-6.5 h-6.5 fill-current" /> : <FiDroplet className="w-6.5 h-6.5 fill-current" />)
+                          : urgencyUpper === 'EMERGENCY'
+                          ? (
+                            <svg className="w-6.5 h-6.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                              <rect x="4" y="9" width="16" height="11" rx="2" ry="2" />
+                              <path d="M9 22V9M15 22V9M9 5h6M12 2v3M12 13h2M12 16h2" />
+                            </svg>
+                          )
+                          : (
+                            <svg className="w-6.5 h-6.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                              <path d="M3 21h18M3 7V3a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v4M4 7h16M4 21V7M20 21V7M9 11h2M9 15h2M13 11h2M13 15h2" />
+                            </svg>
+                          );
+
+                        return (
+                          <motion.div
+                            layout
+                            key={req.id}
+                            className="bg-white dark:bg-[#0F1420] shadow-[0_4px_20px_rgba(0,0,0,0.02)] border border-slate-100/35 dark:border-slate-850 rounded-3xl p-5 text-left flex flex-col md:flex-row md:items-center justify-between gap-5 relative overflow-hidden font-poppins"
+                          >
+                            <div className="flex items-start gap-4">
+                              {/* Left Custom Badge */}
+                              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border shrink-0 shadow-sm ${badgeBgColor}`}>
+                                {badgeIcon}
+                              </div>
+                              <div className="space-y-1.5">
+                                <div className="flex items-center gap-2">
+                                  <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider text-white ${
+                                    urgencyUpper === 'URGENT' ? 'bg-[#E11D48]' : urgencyUpper === 'EMERGENCY' ? 'bg-amber-500' : 'bg-blue-500'
+                                  }`}>
+                                    {req.urgency}
+                                  </span>
+                                  <span className="text-[11px] text-slate-400 font-bold">{req.time}</span>
+                                </div>
+                                <h4 className="font-extrabold text-slate-800 dark:text-white text-[15px] leading-tight">{req.hospitalName}</h4>
+                                <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[11px] text-slate-450">
+                                  <span className="flex items-center gap-1"><FiUser className="w-3.5 h-3.5"/> Patient: {req.patientName}</span>
+                                  <span className="flex items-center gap-1"><FiMapPin className="w-3.5 h-3.5"/> {req.city}</span>
+                                  <span className="flex items-center gap-0.5 font-bold text-[#E11D48]">🩸 Required: {req.bloodGroup}</span>
+                                  <span className="flex items-center gap-1 font-bold text-slate-700 dark:text-slate-355"><FiActivity className="w-3.5 h-3.5"/> Units: {req.units}</span>
+                                </div>
+                              </div>
                             </div>
-                            <h4 className="font-extrabold text-gray-900 dark:text-white text-[15px] leading-tight">{req.hospitalName}</h4>
-                            <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[11px] text-gray-400">
-                              <span className="flex items-center gap-1"><FiUser className="w-3.5 h-3.5"/> Patient: {req.patientName}</span>
-                              <span className="flex items-center gap-1"><FiMapPin className="w-3.5 h-3.5"/> {req.city}</span>
-                              <span className="flex items-center gap-1 font-bold text-red-600"><FiDroplet className="w-3.5 h-3.5"/> Required: {req.bloodGroup}</span>
-                              <span className="flex items-center gap-1 font-bold text-gray-800 dark:text-gray-200"><FiActivity className="w-3.5 h-3.5"/> Units: {req.units}</span>
+                            <div className="flex items-center gap-2.5 mt-2 md:mt-0 ml-auto md:ml-0">
+                              <button
+                                onClick={() => handleDeclineRequest(req.id)}
+                                className="py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-600 dark:text-slate-350 bg-white dark:bg-slate-950 font-bold text-[11px] uppercase tracking-wider transition-colors cursor-pointer shadow-sm"
+                              >
+                                Decline
+                              </button>
+                              <button
+                                onClick={() => handleAcceptRequest(req.id, req)}
+                                className="py-2 px-5 rounded-xl bg-[#E11D48] hover:bg-[#BE123C] text-white font-bold text-[11px] uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm shadow-rose-500/10"
+                              >
+                                <FiCheck className="w-3.5 h-3.5 stroke-[3px]"/> Accept
+                              </button>
                             </div>
-                          </div>
-                          <div className="flex items-center gap-2.5 mt-2 md:mt-0">
-                            <button
-                              onClick={() => handleDeclineRequest(req.id)}
-                              className="py-2 px-4 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-600 dark:text-gray-300 font-bold text-[11px] uppercase tracking-wider transition-colors cursor-pointer"
-                            >
-                              Decline
-                            </button>
-                            <button
-                              onClick={() => handleAcceptRequest(req.id, req)}
-                              className="py-2 px-5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-[11px] uppercase tracking-wider transition-colors cursor-pointer flex items-center justify-center gap-1.5 shadow-sm shadow-red-500/20"
-                            >
-                              <FiCheck className="w-3.5 h-3.5"/> Accept
-                            </button>
-                          </div>
-                        </motion.div>
-                      ))}
+                          </motion.div>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
