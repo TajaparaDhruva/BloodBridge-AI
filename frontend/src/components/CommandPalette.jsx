@@ -94,7 +94,17 @@ const CommandPalette = ({ open, onClose, setActiveTab }) => {
   }, {});
 
   const handleSelect = (item) => {
-    if (item.action && setActiveTab) setActiveTab(item.action);
+    if (item.action && setActiveTab) {
+      setActiveTab(item.action);
+    } else if (item.type === 'hospital' && setActiveTab) {
+      setActiveTab('hospitals');
+    } else if (item.type === 'donor' && setActiveTab) {
+      setActiveTab('donors');
+    } else if (item.type === 'blood' && setActiveTab) {
+      setActiveTab('inventory');
+    } else if (item.type === 'city' && setActiveTab) {
+      setActiveTab('map');
+    }
     onClose();
   };
 
