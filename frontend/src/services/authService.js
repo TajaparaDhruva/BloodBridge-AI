@@ -19,6 +19,15 @@ export const authService = {
     return response.data;
   },
 
+  googleLogin: async (token, role = 'donor') => {
+    const response = await api.post('/auth/google', { token, role });
+    if (response.data.success && response.data.data.token) {
+      localStorage.setItem('token', response.data.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.data.user));
+    }
+    return response.data;
+  },
+
   logout: async () => {
     try {
       await api.post('/auth/logout');
