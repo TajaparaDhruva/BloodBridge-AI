@@ -861,76 +861,229 @@ const Dashboard = () => {
                     {/* Detailed Inventory tab */}
                     {activeTab === 'inventory' && (
                       <div className="space-y-6">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h2 className="font-black text-slate dark:text-white text-[20px] tracking-tight">Blood Depots Inventory</h2>
-                            <p className="text-muted text-[13px] font-semibold uppercase mt-0.5">Real-time depletion indicators</p>
+                        {/* Title and Top Actions Row */}
+                        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6 flex-wrap mb-4">
+                          <div className="flex items-center gap-3.5 text-left">
+                            <div className="w-14 h-14 rounded-full bg-[#FFF1F2] dark:bg-rose-950/20 flex items-center justify-center text-[24px] flex-shrink-0 shadow-sm">
+                              🩸
+                            </div>
+                            <div>
+                              <h2 className="font-black text-gray-900 dark:text-white text-[22px] tracking-tight leading-tight">Blood Depots Inventory</h2>
+                              <p className="text-gray-405 dark:text-gray-500 text-[13px] font-semibold mt-0.5">Real-time depletion indicators</p>
+                            </div>
+                          </div>
+
+                          {/* Right action badges */}
+                          <div className="flex items-center gap-3.5 flex-wrap">
+                            <div className="bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 rounded-full py-2 px-4.5 flex items-center gap-2 shadow-sm text-slate-500 dark:text-slate-400 text-[12.5px] font-bold">
+                              <FiClock className="w-4 h-4 text-slate-400" />
+                              <span>Updated: Just now</span>
+                            </div>
+                            <button
+                              onClick={() => {
+                                // Add a new mock depot notification
+                                const newNotif = {
+                                  id: Date.now(),
+                                  title: 'Inventory Action',
+                                  message: 'Depot expansion initialization request dispatched.',
+                                  type: 'info',
+                                  time: 'Just now',
+                                  read: false
+                                };
+                                setNotifications(prev => [newNotif, ...prev]);
+                              }}
+                              className="bg-[#E11D48] hover:bg-rose-600 text-white text-[13.5px] py-2.5 px-5 font-bold rounded-2xl shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center gap-2"
+                            >
+                              <FiPlus className="w-4.5 h-4.5 stroke-[3]" />
+                              <span>Add Depot</span>
+                            </button>
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        {/* 4x2 Grid of Depot Cards */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-2 max-w-6xl mx-auto w-full">
                           {inventory.map((b, i) => {
                             const max = 60;
                             const pct = Math.min(100, Math.round((b.units / max) * 100));
-                            const color = b.status === 'critical' ? '#C62A47' : b.status === 'warning' ? '#D97706' : '#059669';
-                            const isCritical = b.status === 'critical';
+                            
+                            // Dynamic variables based on status
+                            let ringColor = '#059669'; // default stable
+                            let ringTextColorClass = 'text-[#059669]';
+                            let squareBadgeBg = 'bg-emerald-50 dark:bg-emerald-950/20 text-[#10B981]';
+                            let waveColor = '#10B981';
+                            let isCritical = b.status === 'critical';
+                            let statusBadge;
+
+                            if (b.status === 'critical') {
+                              ringColor = '#E11D48';
+                              ringTextColorClass = 'text-[#E11D48]';
+                              squareBadgeBg = 'bg-rose-50 dark:bg-rose-950/20 text-[#E11D48]';
+                              waveColor = '#E11D48';
+                              statusBadge = (
+                                <div className="border border-rose-100 dark:border-rose-900/35 bg-[#FFF1F2] dark:bg-rose-950/20 text-[#E11D48] text-[9px] font-black px-2 py-0.5 rounded-md flex items-center gap-1.5 w-fit uppercase tracking-wider">
+                                  <span className="w-3.5 h-3.5 rounded-full bg-[#E11D48] text-white flex items-center justify-center text-[8px] font-black">!</span>
+                                  <span>Critical</span>
+                                </div>
+                              );
+                            } else if (b.status === 'warning') {
+                              ringColor = '#D97706';
+                              ringTextColorClass = 'text-[#D97706]';
+                              squareBadgeBg = 'bg-amber-50 dark:bg-amber-950/20 text-amber-500';
+                              waveColor = '#D97706';
+                              statusBadge = (
+                                <div className="border border-amber-100 dark:border-amber-900/35 bg-[#FFF7ED] dark:bg-amber-950/20 text-[#D97706] text-[9px] font-black px-2 py-0.5 rounded-md flex items-center gap-1 w-fit uppercase tracking-wider">
+                                  <span className="text-[#D97706] text-[10px] font-black">⚠</span>
+                                  <span>Low Stock</span>
+                                </div>
+                              );
+                            } else {
+                              // Stable
+                              statusBadge = (
+                                <div className="border border-emerald-100 dark:border-emerald-900/35 bg-[#F0FDF4] dark:bg-emerald-950/20 text-[#10B981] text-[9px] font-black px-2 py-0.5 rounded-md flex items-center gap-1.5 w-fit uppercase tracking-wider">
+                                  <span className="w-3.5 h-3.5 rounded-full bg-[#10B981] text-white flex items-center justify-center text-[8px] font-black">✓</span>
+                                  <span>Stable</span>
+                                </div>
+                              );
+                            }
 
                             return (
                               <motion.div
                                 key={b.group}
-                                className="dashboard-widget p-5 text-center border border-black/05 dark:border-white/05 dark:bg-darksurf relative overflow-hidden flex flex-col justify-between h-48 group cursor-default"
+                                className="bg-white dark:bg-slate-900 border border-[#F3F4F6] dark:border-slate-800 rounded-[24px] p-5 pb-7 flex flex-col justify-between relative shadow-sm hover:shadow-md hover:border-slate-200 dark:hover:border-slate-700 transition-all text-left overflow-hidden h-[185px] group cursor-default"
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ delay: i * 0.05 }}
-                                whileHover={{ y: -3 }}
                               >
-                                {/* Radial indicator */}
-                                <div className="relative w-16 h-16 mx-auto mb-2 flex items-center justify-center">
-                                  {isCritical && (
-                                    <span className="absolute w-12 h-12 rounded-full bg-bloodred/10 animate-ping" />
-                                  )}
-                                  <ProgressRing pct={pct} color={color} size={64} stroke={4.5} />
-                                  <div className="absolute inset-0 flex items-center justify-center">
-                                    <span className="text-[12px] font-black" style={{ color }}>
-                                      {b.group}
-                                    </span>
+                                {/* Top corner square badge */}
+                                <div className={`w-8.5 h-8.5 rounded-xl ${squareBadgeBg} flex items-center justify-center text-[18px] relative z-10 font-bold`}>
+                                  <svg className="w-4.5 h-4.5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+                                  </svg>
+                                </div>
+
+                                {/* Progress Ring & Details Row */}
+                                <div className="flex items-center gap-5.5 mt-2 z-10 relative">
+                                  {/* Progress Ring container */}
+                                  <div className="relative w-[76px] h-[76px] flex items-center justify-center flex-shrink-0">
+                                    {isCritical && (
+                                      <span className="absolute w-[60px] h-[60px] rounded-full bg-rose-500/10 animate-ping" />
+                                    )}
+                                    <ProgressRing pct={pct} color={ringColor} size={76} stroke={5} />
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                      <span className={`text-[15px] font-black tracking-tight ${ringTextColorClass}`}>
+                                        {b.group}
+                                      </span>
+                                    </div>
+                                  </div>
+
+                                  {/* Available Details block */}
+                                  <div>
+                                    <div className="flex items-baseline gap-1">
+                                      <span className="text-[28px] font-black text-slate-900 dark:text-white leading-none">{b.units}</span>
+                                    </div>
+                                    <span className="text-[9px] text-slate-400 dark:text-slate-500 font-extrabold uppercase tracking-wider block mt-1 leading-none">Units Available</span>
+                                    
+                                    {/* Status Pill Badge */}
+                                    <div className="mt-3">
+                                      {statusBadge}
+                                    </div>
                                   </div>
                                 </div>
 
-                                <div>
-                                  <p className="font-black text-slate dark:text-white text-2xl leading-none">{b.units}</p>
-                                  <p className="text-muted text-[11px] font-bold mt-1 uppercase tracking-wide">units available</p>
-                                </div>
-
-                                <div className="mt-2.5">
-                                  <StatusBadge status={b.status} />
-                                </div>
+                                {/* Bottom Wave Graphic decoration */}
+                                <svg className="absolute bottom-0 left-0 right-0 w-full h-8 pointer-events-none rounded-b-[24px] select-none" viewBox="0 0 1440 320" preserveAspectRatio="none">
+                                  <path
+                                    fill={waveColor}
+                                    fillOpacity="0.07"
+                                    d="M0,192L60,202.7C120,213,240,235,360,229.3C480,224,600,192,720,176C840,160,960,160,1080,181.3C1200,203,1320,245,1380,266.7L1440,288L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
+                                  />
+                                </svg>
                               </motion.div>
                             );
                           })}
                         </div>
 
-                        {/* Warning Callouts section */}
-                        <div className="grid md:grid-cols-2 gap-4 mt-6">
-                          <WidgetShell className="p-5 border border-bloodred/15 bg-bloodred/03 dark:bg-bloodred/06" hover={false}>
-                            <h4 className="text-bloodred font-black text-[14px] flex items-center gap-1.5 uppercase tracking-wider">
-                              <FiAlertTriangle className="w-4.5 h-4.5" />
-                              Critical Restock Needed
-                            </h4>
-                            <p className="text-[12px] text-muted leading-relaxed mt-2 font-medium">
-                              Depots for <strong className="text-slate dark:text-white font-bold">O-, A-, and AB-</strong> are reporting below safety margins (less than 5 units). Manual outreach coordinates or automated AI notifications have been dispatched.
-                            </p>
-                          </WidgetShell>
+                        {/* Critical & Optimal Warning Banners */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 max-w-6xl mx-auto w-full">
+                          {/* Critical restock needed */}
+                          <div className="bg-[#FFF1F2]/85 dark:bg-rose-950/10 border border-rose-100/60 dark:border-rose-900/20 p-5 px-6 rounded-[28px] flex items-center justify-between text-left relative overflow-hidden shadow-sm">
+                            <div className="flex items-center">
+                              {/* Warning Icon Badge */}
+                              <div className="w-13 h-13 rounded-full bg-rose-100 dark:bg-rose-950/30 text-[#E11D48] flex items-center justify-center text-[22px] flex-shrink-0 shadow-sm mr-4.5">
+                                <FiAlertTriangle className="w-5.5 h-5.5 stroke-[2.5]" />
+                              </div>
+                              <div>
+                                <h4 className="text-[#E11D48] font-black text-[15px] tracking-tight uppercase tracking-wide">Critical Restock Needed</h4>
+                                <p className="text-slate-500 dark:text-slate-400 text-[12.5px] leading-relaxed mt-1 font-semibold">
+                                  Depots for <strong className="text-slate-800 dark:text-white font-bold">O-, A-, and AB-</strong> are reporting below safety margins (less than 5 units). Manual outreach coordinates or automated AI notifications have been dispatched.
+                                </p>
+                              </div>
+                            </div>
+                            
+                            {/* Ringing bell background line art decoration */}
+                            <div className="absolute right-3 -bottom-1.5 opacity-8 pointer-events-none text-rose-500 select-none">
+                              <svg className="w-20 h-20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                              </svg>
+                            </div>
+                          </div>
 
-                          <WidgetShell className="p-5 border border-emerald/15 bg-emerald/03 dark:bg-emerald/06" hover={false}>
-                            <h4 className="text-emerald font-black text-[14px] flex items-center gap-1.5 uppercase tracking-wider">
-                              <FiCheck className="w-4.5 h-4.5 border-2 border-emerald rounded-full" />
-                              Inventory Stability Optimal
-                            </h4>
-                            <p className="text-[12px] text-muted leading-relaxed mt-2 font-medium">
-                              Positive groups (<strong className="text-slate dark:text-white font-bold">O+, A+, B+</strong>) remain stable. Depletion forecasts show adequate buffer levels matching hospital admission trends for the next 72 hours.
-                            </p>
-                          </WidgetShell>
+                          {/* Inventory stability optimal */}
+                          <div className="bg-[#F0FDF4]/85 dark:bg-emerald-950/10 border border-emerald-100/60 dark:border-emerald-900/20 p-5 px-6 rounded-[28px] flex items-center justify-between text-left relative overflow-hidden shadow-sm">
+                            <div className="flex items-center">
+                              {/* Shield Check Icon Badge */}
+                              <div className="w-13 h-13 rounded-full bg-emerald-100 dark:bg-emerald-950/30 text-[#10B981] flex items-center justify-center text-[22px] flex-shrink-0 shadow-sm mr-4.5">
+                                <FiCheck className="w-6 h-6 stroke-[3] border-2 border-[#10B981] rounded-full" />
+                              </div>
+                              <div>
+                                <h4 className="text-[#10B981] font-black text-[15px] tracking-tight uppercase tracking-wide">Inventory Stability Optimal</h4>
+                                <p className="text-slate-500 dark:text-slate-400 text-[12.5px] leading-relaxed mt-1 font-semibold">
+                                  Positive groups (<strong className="text-slate-800 dark:text-white font-bold">O+, A+, B+</strong>) remain stable. Depletion forecasts show adequate buffer levels matching hospital admission trends for the next 72 hours.
+                                </p>
+                              </div>
+                            </div>
+
+                            {/* Line chart background line art decoration */}
+                            <div className="absolute right-3 -bottom-1 opacity-8 pointer-events-none text-emerald-500 select-none">
+                              <svg className="w-20 h-20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Bottom Full-Width prediction warning and analytics links */}
+                        <div className="bg-slate-50/50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800 p-4 px-5 rounded-[22px] flex flex-col sm:flex-row items-center justify-between gap-4 text-left relative overflow-hidden mt-6 max-w-6xl mx-auto w-full shadow-sm">
+                          <div className="flex items-center gap-3">
+                            {/* Calendar Icon Badge */}
+                            <div className="w-9 h-9 rounded-full bg-rose-50 dark:bg-rose-950/20 text-[#E11D48] flex items-center justify-center flex-shrink-0 shadow-sm border border-rose-100/10">
+                              <FiCalendar className="w-4.5 h-4.5" />
+                            </div>
+                            <span className="text-slate-500 dark:text-slate-400 text-[12.5px] font-semibold">
+                              All inventory levels are monitored 24/7. AI predictions updated every 15 minutes.
+                            </span>
+                          </div>
+
+                          {/* View Analytics Button link */}
+                          <button
+                            onClick={() => {
+                              // Trigger custom action or show alerts
+                              const newNotif = {
+                                id: Date.now(),
+                                title: 'Analytics',
+                                message: 'Loading automated depletion projection forecasting models...',
+                                type: 'info',
+                                time: 'Just now',
+                                read: false
+                              };
+                              setNotifications(prev => [newNotif, ...prev]);
+                            }}
+                            className="bg-[#1E293B] hover:bg-slate-800 text-white text-[12.5px] font-extrabold py-2.5 px-5 rounded-xl flex items-center gap-2 transition-all shadow-sm cursor-pointer whitespace-nowrap animate-pulse"
+                          >
+                            <FiTrendingUp className="w-4.5 h-4.5" />
+                            <span>View Analytics</span>
+                            <span className="text-[14px]">→</span>
+                          </button>
                         </div>
                       </div>
                     )}
