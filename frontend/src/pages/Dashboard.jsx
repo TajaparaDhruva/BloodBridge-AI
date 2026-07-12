@@ -197,7 +197,7 @@ const Dashboard = () => {
           onLogout={logout}
         />
 
-        <main className="flex-1 px-6 md:px-10 pt-24 md:pt-28 pb-24 lg:pb-12 overflow-auto dashboard-main relative">
+        <main className="flex-1 px-3 sm:px-6 md:px-10 pt-20 md:pt-24 pb-24 lg:pb-12 overflow-auto dashboard-main relative">
           <div className="max-w-[1440px] mx-auto">
             <AnimatePresence mode="wait">
               <motion.div
@@ -1126,6 +1126,8 @@ const Dashboard = () => {
 
           </div>
         </main>
+
+        <FloatingNav activeTab={activeTab} setActiveTab={setActiveTab} isDonor={false} />
       </div>
 
       <AnimatePresence>
