@@ -219,7 +219,7 @@ const Signup = () => {
             value={form.password}
             onChange={e => set('password', e.target.value)}
             placeholder="Password (min. 6 characters)"
-            className="w-full pl-11 pr-12 py-4 bg-white dark:bg-[#0F1420] border border-black/08 dark:border-white/08 rounded-2xl text-[14px] font-semibold text-slate-800 dark:text-white placeholder-muted focus:outline-none focus:border-[#E11D48] focus:ring-4 focus:ring-[#E11D48]/10 transition-all"
+            className="w-full pl-11 pr-12 py-2.5 bg-white dark:bg-[#0F1420] border border-black/08 dark:border-white/08 rounded-2xl text-[14px] font-semibold text-slate-800 dark:text-white placeholder-muted focus:outline-none focus:border-[#E11D48] focus:ring-4 focus:ring-[#E11D48]/10 transition-all"
           />
           <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted cursor-pointer">
             {showPw ? <FiEyeOff className="w-4 h-4" /> : <FiEye className="w-4 h-4" />}
@@ -229,7 +229,7 @@ const Signup = () => {
         <div>
           <label className="text-[12px] font-black text-muted uppercase tracking-wider mb-2 block">City</label>
           <select value={form.city} onChange={e => set('city', e.target.value)}
-            className="w-full py-4 px-4 bg-white dark:bg-[#0F1420] border border-black/08 dark:border-white/08 rounded-2xl text-[14px] font-semibold text-slate-800 dark:text-white focus:outline-none focus:border-[#E11D48] focus:ring-4 focus:ring-[#E11D48]/10 transition-all">
+            className="w-full py-2.5 px-4 bg-white dark:bg-[#0F1420] border border-black/08 dark:border-white/08 rounded-2xl text-[14px] font-semibold text-slate-800 dark:text-white focus:outline-none focus:border-[#E11D48] focus:ring-4 focus:ring-[#E11D48]/10 transition-all">
             {CITIES.map(c => <option key={c}>{c}</option>)}
           </select>
         </div>
@@ -667,28 +667,6 @@ const Signup = () => {
               </div>
             )}
 
-            {/* Bottom Secure Banner */}
-            <div className="mt-5 bg-emerald-50/40 dark:bg-emerald-950/10 border border-emerald-100/40 dark:border-emerald-900/20 p-3.5 rounded-2xl flex items-start gap-3 relative overflow-hidden">
-              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-600 flex-shrink-0">
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                  <path d="M9 11l3 3 5-5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
-              <div className="flex-1 space-y-0.5 z-10">
-                <p className="text-[11.5px] font-bold text-slate-800 dark:text-slate-200">Your data is safe with us</p>
-                <p className="text-[10.5px] font-semibold text-gray-500 dark:text-slate-400 leading-relaxed">
-                  We use AES-256 encryption and follow HIPAA guidelines to keep your information secure.
-                </p>
-              </div>
-              {/* Padlock sketch graphic illustration on right */}
-              <div className="absolute right-2 bottom-0 w-14 h-14 opacity-[0.06] pointer-events-none text-emerald-600">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg>
-              </div>
-            </div>
 
           </div>
         </div>
@@ -707,7 +685,7 @@ const FloatInput = ({ icon: Icon, label, type = 'text', value, onChange, ...rest
       onChange={e => onChange(e.target.value)}
       placeholder={label}
       {...rest}
-      className={`w-full ${Icon ? 'pl-11' : 'pl-4'} pr-4 py-4 bg-white dark:bg-[#0F1420] border border-black/08 dark:border-white/08 rounded-2xl text-[14px] font-semibold text-slate-800 dark:text-white placeholder-muted focus:outline-none focus:border-[#E11D48] focus:ring-4 focus:ring-[#E11D48]/10 transition-all`}
+      className={`w-full ${Icon ? 'pl-11' : 'pl-4'} pr-4 py-2.5 bg-white dark:bg-[#0F1420] border border-black/08 dark:border-white/08 rounded-2xl text-[14px] font-semibold text-slate-800 dark:text-white placeholder-muted focus:outline-none focus:border-[#E11D48] focus:ring-4 focus:ring-[#E11D48]/10 transition-all`}
     />
   </div>
 );

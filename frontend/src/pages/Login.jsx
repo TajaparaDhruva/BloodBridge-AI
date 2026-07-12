@@ -283,7 +283,7 @@ const Login = () => {
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     placeholder={role === 'hospital' ? 'Enter hospital email or ID' : 'Enter registered email address'}
-                    className="w-full pl-13 pr-4 py-3.5 bg-white dark:bg-darksurf border border-gray-200 dark:border-white/10 rounded-2xl text-[14px] font-semibold text-slate-800 dark:text-white placeholder-muted focus:outline-none focus:border-[#E11D48] focus:ring-4 focus:ring-[#E11D48]/10 transition-all"
+                    className="w-full pl-13 pr-4 py-2.5 bg-white dark:bg-darksurf border border-gray-200 dark:border-white/10 rounded-2xl text-[14px] font-semibold text-slate-800 dark:text-white placeholder-muted focus:outline-none focus:border-[#E11D48] focus:ring-4 focus:ring-[#E11D48]/10 transition-all"
                   />
                 </div>
               </div>
@@ -307,7 +307,7 @@ const Login = () => {
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full pl-13 pr-12 py-3.5 bg-white dark:bg-darksurf border border-gray-200 dark:border-white/10 rounded-2xl text-[14px] font-semibold text-slate-800 dark:text-white placeholder-muted focus:outline-none focus:border-[#E11D48] focus:ring-4 focus:ring-[#E11D48]/10 transition-all"
+                    className="w-full pl-13 pr-12 py-2.5 bg-white dark:bg-darksurf border border-gray-200 dark:border-white/10 rounded-2xl text-[14px] font-semibold text-slate-800 dark:text-white placeholder-muted focus:outline-none focus:border-[#E11D48] focus:ring-4 focus:ring-[#E11D48]/10 transition-all"
                   />
                   <button
                     type="button"
@@ -375,15 +375,6 @@ const Login = () => {
               Continue with Google
             </button>
 
-            {/* Heart Logistics Banner */}
-            <div className="mt-4 bg-rose-50/40 dark:bg-rose-950/10 border border-rose-100/40 dark:border-rose-900/20 p-2.5 rounded-2xl flex items-center justify-center gap-3 text-[9px] font-black text-red-600 dark:text-red-400 tracking-widest uppercase select-none overflow-hidden">
-              <span className="animate-pulse flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-red-600 animate-ping" />
-                Processing Real-Time Logistics
-              </span>
-              <span className="opacity-30">•</span>
-              <span className="opacity-80">Neural Match Active</span>
-            </div>
 
             {/* Create an account / Signup Link */}
             <div className="flex items-center justify-center gap-1.5 my-5 text-[12.5px] font-poppins font-bold text-slate-500 dark:text-slate-400">

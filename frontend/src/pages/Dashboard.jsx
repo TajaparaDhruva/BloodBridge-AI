@@ -24,15 +24,24 @@ import { FiPlus, FiAlertTriangle, FiTrendingUp, FiCheck, FiZap, FiUsers, FiCalen
 import TasksPage from './TasksPage';
 import NotificationsPage from './NotificationsPage';
 
+import { useLocation as useRouterLocation } from 'react-router-dom';
+
 const Dashboard = () => {
   const {
     user, logout, requests, donors, inventory, notifications, createRequest, setNotifications,
     subscription, isTrialExpired, daysRemaining, upgradePlan, simulateTrialExpiry
   } = useAuth();
   const { userLocation } = useLocation();
+  const routerLocation = useRouterLocation();
 
+  const [activeTab, setActiveTab] = useState(routerLocation.state?.activeTab || 'overview');
 
-  const [activeTab, setActiveTab] = useState('overview');
+  useEffect(() => {
+    if (routerLocation.state?.activeTab) {
+      setActiveTab(routerLocation.state.activeTab);
+    }
+  }, [routerLocation.state?.activeTab]);
+
   const [requestFilter, setRequestFilter] = useState('all');
   const [requestSort, setRequestSort] = useState('latest');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
