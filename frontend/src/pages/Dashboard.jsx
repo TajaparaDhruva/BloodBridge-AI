@@ -14,6 +14,8 @@ import DashboardHeader from '../components/dashboard/DashboardHeader';
 import OverviewTab from '../components/dashboard/OverviewTab';
 import RequestModal from '../components/dashboard/RequestModal';
 import RequestDetailsModal from '../components/dashboard/RequestDetailsModal';
+import InventoryAnalyticsModal from '../components/dashboard/InventoryAnalyticsModal';
+import AddDepotModal from '../components/dashboard/AddDepotModal';
 import HospitalSelectorModal from '../components/dashboard/HospitalSelectorModal';
 import VoiceCallModal from '../components/dashboard/VoiceCallModal';
 import BillingPage from './BillingPage';
@@ -28,7 +30,7 @@ import { useLocation as useRouterLocation } from 'react-router-dom';
 
 const Dashboard = () => {
   const {
-    user, logout, requests, donors, inventory, notifications, createRequest, setNotifications,
+    user, logout, requests, donors, inventory, notifications, createRequest, setNotifications, setInventory,
     subscription, isTrialExpired, daysRemaining, upgradePlan, simulateTrialExpiry
   } = useAuth();
   const { userLocation } = useLocation();
@@ -52,6 +54,8 @@ const Dashboard = () => {
   const [showHospitalSelector, setShowHospitalSelector] = useState(false);
   const [activeCall, setActiveCall] = useState(null);
   const [selectedRequestDetails, setSelectedRequestDetails] = useState(null);
+  const [showInventoryAnalytics, setShowInventoryAnalytics] = useState(false);
+  const [showAddDepotModal, setShowAddDepotModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
 
@@ -77,6 +81,43 @@ const Dashboard = () => {
       id: Date.now(),
       title: 'Profile Updated',
       message: 'Hospital details and credentials have been updated successfully.',
+      type: 'success',
+      time: 'Just now',
+      read: false
+    };
+    setNotifications(prev => [newNotif, ...prev]);
+  };
+
+  const handleAddDepot = (group, unitsToAdd) => {
+    console.log("Adding depot stock:", group, unitsToAdd);
+    setInventory(prev => {
+      if (!prev) return [];
+      return prev.map(item => {
+        if (item.group === group) {
+          const currentUnits = Number(item.units) || 0;
+          const parsedAdd = Number(unitsToAdd) || 0;
+          const newUnits = Math.min(60, currentUnits + parsedAdd);
+          let newStatus = 'stable';
+          if (newUnits < 6) newStatus = 'critical';
+          else if (newUnits < 15) newStatus = 'warning';
+          
+          console.log(`Inventory updated for ${group}: ${currentUnits} -> ${newUnits} (status: ${newStatus})`);
+          return {
+            ...item,
+            units: newUnits,
+            status: newStatus
+          };
+        }
+        return item;
+      });
+    });
+    setShowAddDepotModal(false);
+
+    // Add success notification
+    const newNotif = {
+      id: Date.now(),
+      title: 'Depot Stock Added',
+      message: `Successfully replenished ${unitsToAdd} units of ${group} blood.`,
       type: 'success',
       time: 'Just now',
       read: false
@@ -880,18 +921,7 @@ const Dashboard = () => {
                               <span>Updated: Just now</span>
                             </div>
                             <button
-                              onClick={() => {
-                                // Add a new mock depot notification
-                                const newNotif = {
-                                  id: Date.now(),
-                                  title: 'Inventory Action',
-                                  message: 'Depot expansion initialization request dispatched.',
-                                  type: 'info',
-                                  time: 'Just now',
-                                  read: false
-                                };
-                                setNotifications(prev => [newNotif, ...prev]);
-                              }}
+                              onClick={() => setShowAddDepotModal(true)}
                               className="bg-[#E11D48] hover:bg-rose-600 text-white text-[13.5px] py-2.5 px-5 font-bold rounded-2xl shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center gap-2"
                             >
                               <FiPlus className="w-4.5 h-4.5 stroke-[3]" />
@@ -1065,19 +1095,9 @@ const Dashboard = () => {
                           </div>
 
                           {/* View Analytics Button link */}
+                          {/* View Analytics Button link */}
                           <button
-                            onClick={() => {
-                              // Trigger custom action or show alerts
-                              const newNotif = {
-                                id: Date.now(),
-                                title: 'Analytics',
-                                message: 'Loading automated depletion projection forecasting models...',
-                                type: 'info',
-                                time: 'Just now',
-                                read: false
-                              };
-                              setNotifications(prev => [newNotif, ...prev]);
-                            }}
+                            onClick={() => setShowInventoryAnalytics(true)}
                             className="bg-[#1E293B] hover:bg-slate-800 text-white text-[12.5px] font-extrabold py-2.5 px-5 rounded-xl flex items-center gap-2 transition-all shadow-sm cursor-pointer whitespace-nowrap animate-pulse"
                           >
                             <FiTrendingUp className="w-4.5 h-4.5" />
@@ -1155,6 +1175,25 @@ const Dashboard = () => {
               setActiveCall({ hospitalName: hName, number: phoneNum });
             }}
             donors={donors}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showAddDepotModal && (
+          <AddDepotModal
+            onClose={() => setShowAddDepotModal(false)}
+            onAdd={handleAddDepot}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showInventoryAnalytics && (
+          <InventoryAnalyticsModal
+            inventory={inventory}
+            setNotifications={setNotifications}
+            onClose={() => setShowInventoryAnalytics(false)}
           />
         )}
       </AnimatePresence>

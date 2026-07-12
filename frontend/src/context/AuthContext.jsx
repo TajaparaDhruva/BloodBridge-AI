@@ -717,6 +717,7 @@ export const AuthProvider = ({ children }) => {
       registerDonor,
       updateRequestStatus,
       setNotifications,
+      setInventory,
       // Subscription
       subscription,
       isTrialExpired,
