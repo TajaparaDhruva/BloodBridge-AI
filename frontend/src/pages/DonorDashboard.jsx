@@ -12,7 +12,7 @@ import {
   FiHeart, FiActivity, FiUser, FiCalendar, FiMapPin, 
   FiDroplet, FiAward, FiClock, FiSettings, FiHelpCircle, 
   FiBell, FiInfo, FiCheck, FiZap, FiChevronRight, FiAlertTriangle,
-  FiPhone, FiShield, FiLock, FiLogOut
+  FiPhone, FiShield, FiLock, FiLogOut, FiArrowLeft
 } from 'react-icons/fi';
 
 const DonorDashboard = () => {
@@ -36,7 +36,11 @@ const DonorDashboard = () => {
     city: user?.city || 'Ahmedabad',
     weight: user?.weight || '74',
     age: user?.age || '29',
-    bloodGroup: user?.bloodGroup || 'O-'
+    bloodGroup: user?.bloodGroup || 'O-',
+    gender: 'Male',
+    medicalHistory: 'No major illnesses. No recent surgeries.',
+    lastDonationDate: '2026-03-15',
+    pincode: '380015'
   });
 
   const unread = notifications?.filter((n) => !n.read).length || 0;
@@ -346,6 +350,14 @@ const DonorDashboard = () => {
                 {activeTab === 'profile' && (
                   <div className="max-w-3xl mx-auto space-y-8 text-left">
                     <div className="glass-card rounded-3xl p-6 md:p-8 border border-black/05 dark:border-white/05 space-y-6">
+                      
+                      <button
+                        onClick={() => setActiveTab('overview')}
+                        className="mb-2 flex items-center gap-1.5 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors text-[13px] font-bold uppercase tracking-wider"
+                      >
+                        <FiArrowLeft className="w-4 h-4" /> Back to Dashboard
+                      </button>
+
                       <div className="flex items-center justify-between">
                         <div>
                           <h3 className="font-extrabold text-[20px] text-gray-900 dark:text-white leading-tight">Personal & Medical Profile</h3>
@@ -424,6 +436,67 @@ const DonorDashboard = () => {
                               value={profileForm.weight}
                               onChange={(e) => setProfileForm({ ...profileForm, weight: e.target.value })}
                               className="w-full py-3 px-4 rounded-2xl bg-black/02 dark:bg-white/02 border border-black/05 dark:border-white/05 focus:border-red-500 focus:outline-none transition-colors text-sm text-gray-900 dark:text-white disabled:opacity-65"
+                            />
+                          </div>
+
+                          <div className="space-y-1">
+                            <label className="text-[11px] text-gray-400 font-bold uppercase tracking-wider block">Gender</label>
+                            <select
+                              disabled={!isEditingProfile}
+                              value={profileForm.gender}
+                              onChange={(e) => setProfileForm({ ...profileForm, gender: e.target.value })}
+                              className="w-full py-3 px-4 rounded-2xl bg-black/02 dark:bg-white/02 border border-black/05 dark:border-white/05 focus:border-red-500 focus:outline-none transition-colors text-sm text-gray-900 dark:text-white disabled:opacity-65 appearance-none"
+                            >
+                              <option value="Male">Male</option>
+                              <option value="Female">Female</option>
+                              <option value="Other">Other</option>
+                            </select>
+                          </div>
+
+                          <div className="space-y-1">
+                            <label className="text-[11px] text-gray-400 font-bold uppercase tracking-wider block">Blood Group</label>
+                            <select
+                              disabled={!isEditingProfile}
+                              value={profileForm.bloodGroup}
+                              onChange={(e) => setProfileForm({ ...profileForm, bloodGroup: e.target.value })}
+                              className="w-full py-3 px-4 rounded-2xl bg-black/02 dark:bg-white/02 border border-black/05 dark:border-white/05 focus:border-red-500 focus:outline-none transition-colors text-sm text-gray-900 dark:text-white disabled:opacity-65 appearance-none"
+                            >
+                              {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map(bg => (
+                                <option key={bg} value={bg}>{bg}</option>
+                              ))}
+                            </select>
+                          </div>
+
+                          <div className="space-y-1">
+                            <label className="text-[11px] text-gray-400 font-bold uppercase tracking-wider block">Zip / Pincode</label>
+                            <input
+                              type="text"
+                              disabled={!isEditingProfile}
+                              value={profileForm.pincode}
+                              onChange={(e) => setProfileForm({ ...profileForm, pincode: e.target.value })}
+                              className="w-full py-3 px-4 rounded-2xl bg-black/02 dark:bg-white/02 border border-black/05 dark:border-white/05 focus:border-red-500 focus:outline-none transition-colors text-sm text-gray-900 dark:text-white disabled:opacity-65"
+                            />
+                          </div>
+
+                          <div className="space-y-1">
+                            <label className="text-[11px] text-gray-400 font-bold uppercase tracking-wider block">Last Donation Date</label>
+                            <input
+                              type="date"
+                              disabled={!isEditingProfile}
+                              value={profileForm.lastDonationDate}
+                              onChange={(e) => setProfileForm({ ...profileForm, lastDonationDate: e.target.value })}
+                              className="w-full py-3 px-4 rounded-2xl bg-black/02 dark:bg-white/02 border border-black/05 dark:border-white/05 focus:border-red-500 focus:outline-none transition-colors text-sm text-gray-900 dark:text-white disabled:opacity-65"
+                            />
+                          </div>
+
+                          <div className="space-y-1 md:col-span-2 pt-2">
+                            <label className="text-[11px] text-gray-400 font-bold uppercase tracking-wider block">Medical History / Conditions</label>
+                            <textarea
+                              disabled={!isEditingProfile}
+                              value={profileForm.medicalHistory}
+                              onChange={(e) => setProfileForm({ ...profileForm, medicalHistory: e.target.value })}
+                              className="w-full py-3 px-4 rounded-2xl bg-black/02 dark:bg-white/02 border border-black/05 dark:border-white/05 focus:border-red-500 focus:outline-none transition-colors text-sm text-gray-900 dark:text-white disabled:opacity-65 resize-none h-24"
+                              placeholder="Any recent surgeries, medications, or chronic conditions..."
                             />
                           </div>
                         </div>

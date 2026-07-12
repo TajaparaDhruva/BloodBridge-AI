@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
   FiSearch, FiPlus, FiBell, FiZap, FiMapPin,
   FiGrid, FiAlertCircle, FiHeart, FiDatabase, FiActivity,
-  FiLayers, FiCreditCard, FiShield
+  FiLayers, FiCreditCard, FiShield, FiUser, FiLogOut
 } from 'react-icons/fi';
 import LanguageSwitcher from '../LanguageSwitcher';
 
@@ -70,6 +70,18 @@ const DashboardHeader = ({
   const displayName = user?.name || user?.role || 'Operator';
   const navItems = getNavItems(user, isDonor);
   const [scrolled, setScrolled] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowProfileMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -182,15 +194,61 @@ const DashboardHeader = ({
           <LanguageSwitcher />
 
           {/* User profile dropdown logout */}
-          <button
-            onClick={onLogout}
-            className="w-9 h-9 rounded-full bg-rose-50 hover:bg-rose-100 flex items-center justify-center transition-all duration-200 cursor-pointer shadow-sm border border-rose-100/50"
-            title={`Sign Out (${displayName})`}
-          >
-            <svg className="w-5 h-5 text-rose-500" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-            </svg>
-          </button>
+          <div className="relative" ref={dropdownRef}>
+            <button
+              onClick={() => setShowProfileMenu(!showProfileMenu)}
+              className="w-10 h-10 rounded-full bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/50 flex items-center justify-center transition-all duration-200 cursor-pointer shadow-sm border border-rose-100/50 dark:border-rose-900/50"
+              title={`Profile Menu`}
+            >
+              <FiUser className="w-4.5 h-4.5 text-[#E11D48]" />
+            </button>
+            <AnimatePresence>
+              {showProfileMenu && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute right-0 mt-3 w-56 bg-white dark:bg-[#121622] border border-gray-100 dark:border-[#22283A] rounded-2xl shadow-xl z-50 overflow-hidden"
+                >
+                  <div className="p-4 border-b border-gray-100 dark:border-[#22283A] flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center shrink-0 overflow-hidden">
+                      {/* Avatar Image or Initial */}
+                      {user?.avatar ? (
+                        <img src={user.avatar} alt={displayName} className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-sm font-bold text-slate-500 dark:text-slate-300">
+                          {displayName.charAt(0).toUpperCase()}
+                        </span>
+                      )}
+                    </div>
+                    <div className="overflow-hidden">
+                      <p className="text-[13px] font-bold text-slate-900 dark:text-white truncate" title={displayName}>
+                        {displayName.length > 18 ? displayName.substring(0, 18) + '...' : displayName}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="py-2">
+                    <button
+                      onClick={() => {
+                        setActiveTab('profile');
+                        setShowProfileMenu(false);
+                      }}
+                      className="w-full text-left px-5 py-2.5 text-[13px] font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors"
+                    >
+                      View Profile
+                    </button>
+                    <button
+                      onClick={onLogout}
+                      className="w-full text-left px-5 py-2.5 text-[13px] font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
     </motion.nav>
